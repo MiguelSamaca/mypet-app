@@ -100,6 +100,46 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  .theme-vibrant {
+    /* Vibrant pink/purple theme */
+    --background: 300 100% 87%;
+    --foreground: 0 0% 100%;
+
+    --card: 300 100% 87%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 300 100% 87%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary button - E959C3 */
+    --primary: 314 73% 63%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary button - F556CB */
+    --secondary: 318 88% 65%;
+    --secondary-foreground: 300 100% 79%;
+
+    --muted: 300 50% 80%;
+    --muted-foreground: 0 0% 11%;
+
+    /* Accent color - 8D41C6 */
+    --accent: 277 52% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 277 52% 51%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Input border and button outline - F163F1 */
+    --border: 300 86% 66%;
+    --input: 300 86% 66%;
+    --ring: 300 86% 66%;
+
+    --radius: 1rem;
+  }
 }
 
 @layer base {
