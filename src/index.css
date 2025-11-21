@@ -103,14 +103,14 @@ All colors MUST be HSL.
 
   .theme-vibrant {
     /* Vibrant pink/purple theme */
-    --background: 300 100% 87%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
 
-    --card: 300 100% 87%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 11%;
 
-    --popover: 300 100% 87%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 11%;
 
     /* Primary button - E959C3 */
     --primary: 314 73% 63%;
