@@ -28,7 +28,7 @@ const additionalInfo = [
 
 const Requirements = () => {
   return (
-    <section className="bg-background py-16 md:py-24">
+    <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto space-y-6">
           <Accordion type="single" collapsible className="w-full">
@@ -45,7 +45,7 @@ const Requirements = () => {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-center text-muted-foreground italic">
+                <p className="mt-6 text-center text-foreground italic">
                   Esto nos permite cuidarlo como se merece 💖
                 </p>
               </AccordionContent>

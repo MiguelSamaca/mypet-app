@@ -22,11 +22,11 @@ const features = [
 
 const WhatTheyEnjoy = () => {
   return (
-    <section className="bg-primary/10 py-16 md:py-24">
+    <section className="bg-primary/10 py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-6">¿Qué disfrutará tu peludo?</h2>
-          <p className="text-center text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+          <p className="text-center text-xl text-foreground mb-12 max-w-3xl mx-auto">
             Aquí no es un sitio lleno de perros desconocidos… es un hogar temporal que huele a tranquilidad y diversión.
           </p>
 
@@ -43,7 +43,7 @@ const WhatTheyEnjoy = () => {
                 />
                 <div className="p-6 space-y-4">
                   <h3 className="text-foreground">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-foreground leading-relaxed">
                     {feature.description}
                   </p>
                 </div>

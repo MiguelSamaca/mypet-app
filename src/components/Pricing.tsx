@@ -30,11 +30,11 @@ const plans = [
 
 const Pricing = () => {
   return (
-    <section className="bg-secondary py-16 md:py-24">
+    <section className="bg-secondary py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-center mb-4">Planes y tarifas del Hotel</h2>
-          <p className="text-center text-xl text-muted-foreground mb-12">
+          <p className="text-center text-xl text-foreground mb-12">
             Incluye 1 paseo al día y/o cuidado especial
           </p>
 
