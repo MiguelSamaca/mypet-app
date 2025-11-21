@@ -34,7 +34,7 @@ const facilities = [
 
 const Facilities = () => {
   return (
-    <section className="bg-secondary py-16 md:py-24">
+    <section className="bg-secondary py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-12">¿Dónde estará tu peludo?</h2>
@@ -52,7 +52,7 @@ const Facilities = () => {
                 />
                 <div className="p-6 space-y-3">
                   <h3 className="text-foreground text-lg">{facility.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-foreground leading-relaxed">
                     {facility.description}
                   </p>
                 </div>

@@ -17,7 +17,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="bg-background py-16 md:py-24">
+    <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-12">Testimonios</h2>
@@ -29,7 +29,7 @@ const Testimonials = () => {
                 className="bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow relative"
               >
                 <Quote className="w-12 h-12 text-primary/40 mb-4" />
-                <p className="text-muted-foreground leading-relaxed mb-6 italic">
+                <p className="text-foreground leading-relaxed mb-6 italic">
                   "{testimonial.text}"
                 </p>
                 <p className="text-foreground font-semibold">— {testimonial.name}</p>
