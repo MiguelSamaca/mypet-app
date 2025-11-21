@@ -7,6 +7,7 @@ import Caregivers from "@/components/Caregivers";
 import Requirements from "@/components/Requirements";
 import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
       <Requirements />
       <Pricing />
       <Footer />
+      <ThemeToggle />
     </main>
   );
 };
