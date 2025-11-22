@@ -1,4 +1,4 @@
-import { Heart, Phone, Mail, MapPin } from "lucide-react";
+import { Heart, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Heart className="w-6 h-6 fill-white" />
-              <h3 className="text-2xl font-bold">Hotel Pet Care</h3>
+              <h3 className="text-2xl font-bold">Mayte Pet Hotel</h3>
             </div>
             <p className="text-white/90">
               Cuidado como en Casa
@@ -18,13 +18,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Contacto</h4>
             <div className="space-y-3">
-              <a href="tel:+573001234567" className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
+              <a href="tel:+573154148380" className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
                 <Phone className="w-5 h-5" />
-                <span>+57 300 123 4567</span>
-              </a>
-              <a href="mailto:info@hotelpetcare.com" className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
-                <Mail className="w-5 h-5" />
-                <span>info@hotelpetcare.com</span>
+                <span>315 4148380</span>
               </a>
               <div className="flex items-start gap-3 text-white/90">
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-1" />
@@ -43,7 +39,7 @@ const Footer = () => {
         </div>
 
         <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/20 text-center text-white/80">
-          <p>&copy; 2025 Hotel Pet Care. Todos los derechos reservados.</p>
+          <p>&copy; 2025 Mayte Pet Hotel. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

@@ -112,6 +112,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 11%;
 
+    /* Special section background for vibrant theme */
+    --section-bg-vibrant: 300 100% 87%;
+
     /* Primary button - E959C3 */
     --primary: 314 73% 63%;
     --primary-foreground: 0 0% 100%;

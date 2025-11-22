@@ -7,7 +7,7 @@ const Hero = () => {
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="space-y-6 text-center md:text-left">
-            <h1 className="text-foreground">Hotel Pet Care</h1>
+            <h1 className="text-foreground">Mayte Pet Hotel</h1>
             <p className="text-2xl md:text-3xl text-primary font-medium">
               Cuidado como en Casa
             </p>

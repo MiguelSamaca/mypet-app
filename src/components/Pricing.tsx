@@ -30,7 +30,7 @@ const plans = [
 
 const Pricing = () => {
   return (
-    <section className="bg-secondary py-12 md:py-16">
+    <section className="bg-secondary py-12 md:py-16 theme-vibrant:bg-[hsl(var(--section-bg-vibrant))]">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-center mb-4">Planes y tarifas del Hotel</h2>
