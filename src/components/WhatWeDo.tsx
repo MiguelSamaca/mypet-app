@@ -1,9 +1,9 @@
-import { Heart, Utensils, Footprints, Stethoscope, Home, Clock } from "lucide-react";
+import { Heart, Bone, PawPrint, Stethoscope, Home, Clock } from "lucide-react";
 
 const benefits = [
   { icon: Heart, text: "Nos adaptamos a las necesidades de tu peludo" },
-  { icon: Utensils, text: "Podemos cocinar su comida como la prefiere" },
-  { icon: Footprints, text: "Caminatas según su edad y energía (paso suave, moderado o aventurero)" },
+  { icon: Bone, text: "Podemos cocinar su comida como la prefiere" },
+  { icon: PawPrint, text: "Caminatas según su edad y energía (paso suave, moderado o aventurero)" },
   { icon: Stethoscope, text: "Cuidado de salud personalizado" },
   { icon: Home, text: "Espacios cómodos, cálidos y familiares" },
   { icon: Clock, text: "Acompañamiento constante 24/7" },
