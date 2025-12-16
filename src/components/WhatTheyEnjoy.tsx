@@ -22,7 +22,7 @@ const features = [
 
 const WhatTheyEnjoy = () => {
   return (
-    <section className="bg-primary/10 py-12 md:py-16">
+    <section id="servicios" className="bg-primary/10 py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-6">¿Qué disfrutará tu peludo?</h2>

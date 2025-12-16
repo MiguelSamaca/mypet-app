@@ -11,7 +11,7 @@ const benefits = [
 
 const WhatWeDo = () => {
   return (
-    <section className="bg-background py-12 md:py-16">
+    <section id="que-hacemos" className="bg-background py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-4">¿Qué hacemos?</h2>
