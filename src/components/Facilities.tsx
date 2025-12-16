@@ -34,7 +34,7 @@ const facilities = [
 
 const Facilities = () => {
   return (
-    <section className="bg-secondary py-12 md:py-16 theme-vibrant:bg-[hsl(var(--section-bg-vibrant))]">
+    <section id="instalaciones" className="bg-secondary py-12 md:py-16 theme-vibrant:bg-[hsl(var(--section-bg-vibrant))]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center mb-12">¿Dónde estará tu peludo?</h2>
