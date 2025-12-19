@@ -7,7 +7,8 @@ import Caregivers from "@/components/Caregivers";
 import Requirements from "@/components/Requirements";
 import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
-import ThemeToggle from "@/components/ThemeToggle";
+import ScrollToTop from "@/components/ScrollToTop";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   return (
@@ -21,7 +22,8 @@ const Index = () => {
       <Requirements />
       <Pricing />
       <Footer />
-      <ThemeToggle />
+      <ScrollToTop />
+      <WhatsAppButton />
     </main>
   );
 };
