@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Testimonios", href: "#testimonios" },
   { label: "Instalaciones", href: "#instalaciones" },
   { label: "Equipo", href: "#equipo" },
+  { label: "Mayte Boutique", href: "https://maytepetboutique.com", external: true },
 ];
 
 const Hero = () => {
@@ -39,6 +40,8 @@ const Hero = () => {
                 <a
                   key={link.href}
                   href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                   className="text-white hover:text-primary transition-colors font-medium"
                 >
                   {link.label}
@@ -62,6 +65,8 @@ const Hero = () => {
                 <a
                   key={link.href}
                   href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                   className="block py-3 text-white hover:text-primary transition-colors font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
