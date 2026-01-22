@@ -45,7 +45,7 @@ const Caregivers = () => {
                 <img
                   src={caregiverImages[currentIndex]}
                   alt={`Cuidadora profesional ${currentIndex + 1}`}
-                  className="w-full h-[400px] object-cover transition-all duration-500"
+                  className="w-full h-auto max-h-[500px] object-contain transition-all duration-500"
                 />
               </div>
 
