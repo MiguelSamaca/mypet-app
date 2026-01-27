@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import gamesImage from "@/assets/games-interactive.jpg";
+import games1 from "@/assets/games-1.webp";
+import games2 from "@/assets/games-2.webp";
+import games3 from "@/assets/games-3.webp";
+import games4 from "@/assets/games-4.webp";
 import sleeping1 from "@/assets/sleeping-1.webp";
 import sleeping2 from "@/assets/sleeping-2.webp";
 import sleeping3 from "@/assets/sleeping-3.webp";
@@ -12,6 +15,7 @@ import social2 from "@/assets/social-2.webp";
 import social3 from "@/assets/social-3.webp";
 import social4 from "@/assets/social-4.webp";
 
+const gamesImages = [games1, games2, games3, games4];
 const sleepingImages = [sleeping1, sleeping2, sleeping3, sleeping4, sleeping5, sleeping6];
 const socialImages = [social1, social2, social3, social4];
 
@@ -19,8 +23,8 @@ const features = [
   {
     title: "Juegos Interactivos",
     description: "Actividades físicas y mentales que estimulan su curiosidad y lo hacen pasar un día lleno de diversión, sacando sonrisas perrunas.",
-    image: gamesImage,
-    carouselType: null,
+    image: null,
+    carouselType: "games" as const,
   },
   {
     title: "Socialización con Amigos Cercanos",
@@ -117,16 +121,12 @@ const WhatTheyEnjoy = () => {
                 key={index} 
                 className="bg-card rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
               >
-                {feature.carouselType === "sleeping" ? (
+              {feature.carouselType === "games" ? (
+                  <ImageCarousel images={gamesImages} altPrefix="Juegos interactivos" />
+                ) : feature.carouselType === "sleeping" ? (
                   <ImageCarousel images={sleepingImages} altPrefix="Zona de descanso" />
-                ) : feature.carouselType === "social" ? (
-                  <ImageCarousel images={socialImages} altPrefix="Socialización" />
                 ) : (
-                  <img
-                    src={feature.image!}
-                    alt={feature.title}
-                    className="w-full h-64 object-cover"
-                  />
+                  <ImageCarousel images={socialImages} altPrefix="Socialización" />
                 )}
                 <div className="p-6 space-y-4">
                   <h3 className="text-foreground">{feature.title}</h3>
