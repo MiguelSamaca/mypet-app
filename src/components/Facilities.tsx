@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import sleepingImage from "@/assets/sleeping.jpg";
 import sunbathingImage from "@/assets/sunbathing.jpg";
 import photoSpotImage from "@/assets/photo-spot.jpg";
 import walkingImage from "@/assets/walking.jpg";
@@ -8,8 +7,13 @@ import ballpit1 from "@/assets/ballpit-1.webp";
 import ballpit2 from "@/assets/ballpit-2.webp";
 import ballpit3 from "@/assets/ballpit-3.webp";
 import ballpit4 from "@/assets/ballpit-4.webp";
+import rest1 from "@/assets/rest-1.webp";
+import rest2 from "@/assets/rest-2.webp";
+import rest3 from "@/assets/rest-3.webp";
+import rest4 from "@/assets/rest-4.webp";
 
 const ballpitImages = [ballpit1, ballpit2, ballpit3, ballpit4];
+const restImages = [rest1, rest2, rest3, rest4];
 
 interface ImageCarouselProps {
   images: string[];
@@ -80,8 +84,8 @@ const facilities = [
   {
     title: "Lugar para descansar",
     description: "Camitas cómodas, mantitas suaves y un espacio acogedor donde puede dormir profundamente. Un rincón donde el sueño le llega solito.",
-    image: sleepingImage,
-    carouselType: null,
+    image: null,
+    carouselType: "rest" as const,
   },
   {
     title: "Baño de Sol",
@@ -114,7 +118,7 @@ const Facilities = () => {
     <section id="instalaciones" className="bg-secondary py-12 md:py-16 theme-vibrant:bg-[hsl(var(--section-bg-vibrant))]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-center mb-12">¿Dónde estará tu peludo?</h2>
+          <h2 className="text-center mb-12 text-white">¿Dónde estará tu peludo?</h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {facilities.map((facility, index) => (
@@ -122,7 +126,9 @@ const Facilities = () => {
                 key={index} 
                 className="bg-card rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-b-4 border-primary/20"
               >
-                {facility.carouselType === "ballpit" ? (
+                {facility.carouselType === "rest" ? (
+                  <ImageCarousel images={restImages} altPrefix="Lugar para descansar" />
+                ) : facility.carouselType === "ballpit" ? (
                   <ImageCarousel images={ballpitImages} altPrefix="Piscina de pelotas" />
                 ) : (
                   <img
