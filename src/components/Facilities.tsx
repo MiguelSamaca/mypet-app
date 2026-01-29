@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import photoSpotImage from "@/assets/photo-spot.jpg";
 import walkingImage from "@/assets/walking.jpg";
 import ballpit1 from "@/assets/ballpit-1.webp";
 import ballpit2 from "@/assets/ballpit-2.webp";
@@ -13,10 +12,17 @@ import rest4 from "@/assets/rest-4.webp";
 import sunbath1 from "@/assets/sunbath-1.webp";
 import sunbath2 from "@/assets/sunbath-2.webp";
 import sunbath3 from "@/assets/sunbath-3.webp";
+import photospot1 from "@/assets/photospot-1.webp";
+import photospot2 from "@/assets/photospot-2.webp";
+import photospot3 from "@/assets/photospot-3.webp";
+import photospot4 from "@/assets/photospot-4.webp";
+import photospot5 from "@/assets/photospot-5.webp";
+import photospot6 from "@/assets/photospot-6.webp";
 
 const ballpitImages = [ballpit1, ballpit2, ballpit3, ballpit4];
 const restImages = [rest1, rest2, rest3, rest4];
 const sunbathImages = [sunbath1, sunbath2, sunbath3];
+const photospotImages = [photospot1, photospot2, photospot3, photospot4, photospot5, photospot6];
 
 interface ImageCarouselProps {
   images: string[];
@@ -105,8 +111,8 @@ const facilities = [
   {
     title: "Spot de Foto",
     description: "Un espacio iluminado y acogedor para que tu peludo sea el protagonista de fotos hermosas. Porque tu peludo siempre tiene un lado bueno… ¡y nosotros sabemos capturarlo!",
-    image: photoSpotImage,
-    carouselType: null,
+    image: null,
+    carouselType: "photospot" as const,
   },
   {
     title: "Paseo sin presión",
@@ -135,6 +141,8 @@ const Facilities = () => {
                   <ImageCarousel images={sunbathImages} altPrefix="Baño de sol" />
                 ) : facility.carouselType === "ballpit" ? (
                   <ImageCarousel images={ballpitImages} altPrefix="Piscina de pelotas" />
+                ) : facility.carouselType === "photospot" ? (
+                  <ImageCarousel images={photospotImages} altPrefix="Spot de foto" />
                 ) : (
                   <img
                     src={facility.image!}
