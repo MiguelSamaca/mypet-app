@@ -84,7 +84,7 @@ const Caregivers = () => {
 
             <div className="space-y-6">
               <p className="text-lg leading-relaxed text-foreground">
-                Detrás del Hotel Pet Care hay personas que aman a los peludos en todas sus 
+                Detrás de Mayte Pet Hotel hay personas que aman a los peludos en todas sus 
                 formas: viejitos, gorditos, juguetones, sensibles, nerviosos y consentidos.
               </p>
 

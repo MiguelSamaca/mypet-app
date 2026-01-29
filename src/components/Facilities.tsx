@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import sunbathingImage from "@/assets/sunbathing.jpg";
 import photoSpotImage from "@/assets/photo-spot.jpg";
 import walkingImage from "@/assets/walking.jpg";
 import ballpit1 from "@/assets/ballpit-1.webp";
@@ -11,9 +10,13 @@ import rest1 from "@/assets/rest-1.webp";
 import rest2 from "@/assets/rest-2.webp";
 import rest3 from "@/assets/rest-3.webp";
 import rest4 from "@/assets/rest-4.webp";
+import sunbath1 from "@/assets/sunbath-1.webp";
+import sunbath2 from "@/assets/sunbath-2.webp";
+import sunbath3 from "@/assets/sunbath-3.webp";
 
 const ballpitImages = [ballpit1, ballpit2, ballpit3, ballpit4];
 const restImages = [rest1, rest2, rest3, rest4];
+const sunbathImages = [sunbath1, sunbath2, sunbath3];
 
 interface ImageCarouselProps {
   images: string[];
@@ -90,8 +93,8 @@ const facilities = [
   {
     title: "Baño de Sol",
     description: "Un rincón favorito donde muchos perritos se recuestan a 'broncearse', cerrar los ojos y disfrutar el calorcito.",
-    image: sunbathingImage,
-    carouselType: null,
+    image: null,
+    carouselType: "sunbath" as const,
   },
   {
     title: "Diversión sin límites — Piscina de Pelotas",
@@ -118,7 +121,7 @@ const Facilities = () => {
     <section id="instalaciones" className="bg-secondary py-12 md:py-16 theme-vibrant:bg-[hsl(var(--section-bg-vibrant))]">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-center mb-12 text-white">¿Dónde estará tu peludo?</h2>
+          <h2 className="text-center mb-12 text-white text-4xl md:text-5xl font-bold">¿Dónde estará tu peludo?</h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {facilities.map((facility, index) => (
@@ -128,6 +131,8 @@ const Facilities = () => {
               >
                 {facility.carouselType === "rest" ? (
                   <ImageCarousel images={restImages} altPrefix="Lugar para descansar" />
+                ) : facility.carouselType === "sunbath" ? (
+                  <ImageCarousel images={sunbathImages} altPrefix="Baño de sol" />
                 ) : facility.carouselType === "ballpit" ? (
                   <ImageCarousel images={ballpitImages} altPrefix="Piscina de pelotas" />
                 ) : (
