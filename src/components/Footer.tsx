@@ -18,7 +18,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Contacto</h4>
             <div className="space-y-3">
-              <a href="tel:+573154148380" className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
+              <a href="https://api.whatsapp.com/send?phone=573154148380&text=Hola%20%F0%9F%90%B6!%0A%0AMe%20gustar%C3%ADa%20conocer%20m%C3%A1s%20del%20Hotel%F0%9F%90%95%E2%80%8D%F0%9F%A6%BA%F0%9F%A6%AE%F0%9F%8F%A9%0A%0APor%20favor%20me%20das%20informaci%C3%B3n%F0%9F%9B%8F%EF%B8%8F%F0%9F%90%95" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/90 hover:text-white transition-colors">
                 <Phone className="w-5 h-5" />
                 <span>315 4148380</span>
               </a>

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import walkingImage from "@/assets/walking.jpg";
 import ballpit1 from "@/assets/ballpit-1.webp";
+import walking1 from "@/assets/walking-1.webp";
+import walking2 from "@/assets/walking-2.webp";
+import walking3 from "@/assets/walking-3.webp";
 import ballpit2 from "@/assets/ballpit-2.webp";
 import ballpit3 from "@/assets/ballpit-3.webp";
 import ballpit4 from "@/assets/ballpit-4.webp";
@@ -23,6 +25,7 @@ const ballpitImages = [ballpit1, ballpit2, ballpit3, ballpit4];
 const restImages = [rest1, rest2, rest3, rest4];
 const sunbathImages = [sunbath1, sunbath2, sunbath3];
 const photospotImages = [photospot1, photospot2, photospot3, photospot4, photospot5, photospot6];
+const walkingImages = [walking1, walking2, walking3];
 
 interface ImageCarouselProps {
   images: string[];
@@ -117,8 +120,8 @@ const facilities = [
   {
     title: "Paseo sin presión",
     description: "Caminatas a su ritmo, sin manada, sin estrés, solo ellos disfrutando como debe ser.",
-    image: walkingImage,
-    carouselType: null,
+    image: null,
+    carouselType: "walking" as const,
   },
 ];
 
@@ -144,11 +147,7 @@ const Facilities = () => {
                 ) : facility.carouselType === "photospot" ? (
                   <ImageCarousel images={photospotImages} altPrefix="Spot de foto" />
                 ) : (
-                  <img
-                    src={facility.image!}
-                    alt={facility.title}
-                    className="w-full h-56 object-cover"
-                  />
+                  <ImageCarousel images={walkingImages} altPrefix="Paseo sin presión" />
                 )}
                 <div className="p-6 space-y-3">
                   <h3 className="text-foreground text-lg">{facility.title}</h3>
