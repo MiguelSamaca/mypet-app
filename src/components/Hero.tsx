@@ -30,12 +30,8 @@ const Hero = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#" className="flex items-center">
-              <img 
-                src={logoImage} 
-                alt="Mayte Pet Hotel" 
-                className="h-14 md:h-16 w-auto"
-              />
+            <a href="#" className="flex items-center gap-2 text-white">
+              <span className="text-xl font-bold">Mayte Pet Hotel</span>
             </a>
 
             {/* Desktop Navigation */}
@@ -86,7 +82,12 @@ const Hero = () => {
       <div className="relative z-10 flex-1 flex items-center">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-2xl space-y-6">
-            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight flex items-center gap-4">
+              <img 
+                src={logoImage} 
+                alt="Mayte Pet Hotel Logo" 
+                className="h-[1em] w-auto"
+              />
               Mayte Pet Hotel
             </h1>
             <p className="text-3xl md:text-4xl text-primary font-semibold">
