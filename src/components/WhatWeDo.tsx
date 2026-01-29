@@ -21,7 +21,7 @@ const WhatWeDo = () => {
 
           <div className="mb-12">
             <p className="text-lg leading-relaxed text-foreground text-center max-w-4xl mx-auto">
-              En el Hotel Pet Care tu peludo llega a un espacio diseñado para que se sienta 
+              En Mayte Pet Hotel tu peludo llega a un espacio diseñado para que se sienta 
               tan amado como cuando está contigo. Nos adaptamos a sus gustos, rutinas y 
               energía para que ni note que te fuiste. Aquí cada perrito recibe cuidado uno 
               a uno, con atención real, humana y amorosa.
