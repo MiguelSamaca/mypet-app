@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Menu, X, Heart } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import heroImage from "@/assets/hero-dog.jpg";
+import logoImage from "@/assets/logo-mayte-pet-hotel.png";
 
 const navLinks = [
   { label: "Qué hacemos", href: "#que-hacemos" },
@@ -29,9 +30,12 @@ const Hero = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-2 text-white">
-              <Heart className="w-6 h-6 fill-white" />
-              <span className="text-xl font-bold">Mayte Pet Hotel</span>
+            <a href="#" className="flex items-center">
+              <img 
+                src={logoImage} 
+                alt="Mayte Pet Hotel" 
+                className="h-14 md:h-16 w-auto"
+              />
             </a>
 
             {/* Desktop Navigation */}
