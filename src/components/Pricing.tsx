@@ -1,22 +1,45 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const hotelPlans = [
-  { name: "Día Hotel 24 h (1 - 3 Días)", hotel: "$60,000.00", manada: "$108,000.00" },
-  { name: "Hotel 24h de 5-10 Días", hotel: "$54,000.00", manada: "$97,200.00" },
-  { name: "Hotel 24h de 11-15 Días", hotel: "$48,000.00", manada: "$86,400.00" },
-  { name: "Hotel 24h de 16-20 Días", hotel: "$42,000.00", manada: "$75,600.00" },
+  { name: "Día Hotel 24 h (1 - 3 Días)", hotel: "$60,000.00", manada: "$108,000.00", recommended: false },
+  { name: "Hotel 24h de 5-10 Días", hotel: "$54,000.00", manada: "$97,200.00", recommended: true },
+  { name: "Hotel 24h de 11-15 Días", hotel: "$48,000.00", manada: "$86,400.00", recommended: false },
+  { name: "Hotel 24h de 16-20 Días", hotel: "$42,000.00", manada: "$75,600.00", recommended: false },
 ];
 
 const dayCarePlans = [
-  { name: "Cuidado por hora (1 a 5 horas)", hotel: "$8,000.00", manada: "$14,400.00" },
-  { name: "Pasadía hora (6 a 10 horas)", hotel: "$44,000.00", manada: "$79,200.00" },
-  { name: "Día Hotel 24 h (1-3 Días)", hotel: "$60,000.00", manada: "$108,000.00" },
+  { name: "Cuidado por hora (1 a 5 horas)", hotel: "$8,000.00", manada: "$14,400.00", recommended: false },
+  { name: "Pasadía hora (6 a 10 horas)", hotel: "$44,000.00", manada: "$79,200.00", recommended: true },
+  { name: "Día Hotel 24 h (1-3 Días)", hotel: "$60,000.00", manada: "$108,000.00", recommended: false },
 ];
 
 const monthlyPlans = [
-  { name: "DAY CARE 2 Días por semana (8 al mes)", hotel: "$334,400.00", manada: "$601,920.00" },
-  { name: "DAY CARE 3 Días por semana (12 al mes)", hotel: "$475,200.00", manada: "$855,360.00" },
+  { name: "DAY CARE 2 Días por semana (8 al mes)", hotel: "$334,400.00", manada: "$601,920.00", recommended: true },
+  { name: "DAY CARE 3 Días por semana (12 al mes)", hotel: "$475,200.00", manada: "$855,360.00", recommended: false },
 ];
+
+const PlanRow = ({ plan, keyPrefix, index }: { plan: typeof hotelPlans[0], keyPrefix: string, index: number }) => (
+  <tr 
+    key={`${keyPrefix}-${index}`} 
+    className={`border-b border-border last:border-b-0 ${
+      plan.recommended ? 'bg-success/20' : 'hover:bg-muted/20'
+    }`}
+  >
+    <td className="px-6 py-4 text-foreground">
+      <div className="flex items-center gap-3 flex-wrap">
+        <span>{plan.name}</span>
+        {plan.recommended && (
+          <Badge className="bg-success text-success-foreground">
+            Plan recomendado
+          </Badge>
+        )}
+      </div>
+    </td>
+    <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
+    <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
+  </tr>
+);
 
 const Pricing = () => {
   return (
@@ -49,14 +72,7 @@ const Pricing = () => {
                     </td>
                   </tr>
                   {hotelPlans.map((plan, index) => (
-                    <tr 
-                      key={`hotel-${index}`} 
-                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
-                    >
-                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
-                    </tr>
+                    <PlanRow key={`hotel-${index}`} plan={plan} keyPrefix="hotel" index={index} />
                   ))}
 
                   {/* DAY CARE Section */}
@@ -66,14 +82,7 @@ const Pricing = () => {
                     </td>
                   </tr>
                   {dayCarePlans.map((plan, index) => (
-                    <tr 
-                      key={`daycare-${index}`} 
-                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
-                    >
-                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
-                    </tr>
+                    <PlanRow key={`daycare-${index}`} plan={plan} keyPrefix="daycare" index={index} />
                   ))}
 
                   {/* MENSUALIDAD Section */}
@@ -83,14 +92,7 @@ const Pricing = () => {
                     </td>
                   </tr>
                   {monthlyPlans.map((plan, index) => (
-                    <tr 
-                      key={`monthly-${index}`} 
-                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
-                    >
-                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
-                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
-                    </tr>
+                    <PlanRow key={`monthly-${index}`} plan={plan} keyPrefix="monthly" index={index} />
                   ))}
                 </tbody>
               </table>
