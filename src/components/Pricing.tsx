@@ -99,13 +99,19 @@ const Pricing = () => {
             </div>
 
             <div className="p-8 space-y-6">
-              <div className="space-y-3 text-center">
-                <p className="text-foreground text-lg">
-                  ¿Vienes con una manada numerosa? 🐕🐕🐕 Escríbenos y te contamos sobre nuestro descuento especial 💗
-                </p>
-                <p className="text-foreground text-lg">
-                  Los peludos que aprueban el examen comportamental con honores 🎓🐶 acceden a un descuento especial en su estadía ✨
-                </p>
+              <div className="bg-muted/50 rounded-xl p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-primary font-bold text-lg">*</span>
+                  <p className="text-foreground/80 text-sm md:text-base">
+                    ¿Vienes con una manada numerosa? 🐕🐕🐕 Escríbenos y te contamos sobre nuestro descuento especial 💗
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-primary font-bold text-lg">*</span>
+                  <p className="text-foreground/80 text-sm md:text-base">
+                    Los peludos que aprueban el examen comportamental con honores 🎓🐶 acceden a un descuento especial en su estadía ✨
+                  </p>
+                </div>
               </div>
               
               <div className="text-center">
