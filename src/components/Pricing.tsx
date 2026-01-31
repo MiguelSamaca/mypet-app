@@ -1,31 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
-const plans = [
-  {
-    name: "Día Hotel 24 h (1–3 días)",
-    dailyPrice: "$55,000.00",
-    monthlyPrice: "–",
-    recommended: false,
-  },
-  {
-    name: "Hotel 24h de 5–10 días",
-    dailyPrice: "$47,000.00",
-    monthlyPrice: "$470,000.00",
-    recommended: false,
-  },
-  {
-    name: "Hotel 24h de 11–15 días",
-    dailyPrice: "$44,000.00",
-    monthlyPrice: "$660,000.00",
-    recommended: true,
-  },
-  {
-    name: "Hotel 24h de 16–20 días",
-    dailyPrice: "$40,000.00",
-    monthlyPrice: "$800,000.00",
-    recommended: false,
-  },
+const hotelPlans = [
+  { name: "Día Hotel 24 h (1 - 3 Días)", hotel: "$60,000.00", manada: "$108,000.00" },
+  { name: "Hotel 24h de 5-10 Días", hotel: "$54,000.00", manada: "$97,200.00" },
+  { name: "Hotel 24h de 11-15 Días", hotel: "$48,000.00", manada: "$86,400.00" },
+  { name: "Hotel 24h de 16-20 Días", hotel: "$42,000.00", manada: "$75,600.00" },
+];
+
+const dayCarePlans = [
+  { name: "Cuidado por hora (1 a 5 horas)", hotel: "$8,000.00", manada: "$14,400.00" },
+  { name: "Pasadía hora (6 a 10 horas)", hotel: "$44,000.00", manada: "$79,200.00" },
+  { name: "Día Hotel 24 h (1-3 Días)", hotel: "$60,000.00", manada: "$108,000.00" },
+];
+
+const monthlyPlans = [
+  { name: "DAY CARE 2 Días por semana (8 al mes)", hotel: "$334,400.00", manada: "$601,920.00" },
+  { name: "DAY CARE 3 Días por semana (12 al mes)", hotel: "$475,200.00", manada: "$855,360.00" },
 ];
 
 const Pricing = () => {
@@ -41,37 +31,65 @@ const Pricing = () => {
           <div className="bg-card rounded-3xl shadow-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
+                {/* Header */}
                 <thead>
                   <tr className="bg-primary/20">
-                    <th className="px-6 py-4 text-left text-foreground font-semibold">Plan</th>
-                    <th className="px-6 py-4 text-center text-foreground font-semibold">Día</th>
-                    <th className="px-6 py-4 text-center text-foreground font-semibold">Mensual</th>
+                    <th className="px-6 py-4 text-left text-foreground font-semibold"></th>
+                    <th className="px-6 py-4 text-center text-foreground font-semibold">HOTEL</th>
+                    <th className="px-6 py-4 text-center text-foreground font-semibold">
+                      PLAN MANADA 🐶🐶
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {plans.map((plan, index) => (
+                  {/* DÍA Section */}
+                  <tr className="bg-muted/30">
+                    <td colSpan={3} className="px-6 py-3 text-center font-semibold text-foreground">
+                      DÍA
+                    </td>
+                  </tr>
+                  {hotelPlans.map((plan, index) => (
                     <tr 
-                      key={index} 
-                      className={`border-b border-border last:border-b-0 ${
-                        plan.recommended ? 'bg-success/20' : 'hover:bg-muted/20'
-                      }`}
+                      key={`hotel-${index}`} 
+                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
                     >
-                      <td className="px-6 py-6">
-                        <div className="flex items-center gap-3">
-                          <span className="text-foreground font-medium">{plan.name}</span>
-                          {plan.recommended && (
-                            <Badge className="bg-success text-success-foreground">
-                              Plan recomendado
-                            </Badge>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-6 text-center text-foreground font-medium">
-                        {plan.dailyPrice}
-                      </td>
-                      <td className="px-6 py-6 text-center text-foreground font-medium">
-                        {plan.monthlyPrice}
-                      </td>
+                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
+                    </tr>
+                  ))}
+
+                  {/* DAY CARE Section */}
+                  <tr className="bg-muted/30">
+                    <td colSpan={3} className="px-6 py-3 text-center font-semibold text-foreground">
+                      DAY CARE
+                    </td>
+                  </tr>
+                  {dayCarePlans.map((plan, index) => (
+                    <tr 
+                      key={`daycare-${index}`} 
+                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
+                    >
+                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
+                    </tr>
+                  ))}
+
+                  {/* MENSUALIDAD Section */}
+                  <tr className="bg-muted/30">
+                    <td colSpan={3} className="px-6 py-3 text-center font-semibold text-foreground">
+                      MENSUALIDAD
+                    </td>
+                  </tr>
+                  {monthlyPlans.map((plan, index) => (
+                    <tr 
+                      key={`monthly-${index}`} 
+                      className="border-b border-border last:border-b-0 hover:bg-muted/20"
+                    >
+                      <td className="px-6 py-4 text-foreground">{plan.name}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.hotel}</td>
+                      <td className="px-6 py-4 text-center text-foreground font-medium">{plan.manada}</td>
                     </tr>
                   ))}
                 </tbody>
