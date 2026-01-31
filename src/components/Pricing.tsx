@@ -98,19 +98,30 @@ const Pricing = () => {
               </table>
             </div>
 
-            <div className="p-8 text-center">
-              <a 
-                href="https://api.whatsapp.com/send?phone=573154148380&text=Hola%20%F0%9F%90%B6!%0A%0AMe%20gustar%C3%ADa%20conocer%20m%C3%A1s%20del%20Hotel%F0%9F%90%95%E2%80%8D%F0%9F%A6%BA%F0%9F%A6%AE%F0%9F%8F%A9%0A%0APor%20favor%20me%20das%20informaci%C3%B3n%F0%9F%9B%8F%EF%B8%8F%F0%9F%90%95"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button 
-                  size="lg" 
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg"
+            <div className="p-8 space-y-6">
+              <div className="space-y-3 text-center">
+                <p className="text-foreground text-lg">
+                  ¿Vienes con una manada numerosa? 🐕🐕🐕 Escríbenos y te contamos sobre nuestro descuento especial 💗
+                </p>
+                <p className="text-foreground text-lg">
+                  Los peludos que aprueban el examen comportamental con honores 🎓🐶 acceden a un descuento especial en su estadía ✨
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <a 
+                  href="https://api.whatsapp.com/send?phone=573154148380&text=Hola%20%F0%9F%90%B6!%0A%0AMe%20gustar%C3%ADa%20conocer%20m%C3%A1s%20del%20Hotel%F0%9F%90%95%E2%80%8D%F0%9F%A6%BA%F0%9F%A6%AE%F0%9F%8F%A9%0A%0APor%20favor%20me%20das%20informaci%C3%B3n%F0%9F%9B%8F%EF%B8%8F%F0%9F%90%95"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Quiero reservar este plan
-                </Button>
-              </a>
+                  <Button 
+                    size="lg" 
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg"
+                  >
+                    Quiero reservar este plan
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         </div>
