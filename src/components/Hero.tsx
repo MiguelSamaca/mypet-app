@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
+// Desktop/Tablet images
 import heroImage1 from "@/assets/hero-1.webp";
 import heroImage2 from "@/assets/hero-2.webp";
 import heroImage3 from "@/assets/hero-3.webp";
@@ -8,7 +10,15 @@ import heroImage4 from "@/assets/hero-4.webp";
 import heroImage7 from "@/assets/hero-7.webp";
 import heroImage8 from "@/assets/hero-8.webp";
 
-const heroImages = [heroImage1, heroImage2, heroImage3, heroImage4, heroImage7, heroImage8];
+// Mobile images
+import heroMobile1 from "@/assets/hero-mobile-1.webp";
+import heroMobile2 from "@/assets/hero-mobile-2.webp";
+import heroMobile3 from "@/assets/hero-mobile-3.webp";
+import heroMobile4 from "@/assets/hero-mobile-4.webp";
+import heroMobile5 from "@/assets/hero-mobile-5.webp";
+
+const desktopHeroImages = [heroImage1, heroImage2, heroImage3, heroImage4, heroImage7, heroImage8];
+const mobileHeroImages = [heroMobile1, heroMobile2, heroMobile3, heroMobile4, heroMobile5];
 
 const navLinks = [
   { label: "Qué hacemos", href: "#que-hacemos" },
@@ -22,6 +32,13 @@ const navLinks = [
 const Hero = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const isMobile = useIsMobile();
+
+  const heroImages = isMobile ? mobileHeroImages : desktopHeroImages;
+
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [isMobile]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,7 +46,7 @@ const Hero = () => {
     }, 6000); // 6 seconds for slow transition
 
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length]);
 
   const goToPrevious = () => {
     setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
