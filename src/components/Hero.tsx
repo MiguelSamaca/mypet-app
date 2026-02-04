@@ -5,12 +5,10 @@ import heroImage1 from "@/assets/hero-1.webp";
 import heroImage2 from "@/assets/hero-2.webp";
 import heroImage3 from "@/assets/hero-3.webp";
 import heroImage4 from "@/assets/hero-4.webp";
-import heroImage5 from "@/assets/hero-5.webp";
-import heroImage6 from "@/assets/hero-6.webp";
 import heroImage7 from "@/assets/hero-7.webp";
 import heroImage8 from "@/assets/hero-8.webp";
 
-const heroImages = [heroImage1, heroImage2, heroImage3, heroImage4, heroImage5, heroImage6, heroImage7, heroImage8];
+const heroImages = [heroImage1, heroImage2, heroImage3, heroImage4, heroImage7, heroImage8];
 
 const navLinks = [
   { label: "Qué hacemos", href: "#que-hacemos" },
