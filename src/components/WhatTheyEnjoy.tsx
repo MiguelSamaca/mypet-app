@@ -11,13 +11,14 @@ import sleeping4 from "@/assets/sleeping-4.webp";
 import sleeping5 from "@/assets/sleeping-5.webp";
 import sleeping6 from "@/assets/sleeping-6.webp";
 import social1 from "@/assets/social-1.webp";
-import social2 from "@/assets/social-2.webp";
-import social3 from "@/assets/social-3.webp";
 import social4 from "@/assets/social-4.webp";
+import social5 from "@/assets/social-5.webp";
+import social6 from "@/assets/social-6.webp";
+import social7 from "@/assets/social-7.webp";
 
 const gamesImages = [games1, games2, games3, games4];
 const sleepingImages = [sleeping1, sleeping2, sleeping3, sleeping4, sleeping5, sleeping6];
-const socialImages = [social1, social2, social3, social4];
+const socialImages = [social5, social6, social7, social1, social4];
 
 const features = [
   {
