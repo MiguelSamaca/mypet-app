@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ballpit1 from "@/assets/ballpit-1.webp";
 import walking1 from "@/assets/walking-1.webp";
-import walking2 from "@/assets/walking-2.webp";
 import walking3 from "@/assets/walking-3.webp";
+import walking4 from "@/assets/walking-4.webp";
+import walking5 from "@/assets/walking-5.webp";
 import ballpit2 from "@/assets/ballpit-2.webp";
 import ballpit3 from "@/assets/ballpit-3.webp";
 import ballpit4 from "@/assets/ballpit-4.webp";
@@ -25,7 +26,7 @@ const ballpitImages = [ballpit1, ballpit2, ballpit3, ballpit4];
 const restImages = [rest1, rest2, rest3, rest4];
 const sunbathImages = [sunbath1, sunbath2, sunbath3];
 const photospotImages = [photospot1, photospot2, photospot3, photospot4, photospot5, photospot6];
-const walkingImages = [walking1, walking2, walking3];
+const walkingImages = [walking4, walking5, walking1, walking3];
 
 interface ImageCarouselProps {
   images: string[];
