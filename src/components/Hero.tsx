@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import heroImage from "@/assets/hero-dog.jpg";
-import logoImage from "@/assets/logo-mayte-pet-hotel.png";
+import { useState, useEffect } from "react";
+import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+
+import heroImage1 from "@/assets/hero-1.webp";
+import heroImage2 from "@/assets/hero-2.webp";
+import heroImage3 from "@/assets/hero-3.webp";
+import heroImage4 from "@/assets/hero-4.webp";
+
+const heroImages = [heroImage1, heroImage2, heroImage3, heroImage4];
 
 const navLinks = [
   { label: "Qué hacemos", href: "#que-hacemos" },
@@ -14,15 +19,67 @@ const navLinks = [
 
 const Hero = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000); // 6 seconds for slow transition
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+  };
 
   return (
     <section className="relative min-h-screen flex flex-col">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
+      {/* Background Image Carousel */}
+      {heroImages.map((image, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+            index === currentImageIndex ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ backgroundImage: `url(${image})` }}
+        >
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+      ))}
+
+      {/* Carousel Navigation Arrows */}
+      <button
+        onClick={goToPrevious}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors"
+        aria-label="Imagen anterior"
       >
-        <div className="absolute inset-0 bg-black/40" />
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button
+        onClick={goToNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors"
+        aria-label="Imagen siguiente"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+
+      {/* Carousel Dot Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {heroImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`w-3 h-3 rounded-full transition-colors ${
+              index === currentImageIndex ? "bg-white" : "bg-white/50"
+            }`}
+            aria-label={`Ir a imagen ${index + 1}`}
+          />
+        ))}
       </div>
 
       {/* Navigation */}
@@ -82,12 +139,7 @@ const Hero = () => {
       <div className="relative z-10 flex-1 flex items-center">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-2xl space-y-6">
-            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight flex items-center gap-4">
-              <img 
-                src={logoImage} 
-                alt="Mayte Pet Hotel Logo" 
-                className="h-[1em] w-auto"
-              />
+            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
               Mayte Pet Hotel
             </h1>
             <p className="text-3xl md:text-4xl text-primary font-semibold">
