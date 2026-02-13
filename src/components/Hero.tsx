@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -35,41 +35,71 @@ const Hero = () => {
   const isMobile = useIsMobile();
 
   const heroImages = isMobile ? mobileHeroImages : desktopHeroImages;
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0]));
 
   useEffect(() => {
     setCurrentImageIndex(0);
+    setLoadedImages(new Set([0]));
   }, [isMobile]);
+
+  // Preload next image in sequence
+  useEffect(() => {
+    const nextIndex = (currentImageIndex + 1) % heroImages.length;
+    if (!loadedImages.has(nextIndex)) {
+      const img = new Image();
+      img.src = heroImages[nextIndex];
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(nextIndex));
+      };
+    }
+    // Also mark current as loaded
+    if (!loadedImages.has(currentImageIndex)) {
+      setLoadedImages((prev) => new Set(prev).add(currentImageIndex));
+    }
+  }, [currentImageIndex, heroImages, loadedImages]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 6000); // 6 seconds for slow transition
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
   const goToPrevious = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+    const prev = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
+    // Preload the target image immediately
+    if (!loadedImages.has(prev)) {
+      setLoadedImages((p) => new Set(p).add(prev));
+    }
+    setCurrentImageIndex(prev);
   };
 
   const goToNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    const next = (currentImageIndex + 1) % heroImages.length;
+    if (!loadedImages.has(next)) {
+      setLoadedImages((p) => new Set(p).add(next));
+    }
+    setCurrentImageIndex(next);
   };
 
   return (
     <section className="relative min-h-screen flex flex-col">
-      {/* Background Image Carousel */}
-      {heroImages.map((image, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-          style={{ backgroundImage: `url(${image})` }}
-        >
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
-      ))}
+      {/* Background Image Carousel - only render loaded images */}
+      {heroImages.map((image, index) => {
+        if (!loadedImages.has(index) && index !== currentImageIndex) return null;
+        return (
+          <div
+            key={index}
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ backgroundImage: `url(${image})` }}
+          >
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+        );
+      })}
 
       {/* Carousel Navigation Arrows */}
       <button
