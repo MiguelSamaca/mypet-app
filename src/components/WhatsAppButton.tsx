@@ -1,9 +1,16 @@
 const WhatsAppButton = () => {
+  const handleClick = () => {
+    if (typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "Contact");
+    }
+  };
+
   return (
     <a
       href="https://wa.link/zhikvi"
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className="fixed bottom-6 right-4 z-50 p-3 rounded-full bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
       aria-label="Contactar por WhatsApp"
     >
