@@ -10,6 +10,7 @@ import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import LeadPopup from "@/components/LeadPopup";
 
 const Index = () => {
   return (
@@ -26,6 +27,7 @@ const Index = () => {
       <Footer />
       <ScrollToTop />
       <WhatsAppButton />
+      <LeadPopup />
     </main>
   );
 };
