@@ -50,6 +50,11 @@ const LeadPopup = () => {
       }
 
       setIsSubmitted(true);
+
+      // Send email notification (fire and forget)
+      supabase.functions.invoke("notify-lead", {
+        body: { nombre: nombre.trim(), email: email.trim() },
+      }).catch(console.error);
     } catch {
       setError("Hubo un error. Intenta de nuevo.");
     } finally {
