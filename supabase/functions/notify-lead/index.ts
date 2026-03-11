@@ -54,38 +54,60 @@ serve(async (req) => {
       console.error("Resend error:", JSON.stringify(data));
     }
 
-    // Sync lead to Shopify as customer
+    // Sync lead to Shopify as customer via Client Credentials
     const SHOPIFY_STORE_URL = Deno.env.get("SHOPIFY_STORE_URL");
-    const SHOPIFY_ACCESS_TOKEN = Deno.env.get("SHOPIFY_ACCESS_TOKEN");
+    const SHOPIFY_CLIENT_ID = Deno.env.get("SHOPIFY_CLIENT_ID");
+    const SHOPIFY_CLIENT_SECRET = Deno.env.get("SHOPIFY_CLIENT_SECRET");
 
-    if (SHOPIFY_STORE_URL && SHOPIFY_ACCESS_TOKEN) {
+    if (SHOPIFY_STORE_URL && SHOPIFY_CLIENT_ID && SHOPIFY_CLIENT_SECRET) {
       try {
-        const shopifyRes = await fetch(
-          `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers.json`,
+        // Step 1: Get access token via Client Credentials Grant
+        const tokenRes = await fetch(
+          `https://${SHOPIFY_STORE_URL}/admin/oauth/access_token`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              customer: {
-                email,
-                first_name: nombre || "",
-                tags: "lead_mayte,popup_descuento",
-                marketing_consent: {
-                  state: "subscribed",
-                  opt_in_level: "single_opt_in",
-                },
-              },
+              client_id: SHOPIFY_CLIENT_ID,
+              client_secret: SHOPIFY_CLIENT_SECRET,
+              grant_type: "client_credentials",
             }),
           }
         );
-        const shopifyData = await shopifyRes.json();
-        if (!shopifyRes.ok) {
-          console.error("Shopify error:", JSON.stringify(shopifyData));
+        const tokenData = await tokenRes.json();
+        if (!tokenRes.ok) {
+          console.error("Shopify token error:", JSON.stringify(tokenData));
         } else {
-          console.log("Shopify customer created:", shopifyData.customer?.id);
+          const accessToken = tokenData.access_token;
+
+          // Step 2: Create customer with the obtained token
+          const shopifyRes = await fetch(
+            `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers.json`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Shopify-Access-Token": accessToken,
+              },
+              body: JSON.stringify({
+                customer: {
+                  email,
+                  first_name: nombre || "",
+                  tags: "lead_mayte,popup_descuento",
+                  marketing_consent: {
+                    state: "subscribed",
+                    opt_in_level: "single_opt_in",
+                  },
+                },
+              }),
+            }
+          );
+          const shopifyData = await shopifyRes.json();
+          if (!shopifyRes.ok) {
+            console.error("Shopify error:", JSON.stringify(shopifyData));
+          } else {
+            console.log("Shopify customer created:", shopifyData.customer?.id);
+          }
         }
       } catch (shopifyErr) {
         console.error("Shopify sync failed:", shopifyErr);
