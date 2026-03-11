@@ -51,7 +51,45 @@ serve(async (req) => {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(`Resend API error [${res.status}]: ${JSON.stringify(data)}`);
+      console.error("Resend error:", JSON.stringify(data));
+    }
+
+    // Sync lead to Shopify as customer
+    const SHOPIFY_STORE_URL = Deno.env.get("SHOPIFY_STORE_URL");
+    const SHOPIFY_ACCESS_TOKEN = Deno.env.get("SHOPIFY_ACCESS_TOKEN");
+
+    if (SHOPIFY_STORE_URL && SHOPIFY_ACCESS_TOKEN) {
+      try {
+        const shopifyRes = await fetch(
+          `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers.json`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
+            },
+            body: JSON.stringify({
+              customer: {
+                email,
+                first_name: nombre || "",
+                tags: "lead_mayte,popup_descuento",
+                marketing_consent: {
+                  state: "subscribed",
+                  opt_in_level: "single_opt_in",
+                },
+              },
+            }),
+          }
+        );
+        const shopifyData = await shopifyRes.json();
+        if (!shopifyRes.ok) {
+          console.error("Shopify error:", JSON.stringify(shopifyData));
+        } else {
+          console.log("Shopify customer created:", shopifyData.customer?.id);
+        }
+      } catch (shopifyErr) {
+        console.error("Shopify sync failed:", shopifyErr);
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {
