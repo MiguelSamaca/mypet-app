@@ -105,7 +105,7 @@ const LeadPopup = () => {
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
                   type="text"
-                  placeholder="Tu nombre (opcional)"
+                  placeholder="Tu nombre y apellido (opcional)"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   maxLength={100}
