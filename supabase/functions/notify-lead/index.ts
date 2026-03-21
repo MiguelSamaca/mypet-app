@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { nombre, email } = await req.json();
+    const { nombre, email, accepts_marketing = true, origen = "popup_descuento" } = await req.json();
 
     // Sync lead to Shopify as customer via Client Credentials
     const SHOPIFY_STORE_URL = Deno.env.get("SHOPIFY_STORE_URL");
@@ -53,11 +53,12 @@ serve(async (req) => {
                 customer: {
                   email,
                   first_name: nombre || "",
-                  tags: "lead_mayte,popup_descuento,hotel",
-                  note: "Lead registrado desde Mayte Pet Hotel (sitio web)",
-                  marketing_consent: {
-                    state: "subscribed",
+                  tags: `lead_mayte,${origen},hotel`,
+                  note: `Lead registrado desde Mayte Pet Hotel (sitio web) - Origen: ${origen}`,
+                  email_marketing_consent: {
+                    state: accepts_marketing ? "subscribed" : "not_subscribed",
                     opt_in_level: "single_opt_in",
+                    consent_updated_at: new Date().toISOString(),
                   },
                 },
               }),

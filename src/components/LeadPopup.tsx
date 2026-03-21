@@ -11,6 +11,7 @@ const LeadPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [nombre, setNombre] = useState("");
+  const [acceptsMarketing, setAcceptsMarketing] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,9 +52,9 @@ const LeadPopup = () => {
 
       setIsSubmitted(true);
 
-      // Send email notification (fire and forget)
+      // Sync to Shopify (fire and forget)
       supabase.functions.invoke("notify-lead", {
-        body: { nombre: nombre.trim(), email: email.trim() },
+        body: { nombre: nombre.trim(), email: email.trim(), accepts_marketing: acceptsMarketing, origen: "popup_descuento" },
       }).catch(console.error);
     } catch {
       setError("Hubo un error. Intenta de nuevo.");
@@ -120,6 +121,17 @@ const LeadPopup = () => {
                   maxLength={255}
                   className="w-full px-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptsMarketing}
+                    onChange={(e) => setAcceptsMarketing(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-primary text-primary accent-primary"
+                  />
+                  <span className="text-xs text-muted-foreground leading-tight">
+                    🐾 Quiero recibir promociones, tips y cuidados para mi peludo
+                  </span>
+                </label>
                 {error && (
                   <p className="text-xs text-destructive">{error}</p>
                 )}
