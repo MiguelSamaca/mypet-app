@@ -40,7 +40,21 @@ serve(async (req) => {
         } else {
           const accessToken = tokenData.access_token;
 
-          // Step 2: Create customer with the obtained token
+          const customerPayload = {
+            customer: {
+              email,
+              first_name: nombre || "",
+              tags: `lead_mayte,${origen},hotel`,
+              note: `Lead registrado desde Mayte Pet Hotel (sitio web) - Origen: ${origen}`,
+              email_marketing_consent: {
+                state: accepts_marketing ? "subscribed" : "not_subscribed",
+                opt_in_level: "single_opt_in",
+                consent_updated_at: new Date().toISOString(),
+              },
+            },
+          };
+
+          // Step 2: Try to create customer
           const shopifyRes = await fetch(
             `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers.json`,
             {
@@ -49,23 +63,51 @@ serve(async (req) => {
                 "Content-Type": "application/json",
                 "X-Shopify-Access-Token": accessToken,
               },
-              body: JSON.stringify({
-                customer: {
-                  email,
-                  first_name: nombre || "",
-                  tags: `lead_mayte,${origen},hotel`,
-                  note: `Lead registrado desde Mayte Pet Hotel (sitio web) - Origen: ${origen}`,
-                  email_marketing_consent: {
-                    state: accepts_marketing ? "subscribed" : "not_subscribed",
-                    opt_in_level: "single_opt_in",
-                    consent_updated_at: new Date().toISOString(),
-                  },
-                },
-              }),
+              body: JSON.stringify(customerPayload),
             }
           );
           const shopifyData = await shopifyRes.json();
-          if (!shopifyRes.ok) {
+
+          if (!shopifyRes.ok && shopifyData?.errors?.email?.[0] === "has already been taken") {
+            // Customer exists — search and update
+            const searchRes = await fetch(
+              `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers/search.json?query=email:${encodeURIComponent(email)}`,
+              {
+                headers: { "X-Shopify-Access-Token": accessToken },
+              }
+            );
+            const searchData = await searchRes.json();
+            const existingCustomer = searchData?.customers?.[0];
+
+            if (existingCustomer) {
+              const existingTags = existingCustomer.tags ? existingCustomer.tags.split(",").map((t: string) => t.trim()) : [];
+              const newTags = [`lead_mayte`, origen, `hotel`];
+              const mergedTags = [...new Set([...existingTags, ...newTags])].join(",");
+
+              const updateRes = await fetch(
+                `https://${SHOPIFY_STORE_URL}/admin/api/2024-01/customers/${existingCustomer.id}.json`,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Shopify-Access-Token": accessToken,
+                  },
+                  body: JSON.stringify({
+                    customer: {
+                      id: existingCustomer.id,
+                      tags: mergedTags,
+                      note: customerPayload.customer.note,
+                      email_marketing_consent: customerPayload.customer.email_marketing_consent,
+                    },
+                  }),
+                }
+              );
+              await updateRes.json();
+              console.log("Shopify customer updated:", existingCustomer.id);
+            } else {
+              console.error("Shopify: email taken but not found via search");
+            }
+          } else if (!shopifyRes.ok) {
             console.error("Shopify error:", JSON.stringify(shopifyData));
           } else {
             console.log("Shopify customer created:", shopifyData.customer?.id);
