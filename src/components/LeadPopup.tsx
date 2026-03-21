@@ -52,9 +52,9 @@ const LeadPopup = () => {
 
       setIsSubmitted(true);
 
-      // Send email notification (fire and forget)
+      // Sync to Shopify (fire and forget)
       supabase.functions.invoke("notify-lead", {
-        body: { nombre: nombre.trim(), email: email.trim() },
+        body: { nombre: nombre.trim(), email: email.trim(), accepts_marketing: acceptsMarketing, origen: "popup_descuento" },
       }).catch(console.error);
     } catch {
       setError("Hubo un error. Intenta de nuevo.");
