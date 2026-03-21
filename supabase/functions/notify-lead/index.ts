@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { nombre, email } = await req.json();
+    const { nombre, email, accepts_marketing = true, origen = "popup_descuento" } = await req.json();
 
     // Sync lead to Shopify as customer via Client Credentials
     const SHOPIFY_STORE_URL = Deno.env.get("SHOPIFY_STORE_URL");
