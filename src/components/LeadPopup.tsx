@@ -11,6 +11,7 @@ const LeadPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [nombre, setNombre] = useState("");
+  const [acceptsMarketing, setAcceptsMarketing] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
