@@ -121,6 +121,17 @@ const LeadPopup = () => {
                   maxLength={255}
                   className="w-full px-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptsMarketing}
+                    onChange={(e) => setAcceptsMarketing(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-primary text-primary accent-primary"
+                  />
+                  <span className="text-xs text-muted-foreground leading-tight">
+                    🐾 Quiero recibir promociones, tips y cuidados para mi peludo
+                  </span>
+                </label>
                 {error && (
                   <p className="text-xs text-destructive">{error}</p>
                 )}

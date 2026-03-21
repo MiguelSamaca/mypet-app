@@ -53,11 +53,12 @@ serve(async (req) => {
                 customer: {
                   email,
                   first_name: nombre || "",
-                  tags: "lead_mayte,popup_descuento,hotel",
-                  note: "Lead registrado desde Mayte Pet Hotel (sitio web)",
-                  marketing_consent: {
-                    state: "subscribed",
+                  tags: `lead_mayte,${origen},hotel`,
+                  note: `Lead registrado desde Mayte Pet Hotel (sitio web) - Origen: ${origen}`,
+                  email_marketing_consent: {
+                    state: accepts_marketing ? "subscribed" : "not_subscribed",
                     opt_in_level: "single_opt_in",
+                    consent_updated_at: new Date().toISOString(),
                   },
                 },
               }),

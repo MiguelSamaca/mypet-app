@@ -25,6 +25,7 @@ const Index = () => {
       <Caregivers />
       <Requirements />
       <Pricing />
+      <Newsletter />
       <Footer />
       <ScrollToTop />
       <WhatsAppButton />
