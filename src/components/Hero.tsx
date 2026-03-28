@@ -118,8 +118,6 @@ const Hero = () => {
         );
       })}
 
-      {/* Preload first image for LCP */}
-      <link rel="preload" as="image" href={heroImages[0]} />
 
       {/* Carousel Navigation Arrows */}
       <button
