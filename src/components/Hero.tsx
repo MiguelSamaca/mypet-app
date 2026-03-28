@@ -83,30 +83,32 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex flex-col">
-      {/* Hidden img for LCP: first hero image with fetchpriority high */}
-      <img
-        src={heroImages[0]}
-        alt="Mayte Pet Hotel"
-        fetchPriority="high"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: -1, opacity: 0 }}
-      />
-
-      {/* Background Image Carousel - only render loaded images */}
+      {/* Background Image Carousel - CSS-only transitions, no DOM reads */}
       {heroImages.map((image, index) => {
         if (!loadedImages.has(index) && index !== currentImageIndex) return null;
         return (
           <div
             key={index}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
-              index === currentImageIndex ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ backgroundImage: `url(${image})` }}
+            aria-hidden={index !== currentImageIndex}
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              opacity: index === currentImageIndex ? 1 : 0,
+              transition: "opacity 1s ease",
+              willChange: index === currentImageIndex ? "opacity" : "auto",
+              contain: "strict",
+            }}
           >
             <div className="absolute inset-0 bg-black/40" />
           </div>
         );
       })}
+
+      {/* Preload first image for LCP */}
+      <link rel="preload" as="image" href={heroImages[0]} />
 
       {/* Carousel Navigation Arrows */}
       <button
