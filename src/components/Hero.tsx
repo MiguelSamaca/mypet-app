@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -33,39 +33,17 @@ const Hero = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isMobile = useIsMobile();
-  const heroImages = isMobile ? mobileHeroImages : desktopHeroImages;
 
-  // Only render slide 0 initially; unlock rest after 3s or user interaction
-  const [carouselReady, setCarouselReady] = useState(false);
+  const heroImages = isMobile ? mobileHeroImages : desktopHeroImages;
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0]));
 
   useEffect(() => {
     setCurrentImageIndex(0);
     setLoadedImages(new Set([0]));
-    setCarouselReady(false);
   }, [isMobile]);
 
-  // Unlock carousel after 3 seconds
+  // Preload next image in sequence
   useEffect(() => {
-    const timer = setTimeout(() => setCarouselReady(true), 3000);
-    return () => clearTimeout(timer);
-  }, [isMobile]);
-
-  // Unlock on any user interaction
-  useEffect(() => {
-    if (carouselReady) return;
-    const unlock = () => setCarouselReady(true);
-    window.addEventListener("pointerdown", unlock, { once: true, passive: true });
-    window.addEventListener("scroll", unlock, { once: true, passive: true });
-    return () => {
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("scroll", unlock);
-    };
-  }, [carouselReady]);
-
-  // Preload next image once carousel is ready
-  useEffect(() => {
-    if (!carouselReady) return;
     const nextIndex = (currentImageIndex + 1) % heroImages.length;
     if (!loadedImages.has(nextIndex)) {
       const img = new Image();
@@ -74,73 +52,61 @@ const Hero = () => {
         setLoadedImages((prev) => new Set(prev).add(nextIndex));
       };
     }
-  }, [currentImageIndex, heroImages, loadedImages, carouselReady]);
+    if (!loadedImages.has(currentImageIndex)) {
+      setLoadedImages((prev) => new Set(prev).add(currentImageIndex));
+    }
+  }, [currentImageIndex, heroImages, loadedImages]);
 
-  // Autoplay only after carousel is ready
   useEffect(() => {
-    if (!carouselReady) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
     }, 6000);
+
     return () => clearInterval(interval);
-  }, [heroImages.length, carouselReady]);
+  }, [heroImages.length]);
 
-  const goToPrevious = useCallback(() => {
-    setCarouselReady(true);
+  const goToPrevious = () => {
     const prev = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
-    setLoadedImages((p) => new Set(p).add(prev));
+    if (!loadedImages.has(prev)) {
+      setLoadedImages((p) => new Set(p).add(prev));
+    }
     setCurrentImageIndex(prev);
-  }, [currentImageIndex, heroImages.length]);
+  };
 
-  const goToNext = useCallback(() => {
-    setCarouselReady(true);
+  const goToNext = () => {
     const next = (currentImageIndex + 1) % heroImages.length;
-    setLoadedImages((p) => new Set(p).add(next));
+    if (!loadedImages.has(next)) {
+      setLoadedImages((p) => new Set(p).add(next));
+    }
     setCurrentImageIndex(next);
-  }, [currentImageIndex, heroImages.length]);
+  };
 
   return (
     <section className="relative min-h-screen flex flex-col">
-      {/* First image rendered as real <img> for fast LCP */}
+      {/* Hidden img for LCP: first hero image with fetchpriority high */}
       <img
         src={heroImages[0]}
         alt="Mayte Pet Hotel"
         fetchPriority="high"
-        decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: -1, opacity: 0 }}
       />
-      <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }} />
 
-      {/* Additional slides — only rendered after carouselReady */}
-      {carouselReady &&
-        heroImages.map((image, index) => {
-          if (index === 0) return null; // already rendered above
-          if (!loadedImages.has(index) && index !== currentImageIndex) return null;
-          return (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentImageIndex ? "opacity-100" : "opacity-0"
-              }`}
-              style={{ zIndex: index === currentImageIndex ? 2 : 1 }}
-            >
-              <img
-                src={image}
-                alt={`Mayte Pet Hotel ${index + 1}`}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40" />
-            </div>
-          );
-        })}
-
-      {/* Hide first image when another slide is active */}
-      {carouselReady && currentImageIndex !== 0 && (
-        <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2, opacity: 0 }} />
-      )}
+      {/* Background Image Carousel - only render loaded images */}
+      {heroImages.map((image, index) => {
+        if (!loadedImages.has(index) && index !== currentImageIndex) return null;
+        return (
+          <div
+            key={index}
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ backgroundImage: `url(${image})` }}
+          >
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+        );
+      })}
 
       {/* Carousel Navigation Arrows */}
       <button
@@ -163,11 +129,7 @@ const Hero = () => {
         {heroImages.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
-              setCarouselReady(true);
-              setLoadedImages((p) => new Set(p).add(index));
-              setCurrentImageIndex(index);
-            }}
+            onClick={() => setCurrentImageIndex(index)}
             className={`w-3 h-3 rounded-full transition-colors ${
               index === currentImageIndex ? "bg-white" : "bg-white/50"
             }`}
@@ -183,6 +145,7 @@ const Hero = () => {
             <a href="#" className="flex items-center gap-2 text-white">
               <span className="text-xl font-bold">Mayte Pet Hotel</span>
             </a>
+
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <a
@@ -196,6 +159,7 @@ const Hero = () => {
                 </a>
               ))}
             </div>
+
             <button
               className="md:hidden text-white p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -203,6 +167,7 @@ const Hero = () => {
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
+
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 bg-black/80 rounded-2xl p-4">
               {navLinks.map((link) => (
