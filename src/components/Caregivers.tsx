@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Heart, Shield, Brain, Users, ChevronLeft, ChevronRight } from "lucide-react";
-import caregiver1 from "@/assets/caregiver-1.jpg";
-import caregiver2 from "@/assets/caregiver-2.jpg";
-import caregiver3 from "@/assets/caregiver-3.jpg";
-import caregiver4 from "@/assets/caregiver-4.jpg";
+import caregiver1 from "@/assets/caregiver-1.webp";
+import caregiver2 from "@/assets/caregiver-2.webp";
+import caregiver3 from "@/assets/caregiver-3.webp";
+import caregiver4 from "@/assets/caregiver-4.webp";
 
 const qualities = [
   { icon: Heart, text: "Amor absoluto por los animales" },
@@ -45,6 +45,7 @@ const Caregivers = () => {
                 <img
                   src={caregiverImages[currentIndex]}
                   alt={`Cuidadora profesional ${currentIndex + 1}`}
+                  loading="lazy"
                   className="w-full h-auto max-h-[500px] object-contain transition-all duration-500"
                 />
               </div>

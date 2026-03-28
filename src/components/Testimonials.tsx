@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import testimonial1 from "@/assets/testimonial-1.jpg";
-import testimonial2 from "@/assets/testimonial-2.jpg";
-import testimonial3 from "@/assets/testimonial-3.jpg";
-import testimonial4 from "@/assets/testimonial-4.jpg";
-import testimonial5 from "@/assets/testimonial-5.jpg";
-import testimonial6 from "@/assets/testimonial-6.jpg";
+import testimonial1 from "@/assets/testimonial-1.webp";
+import testimonial2 from "@/assets/testimonial-2.webp";
+import testimonial3 from "@/assets/testimonial-3.webp";
+import testimonial4 from "@/assets/testimonial-4.webp";
+import testimonial5 from "@/assets/testimonial-5.webp";
+import testimonial6 from "@/assets/testimonial-6.webp";
 
 const allTestimonials = [
   { src: testimonial1, alt: "Testimonio de cliente satisfecho" },
@@ -38,6 +38,7 @@ const DesktopCarousel = ({ images }: { images: typeof allTestimonials }) => {
       <img
         src={images[index].src}
         alt={images[index].alt}
+        loading="lazy"
         className="w-full h-auto object-cover transition-opacity duration-500"
       />
       {/* Dot indicators */}
@@ -101,6 +102,7 @@ const Testimonials = () => {
               <img
                 src={allTestimonials[currentIndex].src}
                 alt={allTestimonials[currentIndex].alt}
+                loading="lazy"
                 className="w-full h-auto object-cover"
               />
             </div>
