@@ -56,6 +56,7 @@ const ImageCarousel = ({ images, altPrefix }: ImageCarouselProps) => {
           key={index}
           src={img}
           alt={`${altPrefix} ${index + 1}`}
+          loading="lazy"
           className={`absolute inset-0 w-full h-56 object-cover transition-opacity duration-500 ${
             index === currentIndex ? "opacity-100" : "opacity-0"
           }`}

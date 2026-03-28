@@ -38,6 +38,7 @@ const DesktopCarousel = ({ images }: { images: typeof allTestimonials }) => {
       <img
         src={images[index].src}
         alt={images[index].alt}
+        loading="lazy"
         className="w-full h-auto object-cover transition-opacity duration-500"
       />
       {/* Dot indicators */}
@@ -101,6 +102,7 @@ const Testimonials = () => {
               <img
                 src={allTestimonials[currentIndex].src}
                 alt={allTestimonials[currentIndex].alt}
+                loading="lazy"
                 className="w-full h-auto object-cover"
               />
             </div>
