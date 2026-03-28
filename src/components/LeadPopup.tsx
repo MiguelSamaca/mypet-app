@@ -4,8 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-2.webp";
 import ballpitImg from "@/assets/ballpit-2.webp";
 
-const POPUP_DELAY_MS = 18000; // 18 seconds
-const STORAGE_KEY = "mayte_lead_popup_shown";
+const SCROLL_THRESHOLD = 0.3; // 30% of page
+const FALLBACK_DELAY_MS = 12000; // 12 seconds
+const STORAGE_KEY = "mayte_lead_popup_ts";
+const SUPPRESS_DAYS = 7;
+
+function isPopupSuppressed(): boolean {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) return false;
+  const ts = parseInt(stored, 10);
+  if (isNaN(ts)) return false;
+  const daysSince = (Date.now() - ts) / (1000 * 60 * 60 * 24);
+  return daysSince < SUPPRESS_DAYS;
+}
+
+function markPopupShown() {
+  localStorage.setItem(STORAGE_KEY, Date.now().toString());
+}
 
 const LeadPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,15 +32,30 @@ const LeadPopup = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Don't show again if already shown this session
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    if (isPopupSuppressed()) return;
 
-    const timer = setTimeout(() => {
+    let shown = false;
+    const show = () => {
+      if (shown) return;
+      shown = true;
       setIsOpen(true);
-      sessionStorage.setItem(STORAGE_KEY, "true");
-    }, POPUP_DELAY_MS);
+      markPopupShown();
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(fallbackTimer);
+    };
 
-    return () => clearTimeout(timer);
+    const onScroll = () => {
+      const scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      if (scrolled >= SCROLL_THRESHOLD) show();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const fallbackTimer = setTimeout(show, FALLBACK_DELAY_MS);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,6 +114,7 @@ const LeadPopup = () => {
               <img
                 src={heroImg}
                 alt="Peludos felices en Mayte Pet Hotel"
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
@@ -152,6 +183,7 @@ const LeadPopup = () => {
               <img
                 src={ballpitImg}
                 alt="Peludos disfrutando en Mayte Pet Hotel"
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
