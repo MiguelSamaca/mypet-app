@@ -42,6 +42,17 @@ const Hero = () => {
     setLoadedImages(new Set([0]));
   }, [isMobile]);
 
+  // Preload first hero image via <link> in head for LCP
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = heroImages[0];
+    link.setAttribute("fetchpriority", "high");
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, [heroImages]);
+
   // Preload next image in sequence
   useEffect(() => {
     const nextIndex = (currentImageIndex + 1) % heroImages.length;
