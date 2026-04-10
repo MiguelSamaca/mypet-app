@@ -1,5 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+async function sha256(value: string): Promise<string> {
+  const data = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -12,7 +18,7 @@ serve(async (req) => {
   }
 
   try {
-    const { nombre, email, accepts_marketing = true, origen = "popup_descuento" } = await req.json();
+    const { nombre, email, accepts_marketing = true, origen = "popup_descuento", event_id, client_ip, client_ua, fbc, fbp } = await req.json();
 
     // Sync lead to Shopify as customer via Client Credentials
     const SHOPIFY_STORE_URL = Deno.env.get("SHOPIFY_STORE_URL");
@@ -115,6 +121,53 @@ serve(async (req) => {
         }
       } catch (shopifyErr) {
         console.error("Shopify sync failed:", shopifyErr);
+      }
+    }
+
+    // --- Meta Conversions API ---
+    const META_TOKEN = Deno.env.get("META_CONVERSIONS_API_TOKEN");
+    const PIXEL_ID = "915339354347019";
+
+    if (META_TOKEN) {
+      try {
+        const eventData: Record<string, unknown> = {
+          event_name: "CompleteRegistration",
+          event_time: Math.floor(Date.now() / 1000),
+          action_source: "website",
+          event_source_url: "https://maytepethotel.com/",
+          user_data: {
+            em: [await sha256(email.trim().toLowerCase())],
+            ...(nombre ? { fn: [await sha256(nombre.trim().toLowerCase())] } : {}),
+            ...(client_ip ? { client_ip_address: client_ip } : {}),
+            ...(client_ua ? { client_user_agent: client_ua } : {}),
+            ...(fbc ? { fbc } : {}),
+            ...(fbp ? { fbp } : {}),
+          },
+          custom_data: {
+            content_name: origen,
+          },
+          ...(event_id ? { event_id } : {}),
+        };
+
+        const metaRes = await fetch(
+          `https://graph.facebook.com/v22.0/${PIXEL_ID}/events`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              data: [eventData],
+              access_token: META_TOKEN,
+            }),
+          }
+        );
+        const metaData = await metaRes.json();
+        if (!metaRes.ok) {
+          console.error("Meta CAPI error:", JSON.stringify(metaData));
+        } else {
+          console.log("Meta CAPI event sent:", metaData.events_received);
+        }
+      } catch (metaErr) {
+        console.error("Meta CAPI failed:", metaErr);
       }
     }
 
