@@ -32,16 +32,33 @@ const Newsletter = () => {
 
       if (dbError) throw dbError;
 
+      const eventId = `reg_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+
       if (typeof (window as any).fbq === "function") {
         (window as any).fbq("track", "CompleteRegistration", {
           content_name: "newsletter_tarifas",
-        });
+        }, { eventID: eventId });
       }
 
       setIsSubmitted(true);
 
+      // Get Meta browser cookies for deduplication
+      const getCookie = (name: string) => {
+        const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+        return match ? match[2] : undefined;
+      };
+
       supabase.functions.invoke("notify-lead", {
-        body: { nombre: nombre.trim(), email: email.trim(), accepts_marketing: true, origen: "newsletter_tarifas" },
+        body: {
+          nombre: nombre.trim(),
+          email: email.trim(),
+          accepts_marketing: true,
+          origen: "newsletter_tarifas",
+          event_id: eventId,
+          client_ua: navigator.userAgent,
+          fbc: getCookie("_fbc"),
+          fbp: getCookie("_fbp"),
+        },
       }).catch(console.error);
     } catch {
       setError("Hubo un error. Intenta de nuevo.");
