@@ -33,7 +33,9 @@ const Newsletter = () => {
       if (dbError) throw dbError;
 
       if (typeof (window as any).fbq === "function") {
-        (window as any).fbq("track", "Lead");
+        (window as any).fbq("track", "CompleteRegistration", {
+          content_name: "newsletter_tarifas",
+        });
       }
 
       setIsSubmitted(true);
