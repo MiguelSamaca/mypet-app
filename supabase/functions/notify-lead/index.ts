@@ -123,8 +123,8 @@ serve(async (req) => {
                     customer: {
                       id: existingCustomer.id,
                       tags: mergedTags,
-                      note: customerPayload.customer.note,
                       email_marketing_consent: customerPayload.customer.email_marketing_consent,
+                      metafields: leadMetafields,
                     },
                   }),
                 }
