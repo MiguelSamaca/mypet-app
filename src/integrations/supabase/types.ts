@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      compras: {
+        Row: {
+          articulo: string
+          created_at: string
+          dias_duracion: number
+          email: string
+          fecha_compra: string
+          fecha_renovacion: string
+          id: string
+          nombre: string
+          notas: string | null
+          shopify_customer_id: string | null
+          shopify_synced: boolean
+          telefono: string
+        }
+        Insert: {
+          articulo: string
+          created_at?: string
+          dias_duracion: number
+          email: string
+          fecha_compra: string
+          fecha_renovacion: string
+          id?: string
+          nombre: string
+          notas?: string | null
+          shopify_customer_id?: string | null
+          shopify_synced?: boolean
+          telefono: string
+        }
+        Update: {
+          articulo?: string
+          created_at?: string
+          dias_duracion?: number
+          email?: string
+          fecha_compra?: string
+          fecha_renovacion?: string
+          id?: string
+          nombre?: string
+          notas?: string | null
+          shopify_customer_id?: string | null
+          shopify_synced?: boolean
+          telefono?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string
