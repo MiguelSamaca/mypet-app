@@ -8,7 +8,6 @@ import Caregivers from "@/components/Caregivers";
 import Requirements from "@/components/Requirements";
 import Pricing from "@/components/Pricing";
 import Newsletter from "@/components/Newsletter";
-import RepurchaseForm from "@/components/RepurchaseForm";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -26,7 +25,6 @@ const Index = () => {
       <Caregivers />
       <Requirements />
       <Pricing />
-      <RepurchaseForm />
       <Newsletter />
       <Footer />
       <ScrollToTop />
