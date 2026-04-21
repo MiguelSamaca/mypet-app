@@ -2,3 +2,6 @@ project_id = "cvhzsanjnkmqzrjdgcjh"
 
 [functions.notify-lead]
 verify_jwt = false
+
+[functions.register-purchase]
+verify_jwt = false
