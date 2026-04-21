@@ -46,17 +46,38 @@ serve(async (req) => {
         } else {
           const accessToken = tokenData.access_token;
 
+          const leadMetafields = [
+            {
+              namespace: "lead",
+              key: "origen",
+              type: "single_line_text_field",
+              value: origen,
+            },
+            {
+              namespace: "lead",
+              key: "fuente",
+              type: "single_line_text_field",
+              value: "Mayte Pet Hotel - sitio web",
+            },
+            {
+              namespace: "lead",
+              key: "registrado_en",
+              type: "date",
+              value: new Date().toISOString().slice(0, 10),
+            },
+          ];
+
           const customerPayload = {
             customer: {
               email,
               first_name: nombre || "",
               tags: `lead_mayte,${origen},hotel`,
-              note: `Lead registrado desde Mayte Pet Hotel (sitio web) - Origen: ${origen}`,
               email_marketing_consent: {
                 state: accepts_marketing ? "subscribed" : "not_subscribed",
                 opt_in_level: "single_opt_in",
                 consent_updated_at: new Date().toISOString(),
               },
+              metafields: leadMetafields,
             },
           };
 
@@ -102,8 +123,8 @@ serve(async (req) => {
                     customer: {
                       id: existingCustomer.id,
                       tags: mergedTags,
-                      note: customerPayload.customer.note,
                       email_marketing_consent: customerPayload.customer.email_marketing_consent,
+                      metafields: leadMetafields,
                     },
                   }),
                 }
