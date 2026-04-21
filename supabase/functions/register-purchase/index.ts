@@ -107,7 +107,7 @@ serve(async (req) => {
             `renueva_${fecha_renovacion}`,
             "hotel",
           ];
-          const noteLine = `Compra registrada: ${articulo} el ${fecha_compra} (dura ${dias_duracion} días). Próxima recompra: ${fecha_renovacion}.${notas ? ` Notas: ${notas}` : ""}`;
+          // No usamos notas; toda la info va en metafields
 
           // Find existing customer
           const searchRes = await fetch(
@@ -136,6 +136,22 @@ serve(async (req) => {
               type: "date",
               value: fecha_compra,
             },
+            {
+              namespace: "recompra",
+              key: "duration_days",
+              type: "number_integer",
+              value: String(dias_duracion),
+            },
+            ...(notas
+              ? [
+                  {
+                    namespace: "recompra",
+                    key: "notes",
+                    type: "multi_line_text_field",
+                    value: notas,
+                  },
+                ]
+              : []),
           ];
 
           if (existing) {
