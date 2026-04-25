@@ -261,6 +261,19 @@ const AdminPeludos = () => {
               <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader><DialogTitle>Registrar peludo</DialogTitle></DialogHeader>
                 <form onSubmit={handleCreatePerro} className="space-y-3">
+                  <div className="flex justify-end">
+                    <AudioDictado
+                      modo="perfil"
+                      onResult={(d) => {
+                        if (d.nombre) setPNombre(d.nombre);
+                        if (d.raza) setPRaza(d.raza);
+                        if (d.descripcion_especial) setPDescripcion(d.descripcion_especial);
+                        if (d.dueno_nombre) setPDuenoNombre(d.dueno_nombre);
+                        if (d.dueno_email) setPDuenoEmail(d.dueno_email);
+                        if (d.dueno_telefono) setPDuenoTel(d.dueno_telefono);
+                      }}
+                    />
+                  </div>
                   <div><Label>Nombre *</Label><Input value={pNombre} onChange={(e) => setPNombre(e.target.value)} required /></div>
                   <div><Label>Raza</Label><Input value={pRaza} onChange={(e) => setPRaza(e.target.value)} /></div>
                   <div>
