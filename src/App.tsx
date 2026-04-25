@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import RecordatorioCompras from "./pages/RecordatorioCompras";
 import PeludoProfile from "./pages/PeludoProfile";
+import AdminAuth from "./pages/AdminAuth";
+import AdminPeludos from "./pages/AdminPeludos";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/recordatorio-compras" element={<RecordatorioCompras />} />
           <Route path="/recordatoriocompras" element={<RecordatorioCompras />} />
           <Route path="/peludos/:codigo" element={<PeludoProfile />} />
+          <Route path="/admin" element={<AdminAuth />} />
+          <Route path="/admin/peludos" element={<AdminPeludos />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
