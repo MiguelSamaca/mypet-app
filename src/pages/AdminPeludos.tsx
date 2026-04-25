@@ -335,9 +335,14 @@ const AdminPeludos = () => {
                             <p className="text-xs text-muted-foreground">📷 {v.fotos_galeria.length} foto(s)</p>
                           )}
                         </div>
-                        <Button size="sm" variant="ghost" onClick={() => handleDeleteVisita(v.id)}>
-                          <Trash2 className="w-3 h-3 text-destructive" />
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button size="sm" variant="ghost" onClick={() => openEditarVisita(p, v)}>
+                            <Pencil className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => handleDeleteVisita(v.id)}>
+                            <Trash2 className="w-3 h-3 text-destructive" />
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
