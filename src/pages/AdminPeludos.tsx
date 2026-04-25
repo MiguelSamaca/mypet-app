@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, LogOut, Trash2, ExternalLink, Calendar } from "lucide-react";
+import { Plus, LogOut, Trash2, ExternalLink, Calendar, Pencil, X } from "lucide-react";
 import { format } from "date-fns";
 
 interface Perro {
@@ -56,15 +56,17 @@ const AdminPeludos = () => {
   const [pFoto, setPFoto] = useState<File | null>(null);
   const [pDescripcion, setPDescripcion] = useState("");
 
-  // form visita
+  // form visita (crear o editar)
   const [visitaOpen, setVisitaOpen] = useState(false);
   const [activePerro, setActivePerro] = useState<Perro | null>(null);
+  const [editingVisita, setEditingVisita] = useState<Visita | null>(null);
   const [vEntrada, setVEntrada] = useState("");
   const [vSalida, setVSalida] = useState("");
   const [vComportamiento, setVComportamiento] = useState("");
   const [vActividades, setVActividades] = useState("");
   const [vRecomendaciones, setVRecomendaciones] = useState("");
   const [vFotos, setVFotos] = useState<FileList | null>(null);
+  const [vFotosExistentes, setVFotosExistentes] = useState<string[]>([]);
 
   useEffect(() => {
     document.title = "Admin · Peludos | Mayte Pet Hotel";
@@ -144,33 +146,73 @@ const AdminPeludos = () => {
     }
   };
 
-  const handleCreateVisita = async (e: React.FormEvent) => {
+  const resetVisitaForm = () => {
+    setEditingVisita(null);
+    setVEntrada(""); setVSalida(""); setVComportamiento("");
+    setVActividades(""); setVRecomendaciones(""); setVFotos(null);
+    setVFotosExistentes([]);
+  };
+
+  const openNuevaVisita = (p: Perro) => {
+    resetVisitaForm();
+    setActivePerro(p);
+    setVisitaOpen(true);
+  };
+
+  const openEditarVisita = (p: Perro, v: Visita) => {
+    setActivePerro(p);
+    setEditingVisita(v);
+    setVEntrada(v.fecha_entrada);
+    setVSalida(v.fecha_salida);
+    setVComportamiento(v.comportamiento || "");
+    setVActividades(v.actividades || "");
+    setVRecomendaciones(v.recomendaciones || "");
+    setVFotos(null);
+    setVFotosExistentes(v.fotos_galeria || []);
+    setVisitaOpen(true);
+  };
+
+  const handleSaveVisita = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activePerro) return;
     try {
-      const fotos: string[] = [];
+      const fotosNuevas: string[] = [];
       if (vFotos) {
         for (const f of Array.from(vFotos)) {
-          fotos.push(await uploadPhoto(f, `visitas/${activePerro.codigo_acceso}`));
+          fotosNuevas.push(await uploadPhoto(f, `visitas/${activePerro.codigo_acceso}`));
         }
       }
-      const { error } = await supabase.from("visitas").insert({
-        perro_id: activePerro.id,
-        fecha_entrada: vEntrada,
-        fecha_salida: vSalida,
-        comportamiento: vComportamiento || null,
-        actividades: vActividades || null,
-        recomendaciones: vRecomendaciones || null,
-        fotos_galeria: fotos,
-      });
-      if (error) throw error;
-      toast.success("Visita registrada");
+      const fotos = [...vFotosExistentes, ...fotosNuevas];
+
+      if (editingVisita) {
+        const { error } = await supabase.from("visitas").update({
+          fecha_entrada: vEntrada,
+          fecha_salida: vSalida,
+          comportamiento: vComportamiento || null,
+          actividades: vActividades || null,
+          recomendaciones: vRecomendaciones || null,
+          fotos_galeria: fotos,
+        }).eq("id", editingVisita.id);
+        if (error) throw error;
+        toast.success("Visita actualizada");
+      } else {
+        const { error } = await supabase.from("visitas").insert({
+          perro_id: activePerro.id,
+          fecha_entrada: vEntrada,
+          fecha_salida: vSalida,
+          comportamiento: vComportamiento || null,
+          actividades: vActividades || null,
+          recomendaciones: vRecomendaciones || null,
+          fotos_galeria: fotos,
+        });
+        if (error) throw error;
+        toast.success("Visita registrada");
+      }
       setVisitaOpen(false);
-      setVEntrada(""); setVSalida(""); setVComportamiento("");
-      setVActividades(""); setVRecomendaciones(""); setVFotos(null);
+      resetVisitaForm();
       loadData();
     } catch (err: any) {
-      toast.error(err.message || "Error al registrar visita");
+      toast.error(err.message || "Error al guardar visita");
     }
   };
 
@@ -270,7 +312,7 @@ const AdminPeludos = () => {
                     </a>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => { setActivePerro(p); setVisitaOpen(true); }}>
+                    <Button size="sm" variant="outline" onClick={() => openNuevaVisita(p)}>
                       <Calendar className="w-4 h-4 mr-1" /> Visita
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => handleDeletePerro(p.id)}>
@@ -293,9 +335,14 @@ const AdminPeludos = () => {
                             <p className="text-xs text-muted-foreground">📷 {v.fotos_galeria.length} foto(s)</p>
                           )}
                         </div>
-                        <Button size="sm" variant="ghost" onClick={() => handleDeleteVisita(v.id)}>
-                          <Trash2 className="w-3 h-3 text-destructive" />
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button size="sm" variant="ghost" onClick={() => openEditarVisita(p, v)}>
+                            <Pencil className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => handleDeleteVisita(v.id)}>
+                            <Trash2 className="w-3 h-3 text-destructive" />
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -306,24 +353,53 @@ const AdminPeludos = () => {
         ))}
       </main>
 
-      <Dialog open={visitaOpen} onOpenChange={setVisitaOpen}>
+      <Dialog open={visitaOpen} onOpenChange={(o) => { setVisitaOpen(o); if (!o) resetVisitaForm(); }}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>Nueva visita · {activePerro?.nombre}</DialogTitle></DialogHeader>
-          <form onSubmit={handleCreateVisita} className="space-y-3">
+          <DialogHeader>
+            <DialogTitle>
+              {editingVisita ? "Editar visita" : "Nueva visita"} · {activePerro?.nombre}
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSaveVisita} className="space-y-3">
             <div className="grid grid-cols-2 gap-2">
               <div><Label>Entrada *</Label><Input type="date" value={vEntrada} onChange={(e) => setVEntrada(e.target.value)} required /></div>
               <div><Label>Salida *</Label><Input type="date" value={vSalida} onChange={(e) => setVSalida(e.target.value)} required /></div>
             </div>
-            <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={2} /></div>
-            <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={2} /></div>
-            <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={2} /></div>
+            <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={3} /></div>
+            <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={3} /></div>
+            <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={3} /></div>
+
+            {vFotosExistentes.length > 0 && (
+              <div>
+                <Label>Fotos actuales</Label>
+                <div className="grid grid-cols-4 gap-2 mt-1">
+                  {vFotosExistentes.map((url, i) => (
+                    <div key={i} className="relative group">
+                      <img src={url} alt="" className="w-full h-16 object-cover rounded" />
+                      <button
+                        type="button"
+                        onClick={() => setVFotosExistentes(vFotosExistentes.filter((_, idx) => idx !== i))}
+                        className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-bl rounded-tr p-0.5"
+                        aria-label="Quitar foto"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Click en la X para quitar una foto.</p>
+              </div>
+            )}
+
             <div>
-              <Label>Fotos (varias)</Label>
+              <Label>{editingVisita ? "Añadir más fotos" : "Fotos (varias)"}</Label>
               <Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} />
               <p className="text-xs text-muted-foreground mt-1">Mantén Ctrl (o Cmd en Mac) para seleccionar varias fotos a la vez.</p>
-              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) seleccionada(s)</p>}
+              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) nueva(s) seleccionada(s)</p>}
             </div>
-            <Button type="submit" className="w-full">Guardar visita</Button>
+            <Button type="submit" className="w-full">
+              {editingVisita ? "Guardar cambios" : "Guardar visita"}
+            </Button>
           </form>
         </DialogContent>
       </Dialog>
