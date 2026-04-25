@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, LogOut, Trash2, ExternalLink, Calendar } from "lucide-react";
+import { Plus, LogOut, Trash2, ExternalLink, Calendar, Pencil, X } from "lucide-react";
 import { format } from "date-fns";
 
 interface Perro {
