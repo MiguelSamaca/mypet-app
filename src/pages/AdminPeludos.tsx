@@ -353,24 +353,53 @@ const AdminPeludos = () => {
         ))}
       </main>
 
-      <Dialog open={visitaOpen} onOpenChange={setVisitaOpen}>
+      <Dialog open={visitaOpen} onOpenChange={(o) => { setVisitaOpen(o); if (!o) resetVisitaForm(); }}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>Nueva visita · {activePerro?.nombre}</DialogTitle></DialogHeader>
-          <form onSubmit={handleCreateVisita} className="space-y-3">
+          <DialogHeader>
+            <DialogTitle>
+              {editingVisita ? "Editar visita" : "Nueva visita"} · {activePerro?.nombre}
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSaveVisita} className="space-y-3">
             <div className="grid grid-cols-2 gap-2">
               <div><Label>Entrada *</Label><Input type="date" value={vEntrada} onChange={(e) => setVEntrada(e.target.value)} required /></div>
               <div><Label>Salida *</Label><Input type="date" value={vSalida} onChange={(e) => setVSalida(e.target.value)} required /></div>
             </div>
-            <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={2} /></div>
-            <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={2} /></div>
-            <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={2} /></div>
+            <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={3} /></div>
+            <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={3} /></div>
+            <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={3} /></div>
+
+            {vFotosExistentes.length > 0 && (
+              <div>
+                <Label>Fotos actuales</Label>
+                <div className="grid grid-cols-4 gap-2 mt-1">
+                  {vFotosExistentes.map((url, i) => (
+                    <div key={i} className="relative group">
+                      <img src={url} alt="" className="w-full h-16 object-cover rounded" />
+                      <button
+                        type="button"
+                        onClick={() => setVFotosExistentes(vFotosExistentes.filter((_, idx) => idx !== i))}
+                        className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-bl rounded-tr p-0.5"
+                        aria-label="Quitar foto"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Click en la X para quitar una foto.</p>
+              </div>
+            )}
+
             <div>
-              <Label>Fotos (varias)</Label>
+              <Label>{editingVisita ? "Añadir más fotos" : "Fotos (varias)"}</Label>
               <Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} />
               <p className="text-xs text-muted-foreground mt-1">Mantén Ctrl (o Cmd en Mac) para seleccionar varias fotos a la vez.</p>
-              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) seleccionada(s)</p>}
+              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) nueva(s) seleccionada(s)</p>}
             </div>
-            <Button type="submit" className="w-full">Guardar visita</Button>
+            <Button type="submit" className="w-full">
+              {editingVisita ? "Guardar cambios" : "Guardar visita"}
+            </Button>
           </form>
         </DialogContent>
       </Dialog>
