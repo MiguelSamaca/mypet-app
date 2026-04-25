@@ -86,6 +86,95 @@ export type Database = {
         }
         Relationships: []
       }
+      perros: {
+        Row: {
+          codigo_acceso: string
+          created_at: string
+          dueno_email: string | null
+          dueno_nombre: string | null
+          dueno_telefono: string | null
+          foto_url: string | null
+          id: string
+          nombre: string
+          notas: string | null
+          raza: string | null
+          updated_at: string
+        }
+        Insert: {
+          codigo_acceso: string
+          created_at?: string
+          dueno_email?: string | null
+          dueno_nombre?: string | null
+          dueno_telefono?: string | null
+          foto_url?: string | null
+          id?: string
+          nombre: string
+          notas?: string | null
+          raza?: string | null
+          updated_at?: string
+        }
+        Update: {
+          codigo_acceso?: string
+          created_at?: string
+          dueno_email?: string | null
+          dueno_nombre?: string | null
+          dueno_telefono?: string | null
+          foto_url?: string | null
+          id?: string
+          nombre?: string
+          notas?: string | null
+          raza?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      visitas: {
+        Row: {
+          actividades: string | null
+          comportamiento: string | null
+          created_at: string
+          fecha_entrada: string
+          fecha_salida: string
+          fotos_galeria: string[] | null
+          id: string
+          perro_id: string
+          recomendaciones: string | null
+          updated_at: string
+        }
+        Insert: {
+          actividades?: string | null
+          comportamiento?: string | null
+          created_at?: string
+          fecha_entrada: string
+          fecha_salida: string
+          fotos_galeria?: string[] | null
+          id?: string
+          perro_id: string
+          recomendaciones?: string | null
+          updated_at?: string
+        }
+        Update: {
+          actividades?: string | null
+          comportamiento?: string | null
+          created_at?: string
+          fecha_entrada?: string
+          fecha_salida?: string
+          fotos_galeria?: string[] | null
+          id?: string
+          perro_id?: string
+          recomendaciones?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitas_perro_id_fkey"
+            columns: ["perro_id"]
+            isOneToOne: false
+            referencedRelation: "perros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
