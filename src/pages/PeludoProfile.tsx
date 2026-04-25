@@ -282,4 +282,42 @@ const PeludoProfile = () => {
   );
 };
 
+const BulletBlock = ({
+  icon,
+  title,
+  text,
+  accent,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+  accent: string;
+}) => {
+  // Divide por saltos de línea o por viñetas/guiones que el usuario escriba
+  const items = text
+    .split(/\r?\n|(?:^|\s)[•\-*]\s+/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return (
+    <div className={`rounded-xl border p-4 ${accent}`}>
+      <h3 className="font-semibold flex items-center gap-2 mb-3 text-foreground">
+        {icon} {title}
+      </h3>
+      {items.length > 1 ? (
+        <ul className="space-y-2">
+          {items.map((item, i) => (
+            <li key={i} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
+              <span className="text-primary mt-1">•</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-foreground/80 leading-relaxed">{items[0]}</p>
+      )}
+    </div>
+  );
+};
+
 export default PeludoProfile;
