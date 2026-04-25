@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import { Plus, LogOut, Trash2, ExternalLink, Calendar, Pencil, X } from "lucide-react";
 import { format } from "date-fns";
+import AudioDictado from "@/components/AudioDictado";
 
 interface Perro {
   id: string;
