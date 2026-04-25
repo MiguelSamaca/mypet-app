@@ -56,15 +56,17 @@ const AdminPeludos = () => {
   const [pFoto, setPFoto] = useState<File | null>(null);
   const [pDescripcion, setPDescripcion] = useState("");
 
-  // form visita
+  // form visita (crear o editar)
   const [visitaOpen, setVisitaOpen] = useState(false);
   const [activePerro, setActivePerro] = useState<Perro | null>(null);
+  const [editingVisita, setEditingVisita] = useState<Visita | null>(null);
   const [vEntrada, setVEntrada] = useState("");
   const [vSalida, setVSalida] = useState("");
   const [vComportamiento, setVComportamiento] = useState("");
   const [vActividades, setVActividades] = useState("");
   const [vRecomendaciones, setVRecomendaciones] = useState("");
   const [vFotos, setVFotos] = useState<FileList | null>(null);
+  const [vFotosExistentes, setVFotosExistentes] = useState<string[]>([]);
 
   useEffect(() => {
     document.title = "Admin · Peludos | Mayte Pet Hotel";
