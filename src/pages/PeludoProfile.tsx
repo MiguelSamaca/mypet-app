@@ -178,27 +178,6 @@ const PeludoProfile = () => {
       </section>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl space-y-8">
-        {/* Calendario */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-primary" />
-              Calendario de estadías
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Calendar
-              mode="multiple"
-              selected={diasEstadia}
-              modifiersClassNames={{
-                selected: "bg-primary text-primary-foreground hover:bg-primary",
-              }}
-              className="rounded-md border pointer-events-auto"
-              locale={es}
-            />
-          </CardContent>
-        </Card>
-
         {/* Visitas */}
         <section>
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -227,30 +206,30 @@ const PeludoProfile = () => {
                       )}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-5">
                     {v.comportamiento && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <Heart className="w-4 h-4 text-primary" /> Comportamiento
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.comportamiento}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<Heart className="w-4 h-4 text-primary" />}
+                        title="Comportamiento"
+                        text={v.comportamiento}
+                        accent="bg-primary/5 border-primary/20"
+                      />
                     )}
                     {v.actividades && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <Sparkles className="w-4 h-4 text-primary" /> Actividades
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.actividades}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<Sparkles className="w-4 h-4 text-primary" />}
+                        title="Actividades"
+                        text={v.actividades}
+                        accent="bg-secondary/40 border-secondary"
+                      />
                     )}
                     {v.recomendaciones && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <MessageCircle className="w-4 h-4 text-primary" /> Recomendaciones
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.recomendaciones}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<MessageCircle className="w-4 h-4 text-primary" />}
+                        title="Recomendaciones"
+                        text={v.recomendaciones}
+                        accent="bg-accent/30 border-accent"
+                      />
                     )}
                     {v.fotos_galeria && v.fotos_galeria.length > 0 && (
                       <div>
@@ -274,6 +253,27 @@ const PeludoProfile = () => {
             </div>
           )}
         </section>
+
+        {/* Calendario al final */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="w-5 h-5 text-primary" />
+              Calendario de estadías
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Calendar
+              mode="multiple"
+              selected={diasEstadia}
+              modifiersClassNames={{
+                selected: "bg-primary text-primary-foreground hover:bg-primary",
+              }}
+              className="rounded-md border pointer-events-auto"
+              locale={es}
+            />
+          </CardContent>
+        </Card>
       </div>
 
       <Footer />
