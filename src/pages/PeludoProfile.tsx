@@ -19,6 +19,7 @@ interface Perro {
   foto_url: string | null;
   dueno_nombre: string | null;
   notas: string | null;
+  descripcion_especial: string | null;
 }
 
 interface Visita {
@@ -146,7 +147,12 @@ const PeludoProfile = () => {
             <div className="text-center md:text-left flex-1">
               <h1 className="text-4xl md:text-5xl font-bold mb-2">{perro.nombre}</h1>
               {perro.raza && (
-                <p className="text-lg text-muted-foreground mb-3">{perro.raza}</p>
+                <p className="text-lg text-muted-foreground mb-2">{perro.raza}</p>
+              )}
+              {perro.descripcion_especial && (
+                <p className="text-base md:text-lg font-medium text-primary italic mb-3 leading-snug">
+                  ✨ {perro.descripcion_especial}
+                </p>
               )}
               <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
                 <Badge variant="secondary" className="gap-1">
