@@ -312,7 +312,7 @@ const AdminPeludos = () => {
                     </a>
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => { setActivePerro(p); setVisitaOpen(true); }}>
+                    <Button size="sm" variant="outline" onClick={() => openNuevaVisita(p)}>
                       <Calendar className="w-4 h-4 mr-1" /> Visita
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => handleDeletePerro(p.id)}>
