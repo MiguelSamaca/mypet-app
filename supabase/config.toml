@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.register-purchase]
 verify_jwt = false
+
+[functions.transcribe-peludo]
+verify_jwt = false
