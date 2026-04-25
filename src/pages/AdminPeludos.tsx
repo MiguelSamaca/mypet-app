@@ -317,7 +317,12 @@ const AdminPeludos = () => {
             <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={2} /></div>
             <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={2} /></div>
             <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={2} /></div>
-            <div><Label>Fotos (varias)</Label><Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} /></div>
+            <div>
+              <Label>Fotos (varias)</Label>
+              <Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} />
+              <p className="text-xs text-muted-foreground mt-1">Mantén Ctrl (o Cmd en Mac) para seleccionar varias fotos a la vez.</p>
+              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) seleccionada(s)</p>}
+            </div>
             <Button type="submit" className="w-full">Guardar visita</Button>
           </form>
         </DialogContent>
