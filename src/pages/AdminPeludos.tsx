@@ -375,6 +375,18 @@ const AdminPeludos = () => {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSaveVisita} className="space-y-3">
+            <div className="flex justify-end">
+              <AudioDictado
+                modo="visita"
+                onResult={(d) => {
+                  if (d.comportamiento) setVComportamiento(d.comportamiento);
+                  if (d.actividades) setVActividades(d.actividades);
+                  if (d.recomendaciones) setVRecomendaciones(d.recomendaciones);
+                  if (d.fecha_entrada) setVEntrada(d.fecha_entrada);
+                  if (d.fecha_salida) setVSalida(d.fecha_salida);
+                }}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <div><Label>Entrada *</Label><Input type="date" value={vEntrada} onChange={(e) => setVEntrada(e.target.value)} required /></div>
               <div><Label>Salida *</Label><Input type="date" value={vSalida} onChange={(e) => setVSalida(e.target.value)} required /></div>
