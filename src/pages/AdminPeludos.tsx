@@ -146,33 +146,73 @@ const AdminPeludos = () => {
     }
   };
 
-  const handleCreateVisita = async (e: React.FormEvent) => {
+  const resetVisitaForm = () => {
+    setEditingVisita(null);
+    setVEntrada(""); setVSalida(""); setVComportamiento("");
+    setVActividades(""); setVRecomendaciones(""); setVFotos(null);
+    setVFotosExistentes([]);
+  };
+
+  const openNuevaVisita = (p: Perro) => {
+    resetVisitaForm();
+    setActivePerro(p);
+    setVisitaOpen(true);
+  };
+
+  const openEditarVisita = (p: Perro, v: Visita) => {
+    setActivePerro(p);
+    setEditingVisita(v);
+    setVEntrada(v.fecha_entrada);
+    setVSalida(v.fecha_salida);
+    setVComportamiento(v.comportamiento || "");
+    setVActividades(v.actividades || "");
+    setVRecomendaciones(v.recomendaciones || "");
+    setVFotos(null);
+    setVFotosExistentes(v.fotos_galeria || []);
+    setVisitaOpen(true);
+  };
+
+  const handleSaveVisita = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activePerro) return;
     try {
-      const fotos: string[] = [];
+      const fotosNuevas: string[] = [];
       if (vFotos) {
         for (const f of Array.from(vFotos)) {
-          fotos.push(await uploadPhoto(f, `visitas/${activePerro.codigo_acceso}`));
+          fotosNuevas.push(await uploadPhoto(f, `visitas/${activePerro.codigo_acceso}`));
         }
       }
-      const { error } = await supabase.from("visitas").insert({
-        perro_id: activePerro.id,
-        fecha_entrada: vEntrada,
-        fecha_salida: vSalida,
-        comportamiento: vComportamiento || null,
-        actividades: vActividades || null,
-        recomendaciones: vRecomendaciones || null,
-        fotos_galeria: fotos,
-      });
-      if (error) throw error;
-      toast.success("Visita registrada");
+      const fotos = [...vFotosExistentes, ...fotosNuevas];
+
+      if (editingVisita) {
+        const { error } = await supabase.from("visitas").update({
+          fecha_entrada: vEntrada,
+          fecha_salida: vSalida,
+          comportamiento: vComportamiento || null,
+          actividades: vActividades || null,
+          recomendaciones: vRecomendaciones || null,
+          fotos_galeria: fotos,
+        }).eq("id", editingVisita.id);
+        if (error) throw error;
+        toast.success("Visita actualizada");
+      } else {
+        const { error } = await supabase.from("visitas").insert({
+          perro_id: activePerro.id,
+          fecha_entrada: vEntrada,
+          fecha_salida: vSalida,
+          comportamiento: vComportamiento || null,
+          actividades: vActividades || null,
+          recomendaciones: vRecomendaciones || null,
+          fotos_galeria: fotos,
+        });
+        if (error) throw error;
+        toast.success("Visita registrada");
+      }
       setVisitaOpen(false);
-      setVEntrada(""); setVSalida(""); setVComportamiento("");
-      setVActividades(""); setVRecomendaciones(""); setVFotos(null);
+      resetVisitaForm();
       loadData();
     } catch (err: any) {
-      toast.error(err.message || "Error al registrar visita");
+      toast.error(err.message || "Error al guardar visita");
     }
   };
 
