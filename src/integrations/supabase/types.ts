@@ -90,6 +90,7 @@ export type Database = {
         Row: {
           codigo_acceso: string
           created_at: string
+          descripcion_especial: string | null
           dueno_email: string | null
           dueno_nombre: string | null
           dueno_telefono: string | null
@@ -103,6 +104,7 @@ export type Database = {
         Insert: {
           codigo_acceso: string
           created_at?: string
+          descripcion_especial?: string | null
           dueno_email?: string | null
           dueno_nombre?: string | null
           dueno_telefono?: string | null
@@ -116,6 +118,7 @@ export type Database = {
         Update: {
           codigo_acceso?: string
           created_at?: string
+          descripcion_especial?: string | null
           dueno_email?: string | null
           dueno_nombre?: string | null
           dueno_telefono?: string | null
