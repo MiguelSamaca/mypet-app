@@ -20,6 +20,7 @@ interface Perro {
   dueno_nombre: string | null;
   dueno_email: string | null;
   dueno_telefono: string | null;
+  descripcion_especial: string | null;
 }
 
 interface Visita {
@@ -53,6 +54,7 @@ const AdminPeludos = () => {
   const [pDuenoEmail, setPDuenoEmail] = useState("");
   const [pDuenoTel, setPDuenoTel] = useState("");
   const [pFoto, setPFoto] = useState<File | null>(null);
+  const [pDescripcion, setPDescripcion] = useState("");
 
   // form visita
   const [visitaOpen, setVisitaOpen] = useState(false);
@@ -129,12 +131,13 @@ const AdminPeludos = () => {
         dueno_nombre: pDuenoNombre || null,
         dueno_email: pDuenoEmail || null,
         dueno_telefono: pDuenoTel || null,
+        descripcion_especial: pDescripcion || null,
       });
       if (error) throw error;
       toast.success("Peludo registrado");
       setPerroOpen(false);
       setPNombre(""); setPRaza(""); setPCodigo(""); setPDuenoNombre("");
-      setPDuenoEmail(""); setPDuenoTel(""); setPFoto(null);
+      setPDuenoEmail(""); setPDuenoTel(""); setPFoto(null); setPDescripcion("");
       loadData();
     } catch (err: any) {
       toast.error(err.message || "Error al registrar");
@@ -217,6 +220,15 @@ const AdminPeludos = () => {
                 <form onSubmit={handleCreatePerro} className="space-y-3">
                   <div><Label>Nombre *</Label><Input value={pNombre} onChange={(e) => setPNombre(e.target.value)} required /></div>
                   <div><Label>Raza</Label><Input value={pRaza} onChange={(e) => setPRaza(e.target.value)} /></div>
+                  <div>
+                    <Label>Descripción especial</Label>
+                    <Textarea
+                      value={pDescripcion}
+                      onChange={(e) => setPDescripcion(e.target.value)}
+                      placeholder='Ej: "El perro más juguetón que nos ha visitado"'
+                      rows={2}
+                    />
+                  </div>
                   <div>
                     <Label>Código de acceso (URL)</Label>
                     <Input value={pCodigo} onChange={(e) => setPCodigo(e.target.value)} placeholder={pNombre ? slugify(pNombre) : "ej: rocky-2026"} />
@@ -305,7 +317,12 @@ const AdminPeludos = () => {
             <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={2} /></div>
             <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={2} /></div>
             <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={2} /></div>
-            <div><Label>Fotos (varias)</Label><Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} /></div>
+            <div>
+              <Label>Fotos (varias)</Label>
+              <Input type="file" accept="image/*" multiple onChange={(e) => setVFotos(e.target.files)} />
+              <p className="text-xs text-muted-foreground mt-1">Mantén Ctrl (o Cmd en Mac) para seleccionar varias fotos a la vez.</p>
+              {vFotos && <p className="text-xs text-primary mt-1">{vFotos.length} foto(s) seleccionada(s)</p>}
+            </div>
             <Button type="submit" className="w-full">Guardar visita</Button>
           </form>
         </DialogContent>

@@ -1,0 +1,1 @@
+ALTER TABLE public.perros ADD COLUMN IF NOT EXISTS descripcion_especial text;

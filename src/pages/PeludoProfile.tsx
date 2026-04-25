@@ -19,6 +19,7 @@ interface Perro {
   foto_url: string | null;
   dueno_nombre: string | null;
   notas: string | null;
+  descripcion_especial: string | null;
 }
 
 interface Visita {
@@ -146,7 +147,12 @@ const PeludoProfile = () => {
             <div className="text-center md:text-left flex-1">
               <h1 className="text-4xl md:text-5xl font-bold mb-2">{perro.nombre}</h1>
               {perro.raza && (
-                <p className="text-lg text-muted-foreground mb-3">{perro.raza}</p>
+                <p className="text-lg text-muted-foreground mb-2">{perro.raza}</p>
+              )}
+              {perro.descripcion_especial && (
+                <p className="text-base md:text-lg font-medium text-primary italic mb-3 leading-snug">
+                  ✨ {perro.descripcion_especial}
+                </p>
               )}
               <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
                 <Badge variant="secondary" className="gap-1">
@@ -172,27 +178,6 @@ const PeludoProfile = () => {
       </section>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl space-y-8">
-        {/* Calendario */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-primary" />
-              Calendario de estadías
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Calendar
-              mode="multiple"
-              selected={diasEstadia}
-              modifiersClassNames={{
-                selected: "bg-primary text-primary-foreground hover:bg-primary",
-              }}
-              className="rounded-md border pointer-events-auto"
-              locale={es}
-            />
-          </CardContent>
-        </Card>
-
         {/* Visitas */}
         <section>
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -221,30 +206,30 @@ const PeludoProfile = () => {
                       )}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-5">
                     {v.comportamiento && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <Heart className="w-4 h-4 text-primary" /> Comportamiento
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.comportamiento}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<Heart className="w-4 h-4 text-primary" />}
+                        title="Comportamiento"
+                        text={v.comportamiento}
+                        accent="bg-primary/5 border-primary/20"
+                      />
                     )}
                     {v.actividades && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <Sparkles className="w-4 h-4 text-primary" /> Actividades
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.actividades}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<Sparkles className="w-4 h-4 text-primary" />}
+                        title="Actividades"
+                        text={v.actividades}
+                        accent="bg-secondary/40 border-secondary"
+                      />
                     )}
                     {v.recomendaciones && (
-                      <div>
-                        <h3 className="font-semibold flex items-center gap-2 mb-1">
-                          <MessageCircle className="w-4 h-4 text-primary" /> Recomendaciones
-                        </h3>
-                        <p className="text-muted-foreground whitespace-pre-line">{v.recomendaciones}</p>
-                      </div>
+                      <BulletBlock
+                        icon={<MessageCircle className="w-4 h-4 text-primary" />}
+                        title="Recomendaciones"
+                        text={v.recomendaciones}
+                        accent="bg-accent/30 border-accent"
+                      />
                     )}
                     {v.fotos_galeria && v.fotos_galeria.length > 0 && (
                       <div>
@@ -268,11 +253,70 @@ const PeludoProfile = () => {
             </div>
           )}
         </section>
+
+        {/* Calendario al final */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CalendarDays className="w-5 h-5 text-primary" />
+              Calendario de estadías
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Calendar
+              mode="multiple"
+              selected={diasEstadia}
+              modifiersClassNames={{
+                selected: "bg-primary text-primary-foreground hover:bg-primary",
+              }}
+              className="rounded-md border pointer-events-auto"
+              locale={es}
+            />
+          </CardContent>
+        </Card>
       </div>
 
       <Footer />
       <WhatsAppButton />
     </main>
+  );
+};
+
+const BulletBlock = ({
+  icon,
+  title,
+  text,
+  accent,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+  accent: string;
+}) => {
+  // Divide por saltos de línea o por viñetas/guiones que el usuario escriba
+  const items = text
+    .split(/\r?\n|(?:^|\s)[•\-*]\s+/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return (
+    <div className={`rounded-xl border p-4 ${accent}`}>
+      <h3 className="font-semibold flex items-center gap-2 mb-3 text-foreground">
+        {icon} {title}
+      </h3>
+      {items.length > 1 ? (
+        <ul className="space-y-2">
+          {items.map((item, i) => (
+            <li key={i} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
+              <span className="text-primary mt-1">•</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-foreground/80 leading-relaxed">{items[0]}</p>
+      )}
+    </div>
   );
 };
 
