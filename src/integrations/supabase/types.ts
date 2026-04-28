@@ -161,8 +161,12 @@ export type Database = {
           fecha_salida: string
           fotos_galeria: string[] | null
           id: string
+          interaccion_social: number | null
+          notas_admin: string | null
+          obediencia: number | null
           perro_id: string
           recomendaciones: string | null
+          tarifa_pagada: number | null
           updated_at: string
         }
         Insert: {
@@ -173,8 +177,12 @@ export type Database = {
           fecha_salida: string
           fotos_galeria?: string[] | null
           id?: string
+          interaccion_social?: number | null
+          notas_admin?: string | null
+          obediencia?: number | null
           perro_id: string
           recomendaciones?: string | null
+          tarifa_pagada?: number | null
           updated_at?: string
         }
         Update: {
@@ -185,8 +193,12 @@ export type Database = {
           fecha_salida?: string
           fotos_galeria?: string[] | null
           id?: string
+          interaccion_social?: number | null
+          notas_admin?: string | null
+          obediencia?: number | null
           perro_id?: string
           recomendaciones?: string | null
+          tarifa_pagada?: number | null
           updated_at?: string
         }
         Relationships: [
