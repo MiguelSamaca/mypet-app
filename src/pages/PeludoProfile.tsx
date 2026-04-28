@@ -2,10 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarDays, Heart, Sparkles, MessageCircle, Dog } from "lucide-react";
+import { CalendarDays, Heart, Sparkles, MessageCircle, Dog, PawPrint } from "lucide-react";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
@@ -30,6 +29,8 @@ interface Visita {
   actividades: string | null;
   recomendaciones: string | null;
   fotos_galeria: string[] | null;
+  obediencia: number | null;
+  interaccion_social: number | null;
 }
 
 const PeludoProfile = () => {
@@ -67,7 +68,6 @@ const PeludoProfile = () => {
     load();
   }, [codigo]);
 
-  // SEO
   useEffect(() => {
     if (perro) {
       document.title = `${perro.nombre} · Mayte Pet Hotel`;
@@ -94,6 +94,15 @@ const PeludoProfile = () => {
       } catch {}
     });
     return dias;
+  }, [visitas]);
+
+  // Promedios del boletín a partir de todas las visitas calificadas
+  const boletin = useMemo(() => {
+    const oVals = visitas.map((v) => v.obediencia).filter((n): n is number => typeof n === "number");
+    const sVals = visitas.map((v) => v.interaccion_social).filter((n): n is number => typeof n === "number");
+    const avg = (arr: number[]) =>
+      arr.length ? Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10 : null;
+    return { obediencia: avg(oVals), interaccion: avg(sVals) };
   }, [visitas]);
 
   if (loading) {
@@ -123,6 +132,8 @@ const PeludoProfile = () => {
       </main>
     );
   }
+
+  const tieneBoletin = boletin.obediencia !== null || boletin.interaccion !== null;
 
   return (
     <main className="min-h-screen bg-background">
@@ -178,6 +189,25 @@ const PeludoProfile = () => {
       </section>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl space-y-8">
+        {/* Boletín de Calificaciones */}
+        {tieneBoletin && (
+          <Card className="border-primary/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <PawPrint className="w-5 h-5 text-primary" />
+                Boletín de Calificaciones
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Promedio basado en todas las visitas registradas.
+              </p>
+            </CardHeader>
+            <CardContent className="grid gap-6 sm:grid-cols-2">
+              <PuntajeHuellas label="Obediencia" valor={boletin.obediencia} />
+              <PuntajeHuellas label="Interacción Social" valor={boletin.interaccion} />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Visitas */}
         <section>
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -207,6 +237,12 @@ const PeludoProfile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-5">
+                    {(v.obediencia !== null || v.interaccion_social !== null) && (
+                      <div className="grid grid-cols-2 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                        <PuntajeHuellas label="Obediencia" valor={v.obediencia} compact />
+                        <PuntajeHuellas label="Interacción Social" valor={v.interaccion_social} compact />
+                      </div>
+                    )}
                     {v.comportamiento && (
                       <BulletBlock
                         icon={<Heart className="w-4 h-4 text-primary" />}
@@ -253,32 +289,48 @@ const PeludoProfile = () => {
             </div>
           )}
         </section>
-
-        {/* Calendario al final */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-primary" />
-              Calendario de estadías
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Calendar
-              mode="multiple"
-              selected={diasEstadia}
-              modifiersClassNames={{
-                selected: "bg-primary text-primary-foreground hover:bg-primary",
-              }}
-              className="rounded-md border pointer-events-auto"
-              locale={es}
-            />
-          </CardContent>
-        </Card>
       </div>
 
       <Footer />
       <WhatsAppButton />
     </main>
+  );
+};
+
+const PuntajeHuellas = ({
+  label,
+  valor,
+  compact = false,
+}: {
+  label: string;
+  valor: number | null;
+  compact?: boolean;
+}) => {
+  if (valor === null) {
+    return (
+      <div>
+        <p className={`font-semibold ${compact ? "text-sm" : ""}`}>{label}</p>
+        <p className="text-xs text-muted-foreground">Sin calificar</p>
+      </div>
+    );
+  }
+  // 10 huellitas, llenas según el valor (redondeado)
+  const llenas = Math.round(valor);
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <p className={`font-semibold ${compact ? "text-sm" : ""}`}>{label}</p>
+        <span className="text-sm font-bold text-primary">{valor}/10</span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <PawPrint
+            key={i}
+            className={`w-4 h-4 ${i < llenas ? "text-primary fill-primary" : "text-muted-foreground/30"}`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -293,7 +345,6 @@ const BulletBlock = ({
   text: string;
   accent: string;
 }) => {
-  // Divide por saltos de línea o por viñetas/guiones que el usuario escriba
   const items = text
     .split(/\r?\n|(?:^|\s)[•\-*]\s+/g)
     .map((s) => s.trim())
