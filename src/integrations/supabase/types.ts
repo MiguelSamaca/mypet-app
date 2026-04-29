@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      categorias_finanzas: {
+        Row: {
+          activo: boolean
+          created_at: string
+          id: string
+          naturaleza: Database["public"]["Enums"]["naturaleza_gasto"] | null
+          nombre: string
+          tipo: Database["public"]["Enums"]["tipo_movimiento"]
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          naturaleza?: Database["public"]["Enums"]["naturaleza_gasto"] | null
+          nombre: string
+          tipo: Database["public"]["Enums"]["tipo_movimiento"]
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          naturaleza?: Database["public"]["Enums"]["naturaleza_gasto"] | null
+          nombre?: string
+          tipo?: Database["public"]["Enums"]["tipo_movimiento"]
+        }
+        Relationships: []
+      }
       compras: {
         Row: {
           articulo: string
@@ -86,6 +113,101 @@ export type Database = {
         }
         Relationships: []
       }
+      movimientos: {
+        Row: {
+          cantidad: number
+          categoria_id: string | null
+          cliente: string | null
+          costo: number
+          created_at: string
+          detalle: string | null
+          fecha: string
+          id: string
+          no_pro_serv: string | null
+          no_venta: string | null
+          notas: string | null
+          perro_id: string | null
+          producto: string
+          tarifa_id: string | null
+          tipo: Database["public"]["Enums"]["tipo_movimiento"]
+          unidad_negocio: Database["public"]["Enums"]["unidad_negocio"]
+          updated_at: string
+          ventas: number
+          visita_id: string | null
+        }
+        Insert: {
+          cantidad?: number
+          categoria_id?: string | null
+          cliente?: string | null
+          costo?: number
+          created_at?: string
+          detalle?: string | null
+          fecha?: string
+          id?: string
+          no_pro_serv?: string | null
+          no_venta?: string | null
+          notas?: string | null
+          perro_id?: string | null
+          producto: string
+          tarifa_id?: string | null
+          tipo: Database["public"]["Enums"]["tipo_movimiento"]
+          unidad_negocio?: Database["public"]["Enums"]["unidad_negocio"]
+          updated_at?: string
+          ventas?: number
+          visita_id?: string | null
+        }
+        Update: {
+          cantidad?: number
+          categoria_id?: string | null
+          cliente?: string | null
+          costo?: number
+          created_at?: string
+          detalle?: string | null
+          fecha?: string
+          id?: string
+          no_pro_serv?: string | null
+          no_venta?: string | null
+          notas?: string | null
+          perro_id?: string | null
+          producto?: string
+          tarifa_id?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_movimiento"]
+          unidad_negocio?: Database["public"]["Enums"]["unidad_negocio"]
+          updated_at?: string
+          ventas?: number
+          visita_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movimientos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_finanzas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_perro_id_fkey"
+            columns: ["perro_id"]
+            isOneToOne: false
+            referencedRelation: "perros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_tarifa_id_fkey"
+            columns: ["tarifa_id"]
+            isOneToOne: false
+            referencedRelation: "tarifas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimientos_visita_id_fkey"
+            columns: ["visita_id"]
+            isOneToOne: false
+            referencedRelation: "visitas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       perros: {
         Row: {
           codigo_acceso: string
@@ -127,6 +249,45 @@ export type Database = {
           nombre?: string
           notas?: string | null
           raza?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tarifas: {
+        Row: {
+          activo: boolean
+          created_at: string
+          id: string
+          nombre: string
+          orden: number
+          precio_hotel: number
+          precio_manada: number
+          seccion: string
+          unidad_negocio: Database["public"]["Enums"]["unidad_negocio"]
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre: string
+          orden?: number
+          precio_hotel?: number
+          precio_manada?: number
+          seccion: string
+          unidad_negocio?: Database["public"]["Enums"]["unidad_negocio"]
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre?: string
+          orden?: number
+          precio_hotel?: number
+          precio_manada?: number
+          seccion?: string
+          unidad_negocio?: Database["public"]["Enums"]["unidad_negocio"]
           updated_at?: string
         }
         Relationships: []
@@ -227,6 +388,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "colaborador"
+      naturaleza_gasto: "fijo" | "variable"
+      tipo_movimiento: "ingreso" | "gasto"
+      unidad_negocio: "HOTEL" | "TIENDA" | "PASEOS" | "OTRO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -355,6 +519,9 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "colaborador"],
+      naturaleza_gasto: ["fijo", "variable"],
+      tipo_movimiento: ["ingreso", "gasto"],
+      unidad_negocio: ["HOTEL", "TIENDA", "PASEOS", "OTRO"],
     },
   },
 } as const

@@ -321,6 +321,7 @@ const AdminPeludos = () => {
                 </form>
               </DialogContent>
             </Dialog>
+            <Button variant="outline" onClick={() => navigate("/admin/finanzas")}>💰 Finanzas</Button>
             <Button variant="outline" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
           </div>
         </div>
