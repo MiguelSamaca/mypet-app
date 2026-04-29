@@ -9,6 +9,7 @@ import PeludoProfile from "./pages/PeludoProfile";
 import AdminAuth from "./pages/AdminAuth";
 import AdminPeludos from "./pages/AdminPeludos";
 import AdminFinanzas from "./pages/AdminFinanzas";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/recordatoriocompras" element={<RecordatorioCompras />} />
           <Route path="/peludos/:codigo" element={<PeludoProfile />} />
           <Route path="/admin" element={<AdminAuth />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/peludos" element={<AdminPeludos />} />
           <Route path="/admin/finanzas" element={<AdminFinanzas />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

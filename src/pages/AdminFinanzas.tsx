@@ -257,7 +257,8 @@ const AdminFinanzas = () => {
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <Link to="/admin/peludos"><Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4 mr-1" /> Peludos</Button></Link>
+            <Link to="/admin/dashboard"><Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4 mr-1" /> Panel</Button></Link>
+            <Link to="/admin/peludos"><Button variant="ghost" size="sm">🐾 Peludos</Button></Link>
             <h1 className="text-xl font-bold">💰 Finanzas Hotel</h1>
           </div>
           <div className="flex gap-2">
