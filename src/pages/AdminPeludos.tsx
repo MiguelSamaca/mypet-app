@@ -228,6 +228,9 @@ const AdminPeludos = () => {
         fotos_galeria: fotos,
         obediencia: vObediencia ? Number(vObediencia) : null,
         interaccion_social: vInteraccion ? Number(vInteraccion) : null,
+        energia: vEnergia ? Number(vEnergia) : null,
+        consenticion: vConsenticion ? Number(vConsenticion) : null,
+        descanso: vDescanso ? Number(vDescanso) : null,
         tarifa_pagada: vTarifa ? Number(vTarifa) : null,
         notas_admin: vNotasAdmin || null,
       };
