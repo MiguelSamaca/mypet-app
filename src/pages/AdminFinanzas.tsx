@@ -31,10 +31,11 @@ interface Categoria {
   tipo: Tipo;
   naturaleza: "fijo" | "variable" | null;
 }
-interface Perro { id: string; nombre: string; codigo_acceso: string }
+interface Perro { id: string; nombre: string; codigo_acceso: string; dueno_nombre: string | null }
 interface Movimiento {
   id: string;
   fecha: string;
+  fecha_salida: string | null;
   tipo: Tipo;
   categoria_id: string | null;
   unidad_negocio: Unidad;
@@ -49,8 +50,15 @@ interface Movimiento {
   tarifa_id: string | null;
   notas: string | null;
   categorias_finanzas?: Categoria | null;
-  perros?: { nombre: string; codigo_acceso: string } | null;
+  perros?: { nombre: string; codigo_acceso: string; dueno_nombre: string | null } | null;
 }
+
+const UNIDAD_LABEL: Record<Unidad, string> = {
+  HOTEL: "MP HOTEL",
+  TIENDA: "BOUTIQUE",
+  PASEOS: "PASEOS",
+  OTRO: "OTRO",
+};
 
 const COP = (n: number) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
@@ -74,6 +82,7 @@ const AdminFinanzas = () => {
   const [openNuevo, setOpenNuevo] = useState(false);
   const [fTipo, setFTipo] = useState<Tipo>("ingreso");
   const [fFecha, setFFecha] = useState(new Date().toISOString().slice(0, 10));
+  const [fFechaSalida, setFFechaSalida] = useState("");
   const [fCategoria, setFCategoria] = useState<string>("");
   const [fUnidad, setFUnidad] = useState<Unidad>("HOTEL");
   const [fTarifa, setFTarifa] = useState<string>("");
@@ -101,8 +110,8 @@ const AdminFinanzas = () => {
     const [t, c, p, m] = await Promise.all([
       supabase.from("tarifas").select("*").eq("activo", true).order("orden"),
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
-      supabase.from("perros").select("id,nombre,codigo_acceso").order("nombre"),
-      supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso)").order("fecha", { ascending: false }).limit(1000),
+      supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
+      supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
     if (c.data) setCategorias(c.data as Categoria[]);
@@ -113,10 +122,16 @@ const AdminFinanzas = () => {
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
 
   const resetForm = () => {
-    setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10));
+    setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10)); setFFechaSalida("");
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
+  };
+
+  const handlePerroChange = (id: string) => {
+    setFPerro(id);
+    const p = perros.find((x) => x.id === id);
+    if (p?.dueno_nombre) setFCliente(p.dueno_nombre);
   };
 
   // Cuando elige tarifa: autocompleta producto + ventas
@@ -164,6 +179,7 @@ const AdminFinanzas = () => {
     e.preventDefault();
     const payload = {
       fecha: fFecha,
+      fecha_salida: fFechaSalida || null,
       tipo: fTipo,
       categoria_id: fCategoria || null,
       unidad_negocio: fUnidad,
@@ -278,20 +294,23 @@ const AdminFinanzas = () => {
                   </Tabs>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div><Label>Fecha *</Label><Input type="date" value={fFecha} onChange={(e) => setFFecha(e.target.value)} required /></div>
+                    <div><Label>Fecha {fTipo === "ingreso" && fUnidad === "HOTEL" ? "entrada" : ""} *</Label><Input type="date" value={fFecha} onChange={(e) => setFFecha(e.target.value)} required /></div>
                     <div>
                       <Label>Unidad de negocio</Label>
                       <Select value={fUnidad} onValueChange={(v) => setFUnidad(v as Unidad)}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="HOTEL">HOTEL</SelectItem>
-                          <SelectItem value="TIENDA">TIENDA</SelectItem>
-                          <SelectItem value="PASEOS">PASEOS</SelectItem>
+                          <SelectItem value="HOTEL">MP HOTEL</SelectItem>
+                          <SelectItem value="TIENDA">BOUTIQUE</SelectItem>
                           <SelectItem value="OTRO">OTRO</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
+
+                  {fTipo === "ingreso" && fUnidad === "HOTEL" && (
+                    <div><Label>Fecha de salida</Label><Input type="date" value={fFechaSalida} onChange={(e) => setFFechaSalida(e.target.value)} /></div>
+                  )}
 
                   {fTipo === "ingreso" && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
@@ -339,7 +358,7 @@ const AdminFinanzas = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <div><Label>Cliente</Label><Input value={fCliente} onChange={(e) => setFCliente(e.target.value)} /></div>
                       <div><Label>Peludo (vincular estadía)</Label>
-                        <Select value={fPerro} onValueChange={setFPerro}>
+                        <Select value={fPerro} onValueChange={handlePerroChange}>
                           <SelectTrigger><SelectValue placeholder="Opcional..." /></SelectTrigger>
                           <SelectContent>
                             {perros.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
@@ -403,9 +422,8 @@ const AdminFinanzas = () => {
               <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="TODAS">Todas</SelectItem>
-                <SelectItem value="HOTEL">HOTEL</SelectItem>
-                <SelectItem value="TIENDA">TIENDA</SelectItem>
-                <SelectItem value="PASEOS">PASEOS</SelectItem>
+                <SelectItem value="HOTEL">MP HOTEL</SelectItem>
+                <SelectItem value="TIENDA">BOUTIQUE</SelectItem>
                 <SelectItem value="OTRO">OTRO</SelectItem>
               </SelectContent>
             </Select>
@@ -472,7 +490,7 @@ const AdminFinanzas = () => {
                         {m.tipo}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs">{m.unidad_negocio}</TableCell>
+                    <TableCell className="text-xs">{UNIDAD_LABEL[m.unidad_negocio] || m.unidad_negocio}</TableCell>
                     <TableCell className="font-medium">{m.producto}</TableCell>
                     <TableCell className="text-xs">{m.categorias_finanzas?.nombre || "—"}</TableCell>
                     <TableCell className="text-right text-xs">{m.costo > 0 ? COP(Number(m.costo)) : "—"}</TableCell>

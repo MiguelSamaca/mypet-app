@@ -1,0 +1,1 @@
+ALTER TABLE public.movimientos ADD COLUMN IF NOT EXISTS fecha_salida date;
