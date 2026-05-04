@@ -453,8 +453,20 @@ const AdminPeludos = () => {
                   <Input type="number" min={1} max={10} value={vObediencia} onChange={(e) => setVObediencia(e.target.value)} placeholder="1-10" />
                 </div>
                 <div>
-                  <Label className="text-xs">Interacción social</Label>
+                  <Label className="text-xs">Socialización</Label>
                   <Input type="number" min={1} max={10} value={vInteraccion} onChange={(e) => setVInteraccion(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Energía</Label>
+                  <Input type="number" min={1} max={10} value={vEnergia} onChange={(e) => setVEnergia(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Consentición</Label>
+                  <Input type="number" min={1} max={10} value={vConsenticion} onChange={(e) => setVConsenticion(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Descanso</Label>
+                  <Input type="number" min={1} max={10} value={vDescanso} onChange={(e) => setVDescanso(e.target.value)} placeholder="1-10" />
                 </div>
               </div>
             </div>
