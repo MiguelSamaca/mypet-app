@@ -358,7 +358,7 @@ const AdminFinanzas = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <div><Label>Cliente</Label><Input value={fCliente} onChange={(e) => setFCliente(e.target.value)} /></div>
                       <div><Label>Peludo (vincular estadía)</Label>
-                        <Select value={fPerro} onValueChange={setFPerro}>
+                        <Select value={fPerro} onValueChange={handlePerroChange}>
                           <SelectTrigger><SelectValue placeholder="Opcional..." /></SelectTrigger>
                           <SelectContent>
                             {perros.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
