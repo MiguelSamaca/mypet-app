@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarDays, Heart, Sparkles, MessageCircle, Dog, PawPrint } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
@@ -248,56 +249,80 @@ const PeludoProfile = () => {
                       )}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-5">
-                    {(v.obediencia !== null || v.interaccion_social !== null || v.energia !== null || v.consenticion !== null || v.descanso !== null) && (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
-                        <PuntajeHuellas label="Obediencia" valor={v.obediencia} compact />
-                        <PuntajeHuellas label="Socialización" valor={v.interaccion_social} compact />
-                        <PuntajeHuellas label="Energía" valor={v.energia} compact />
-                        <PuntajeHuellas label="Consentición" valor={v.consenticion} compact />
-                        <PuntajeHuellas label="Descanso" valor={v.descanso} compact />
-                      </div>
-                    )}
-                    {v.comportamiento && (
-                      <BulletBlock
-                        icon={<Heart className="w-4 h-4 text-primary" />}
-                        title="Comportamiento"
-                        text={v.comportamiento}
-                        accent="bg-primary/5 border-primary/20"
-                      />
-                    )}
-                    {v.actividades && (
-                      <BulletBlock
-                        icon={<Sparkles className="w-4 h-4 text-primary" />}
-                        title="Actividades"
-                        text={v.actividades}
-                        accent="bg-secondary/40 border-secondary"
-                      />
-                    )}
-                    {v.recomendaciones && (
-                      <BulletBlock
-                        icon={<MessageCircle className="w-4 h-4 text-primary" />}
-                        title="Recomendaciones"
-                        text={v.recomendaciones}
-                        accent="bg-accent/30 border-accent"
-                      />
-                    )}
-                    {v.fotos_galeria && v.fotos_galeria.length > 0 && (
-                      <div>
-                        <h3 className="font-semibold mb-2">Galería</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {v.fotos_galeria.map((url, i) => (
-                            <img
-                              key={i}
-                              src={url}
-                              alt={`Foto ${i + 1} de la visita`}
-                              loading="lazy"
-                              className="aspect-square object-cover rounded-md w-full"
+                  <CardContent>
+                    <Accordion type="multiple" className="w-full">
+                      {(v.obediencia !== null || v.interaccion_social !== null || v.energia !== null || v.consenticion !== null || v.descanso !== null) && (
+                        <AccordionItem value="boletin">
+                          <AccordionTrigger className="text-sm font-semibold">🐾 Boletín de Calificaciones</AccordionTrigger>
+                          <AccordionContent>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                              <PuntajeHuellas label="Obediencia" valor={v.obediencia} compact />
+                              <PuntajeHuellas label="Socialización" valor={v.interaccion_social} compact />
+                              <PuntajeHuellas label="Energía" valor={v.energia} compact />
+                              <PuntajeHuellas label="Consentición" valor={v.consenticion} compact />
+                              <PuntajeHuellas label="Descanso" valor={v.descanso} compact />
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      )}
+                      {v.comportamiento && (
+                        <AccordionItem value="comportamiento">
+                          <AccordionTrigger className="text-sm font-semibold">❤️ Comportamiento</AccordionTrigger>
+                          <AccordionContent>
+                            <BulletBlock
+                              icon={<Heart className="w-4 h-4 text-primary" />}
+                              title="Comportamiento"
+                              text={v.comportamiento}
+                              accent="bg-primary/5 border-primary/20"
                             />
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                          </AccordionContent>
+                        </AccordionItem>
+                      )}
+                      {v.actividades && (
+                        <AccordionItem value="actividades">
+                          <AccordionTrigger className="text-sm font-semibold">🎾 Actividades</AccordionTrigger>
+                          <AccordionContent>
+                            <BulletBlock
+                              icon={<Sparkles className="w-4 h-4 text-primary" />}
+                              title="Actividades"
+                              text={v.actividades}
+                              accent="bg-secondary/40 border-secondary"
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      )}
+                      {v.recomendaciones && (
+                        <AccordionItem value="recomendaciones">
+                          <AccordionTrigger className="text-sm font-semibold">💡 Recomendaciones</AccordionTrigger>
+                          <AccordionContent>
+                            <BulletBlock
+                              icon={<MessageCircle className="w-4 h-4 text-primary" />}
+                              title="Recomendaciones"
+                              text={v.recomendaciones}
+                              accent="bg-accent/30 border-accent"
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      )}
+                      {v.fotos_galeria && v.fotos_galeria.length > 0 && (
+                        <AccordionItem value="galeria">
+                          <AccordionTrigger className="text-sm font-semibold">📸 Galería</AccordionTrigger>
+                          <AccordionContent>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                              {v.fotos_galeria.map((url, i) => (
+                                <img
+                                  key={i}
+                                  src={url}
+                                  alt={`Foto ${i + 1} de la visita`}
+                                  loading="lazy"
+                                  className="aspect-square object-cover rounded-md w-full"
+                                />
+                              ))}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      )}
+                    </Accordion>
                   </CardContent>
                 </Card>
               ))}
