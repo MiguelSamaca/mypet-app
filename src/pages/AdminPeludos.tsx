@@ -197,6 +197,9 @@ const AdminPeludos = () => {
     setVRecomendaciones(v.recomendaciones || "");
     setVObediencia(v.obediencia?.toString() || "");
     setVInteraccion(v.interaccion_social?.toString() || "");
+    setVEnergia(v.energia?.toString() || "");
+    setVConsenticion(v.consenticion?.toString() || "");
+    setVDescanso(v.descanso?.toString() || "");
     setVTarifa(v.tarifa_pagada?.toString() || "");
     setVNotasAdmin(v.notas_admin || "");
     setVFotos(null);
