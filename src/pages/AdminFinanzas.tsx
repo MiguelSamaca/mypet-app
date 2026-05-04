@@ -31,10 +31,11 @@ interface Categoria {
   tipo: Tipo;
   naturaleza: "fijo" | "variable" | null;
 }
-interface Perro { id: string; nombre: string; codigo_acceso: string }
+interface Perro { id: string; nombre: string; codigo_acceso: string; dueno_nombre: string | null }
 interface Movimiento {
   id: string;
   fecha: string;
+  fecha_salida: string | null;
   tipo: Tipo;
   categoria_id: string | null;
   unidad_negocio: Unidad;
@@ -49,8 +50,15 @@ interface Movimiento {
   tarifa_id: string | null;
   notas: string | null;
   categorias_finanzas?: Categoria | null;
-  perros?: { nombre: string; codigo_acceso: string } | null;
+  perros?: { nombre: string; codigo_acceso: string; dueno_nombre: string | null } | null;
 }
+
+const UNIDAD_LABEL: Record<Unidad, string> = {
+  HOTEL: "MP HOTEL",
+  TIENDA: "BOUTIQUE",
+  PASEOS: "PASEOS",
+  OTRO: "OTRO",
+};
 
 const COP = (n: number) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
