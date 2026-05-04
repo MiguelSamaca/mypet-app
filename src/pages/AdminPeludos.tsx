@@ -82,6 +82,9 @@ const AdminPeludos = () => {
   const [vRecomendaciones, setVRecomendaciones] = useState("");
   const [vObediencia, setVObediencia] = useState<string>("");
   const [vInteraccion, setVInteraccion] = useState<string>("");
+  const [vEnergia, setVEnergia] = useState<string>("");
+  const [vConsenticion, setVConsenticion] = useState<string>("");
+  const [vDescanso, setVDescanso] = useState<string>("");
   const [vTarifa, setVTarifa] = useState<string>("");
   const [vNotasAdmin, setVNotasAdmin] = useState("");
   const [vFotos, setVFotos] = useState<FileList | null>(null);
