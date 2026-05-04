@@ -142,7 +142,7 @@ const PeludoProfile = () => {
     );
   }
 
-  const tieneBoletin = boletin.obediencia !== null || boletin.interaccion !== null;
+  const tieneBoletin = Object.values(boletin).some((v) => v !== null);
 
   return (
     <main className="min-h-screen bg-background">
