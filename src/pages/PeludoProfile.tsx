@@ -210,9 +210,12 @@ const PeludoProfile = () => {
                 Promedio basado en todas las visitas registradas.
               </p>
             </CardHeader>
-            <CardContent className="grid gap-6 sm:grid-cols-2">
+            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <PuntajeHuellas label="Obediencia" valor={boletin.obediencia} />
-              <PuntajeHuellas label="Interacción Social" valor={boletin.interaccion} />
+              <PuntajeHuellas label="Socialización" valor={boletin.socializacion} />
+              <PuntajeHuellas label="Energía" valor={boletin.energia} />
+              <PuntajeHuellas label="Consentición" valor={boletin.consenticion} />
+              <PuntajeHuellas label="Descanso" valor={boletin.descanso} />
             </CardContent>
           </Card>
         )}
