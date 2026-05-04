@@ -122,10 +122,16 @@ const AdminFinanzas = () => {
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
 
   const resetForm = () => {
-    setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10));
+    setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10)); setFFechaSalida("");
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
+  };
+
+  const handlePerroChange = (id: string) => {
+    setFPerro(id);
+    const p = perros.find((x) => x.id === id);
+    if (p?.dueno_nombre) setFCliente(p.dueno_nombre);
   };
 
   // Cuando elige tarifa: autocompleta producto + ventas
