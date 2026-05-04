@@ -422,9 +422,8 @@ const AdminFinanzas = () => {
               <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="TODAS">Todas</SelectItem>
-                <SelectItem value="HOTEL">HOTEL</SelectItem>
-                <SelectItem value="TIENDA">TIENDA</SelectItem>
-                <SelectItem value="PASEOS">PASEOS</SelectItem>
+                <SelectItem value="HOTEL">MP HOTEL</SelectItem>
+                <SelectItem value="TIENDA">BOUTIQUE</SelectItem>
                 <SelectItem value="OTRO">OTRO</SelectItem>
               </SelectContent>
             </Select>
