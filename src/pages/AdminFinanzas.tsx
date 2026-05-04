@@ -294,20 +294,23 @@ const AdminFinanzas = () => {
                   </Tabs>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div><Label>Fecha *</Label><Input type="date" value={fFecha} onChange={(e) => setFFecha(e.target.value)} required /></div>
+                    <div><Label>Fecha {fTipo === "ingreso" && fUnidad === "HOTEL" ? "entrada" : ""} *</Label><Input type="date" value={fFecha} onChange={(e) => setFFecha(e.target.value)} required /></div>
                     <div>
                       <Label>Unidad de negocio</Label>
                       <Select value={fUnidad} onValueChange={(v) => setFUnidad(v as Unidad)}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="HOTEL">HOTEL</SelectItem>
-                          <SelectItem value="TIENDA">TIENDA</SelectItem>
-                          <SelectItem value="PASEOS">PASEOS</SelectItem>
+                          <SelectItem value="HOTEL">MP HOTEL</SelectItem>
+                          <SelectItem value="TIENDA">BOUTIQUE</SelectItem>
                           <SelectItem value="OTRO">OTRO</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
+
+                  {fTipo === "ingreso" && fUnidad === "HOTEL" && (
+                    <div><Label>Fecha de salida</Label><Input type="date" value={fFechaSalida} onChange={(e) => setFFechaSalida(e.target.value)} /></div>
+                  )}
 
                   {fTipo === "ingreso" && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
