@@ -122,6 +122,7 @@ export type Database = {
           created_at: string
           detalle: string | null
           fecha: string
+          fecha_salida: string | null
           id: string
           no_pro_serv: string | null
           no_venta: string | null
@@ -143,6 +144,7 @@ export type Database = {
           created_at?: string
           detalle?: string | null
           fecha?: string
+          fecha_salida?: string | null
           id?: string
           no_pro_serv?: string | null
           no_venta?: string | null
@@ -164,6 +166,7 @@ export type Database = {
           created_at?: string
           detalle?: string | null
           fecha?: string
+          fecha_salida?: string | null
           id?: string
           no_pro_serv?: string | null
           no_venta?: string | null
