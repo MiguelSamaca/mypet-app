@@ -317,7 +317,10 @@ export type Database = {
         Row: {
           actividades: string | null
           comportamiento: string | null
+          consenticion: number | null
           created_at: string
+          descanso: number | null
+          energia: number | null
           fecha_entrada: string
           fecha_salida: string
           fotos_galeria: string[] | null
@@ -333,7 +336,10 @@ export type Database = {
         Insert: {
           actividades?: string | null
           comportamiento?: string | null
+          consenticion?: number | null
           created_at?: string
+          descanso?: number | null
+          energia?: number | null
           fecha_entrada: string
           fecha_salida: string
           fotos_galeria?: string[] | null
@@ -349,7 +355,10 @@ export type Database = {
         Update: {
           actividades?: string | null
           comportamiento?: string | null
+          consenticion?: number | null
           created_at?: string
+          descanso?: number | null
+          energia?: number | null
           fecha_entrada?: string
           fecha_salida?: string
           fotos_galeria?: string[] | null
