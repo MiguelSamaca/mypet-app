@@ -249,10 +249,13 @@ const PeludoProfile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-5">
-                    {(v.obediencia !== null || v.interaccion_social !== null) && (
-                      <div className="grid grid-cols-2 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    {(v.obediencia !== null || v.interaccion_social !== null || v.energia !== null || v.consenticion !== null || v.descanso !== null) && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
                         <PuntajeHuellas label="Obediencia" valor={v.obediencia} compact />
-                        <PuntajeHuellas label="Interacción Social" valor={v.interaccion_social} compact />
+                        <PuntajeHuellas label="Socialización" valor={v.interaccion_social} compact />
+                        <PuntajeHuellas label="Energía" valor={v.energia} compact />
+                        <PuntajeHuellas label="Consentición" valor={v.consenticion} compact />
+                        <PuntajeHuellas label="Descanso" valor={v.descanso} compact />
                       </div>
                     )}
                     {v.comportamiento && (
