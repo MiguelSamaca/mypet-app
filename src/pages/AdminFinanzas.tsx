@@ -117,11 +117,6 @@ const AdminFinanzas = () => {
     if (p.data) setPerros(p.data as Perro[]);
     if (m.data) setMovimientos(m.data as Movimiento[]);
   };
-    if (t.data) setTarifas(t.data as Tarifa[]);
-    if (c.data) setCategorias(c.data as Categoria[]);
-    if (p.data) setPerros(p.data as Perro[]);
-    if (m.data) setMovimientos(m.data as Movimiento[]);
-  };
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
 
