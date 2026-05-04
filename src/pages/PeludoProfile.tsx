@@ -31,6 +31,9 @@ interface Visita {
   fotos_galeria: string[] | null;
   obediencia: number | null;
   interaccion_social: number | null;
+  energia: number | null;
+  consenticion: number | null;
+  descanso: number | null;
 }
 
 const PeludoProfile = () => {
