@@ -13,6 +13,7 @@ import { Plus, LogOut, Trash2, ExternalLink, Calendar, Pencil, X, FileText, Doll
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import AudioDictado from "@/components/AudioDictado";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Perro {
   id: string;
@@ -439,54 +440,82 @@ const AdminPeludos = () => {
                 }}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div><Label>Entrada *</Label><Input type="date" value={vEntrada} onChange={(e) => setVEntrada(e.target.value)} required /></div>
-              <div><Label>Salida *</Label><Input type="date" value={vSalida} onChange={(e) => setVSalida(e.target.value)} required /></div>
-            </div>
+            <Accordion type="multiple" defaultValue={["fechas"]} className="w-full">
+              <AccordionItem value="fechas">
+                <AccordionTrigger className="text-sm font-semibold">📅 Fechas de estadía</AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div><Label>Entrada *</Label><Input type="date" value={vEntrada} onChange={(e) => setVEntrada(e.target.value)} required /></div>
+                    <div><Label>Salida *</Label><Input type="date" value={vSalida} onChange={(e) => setVSalida(e.target.value)} required /></div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-            {/* Boletín */}
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-2">
-              <p className="text-sm font-semibold">🐾 Boletín de Calificaciones (1-10)</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label className="text-xs">Obediencia</Label>
-                  <Input type="number" min={1} max={10} value={vObediencia} onChange={(e) => setVObediencia(e.target.value)} placeholder="1-10" />
-                </div>
-                <div>
-                  <Label className="text-xs">Socialización</Label>
-                  <Input type="number" min={1} max={10} value={vInteraccion} onChange={(e) => setVInteraccion(e.target.value)} placeholder="1-10" />
-                </div>
-                <div>
-                  <Label className="text-xs">Energía</Label>
-                  <Input type="number" min={1} max={10} value={vEnergia} onChange={(e) => setVEnergia(e.target.value)} placeholder="1-10" />
-                </div>
-                <div>
-                  <Label className="text-xs">Consentición</Label>
-                  <Input type="number" min={1} max={10} value={vConsenticion} onChange={(e) => setVConsenticion(e.target.value)} placeholder="1-10" />
-                </div>
-                <div>
-                  <Label className="text-xs">Descanso</Label>
-                  <Input type="number" min={1} max={10} value={vDescanso} onChange={(e) => setVDescanso(e.target.value)} placeholder="1-10" />
-                </div>
-              </div>
-            </div>
+              <AccordionItem value="boletin">
+                <AccordionTrigger className="text-sm font-semibold">🐾 Boletín de Calificaciones (1-10)</AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div>
+                      <Label className="text-xs">Obediencia</Label>
+                      <Input type="number" min={1} max={10} value={vObediencia} onChange={(e) => setVObediencia(e.target.value)} placeholder="1-10" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Socialización</Label>
+                      <Input type="number" min={1} max={10} value={vInteraccion} onChange={(e) => setVInteraccion(e.target.value)} placeholder="1-10" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Energía</Label>
+                      <Input type="number" min={1} max={10} value={vEnergia} onChange={(e) => setVEnergia(e.target.value)} placeholder="1-10" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Consentición</Label>
+                      <Input type="number" min={1} max={10} value={vConsenticion} onChange={(e) => setVConsenticion(e.target.value)} placeholder="1-10" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Descanso</Label>
+                      <Input type="number" min={1} max={10} value={vDescanso} onChange={(e) => setVDescanso(e.target.value)} placeholder="1-10" />
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-            <div><Label>Comportamiento</Label><Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={3} /></div>
-            <div><Label>Actividades</Label><Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={3} /></div>
-            <div><Label>Recomendaciones</Label><Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={3} /></div>
+              <AccordionItem value="comportamiento">
+                <AccordionTrigger className="text-sm font-semibold">🐶 Comportamiento</AccordionTrigger>
+                <AccordionContent>
+                  <Textarea value={vComportamiento} onChange={(e) => setVComportamiento(e.target.value)} rows={3} />
+                </AccordionContent>
+              </AccordionItem>
 
-            {/* Solo admin */}
-            <div className="rounded-lg border border-dashed bg-muted/30 p-3 space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase">🔒 Solo administrador</p>
-              <div>
-                <Label className="text-xs flex items-center gap-1"><DollarSign className="w-3 h-3" />Tarifa pagada (COP)</Label>
-                <Input type="number" min={0} step="1000" value={vTarifa} onChange={(e) => setVTarifa(e.target.value)} placeholder="Ej: 150000" />
-              </div>
-              <div>
-                <Label className="text-xs">Notas internas</Label>
-                <Textarea value={vNotasAdmin} onChange={(e) => setVNotasAdmin(e.target.value)} rows={2} placeholder="Notas que no se muestran al dueño" />
-              </div>
-            </div>
+              <AccordionItem value="actividades">
+                <AccordionTrigger className="text-sm font-semibold">🎾 Actividades</AccordionTrigger>
+                <AccordionContent>
+                  <Textarea value={vActividades} onChange={(e) => setVActividades(e.target.value)} rows={3} />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="recomendaciones">
+                <AccordionTrigger className="text-sm font-semibold">💡 Recomendaciones</AccordionTrigger>
+                <AccordionContent>
+                  <Textarea value={vRecomendaciones} onChange={(e) => setVRecomendaciones(e.target.value)} rows={3} />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="admin">
+                <AccordionTrigger className="text-sm font-semibold">🔒 Solo administrador</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2 pt-1">
+                    <div>
+                      <Label className="text-xs flex items-center gap-1"><DollarSign className="w-3 h-3" />Tarifa pagada (COP)</Label>
+                      <Input type="number" min={0} step="1000" value={vTarifa} onChange={(e) => setVTarifa(e.target.value)} placeholder="Ej: 150000" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Notas internas</Label>
+                      <Textarea value={vNotasAdmin} onChange={(e) => setVNotasAdmin(e.target.value)} rows={2} placeholder="Notas que no se muestran al dueño" />
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
 
             {vFotosExistentes.length > 0 && (
               <div>
