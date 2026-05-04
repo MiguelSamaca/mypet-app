@@ -31,6 +31,9 @@ interface Visita {
   fotos_galeria: string[] | null;
   obediencia: number | null;
   interaccion_social: number | null;
+  energia: number | null;
+  consenticion: number | null;
+  descanso: number | null;
 }
 
 const PeludoProfile = () => {
@@ -98,11 +101,17 @@ const PeludoProfile = () => {
 
   // Promedios del boletín a partir de todas las visitas calificadas
   const boletin = useMemo(() => {
-    const oVals = visitas.map((v) => v.obediencia).filter((n): n is number => typeof n === "number");
-    const sVals = visitas.map((v) => v.interaccion_social).filter((n): n is number => typeof n === "number");
-    const avg = (arr: number[]) =>
-      arr.length ? Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10 : null;
-    return { obediencia: avg(oVals), interaccion: avg(sVals) };
+    const avg = (key: keyof Visita) => {
+      const arr = visitas.map((v) => v[key]).filter((n): n is number => typeof n === "number");
+      return arr.length ? Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10 : null;
+    };
+    return {
+      obediencia: avg("obediencia"),
+      socializacion: avg("interaccion_social"),
+      energia: avg("energia"),
+      consenticion: avg("consenticion"),
+      descanso: avg("descanso"),
+    };
   }, [visitas]);
 
   if (loading) {
@@ -133,7 +142,7 @@ const PeludoProfile = () => {
     );
   }
 
-  const tieneBoletin = boletin.obediencia !== null || boletin.interaccion !== null;
+  const tieneBoletin = Object.values(boletin).some((v) => v !== null);
 
   return (
     <main className="min-h-screen bg-background">
@@ -201,9 +210,12 @@ const PeludoProfile = () => {
                 Promedio basado en todas las visitas registradas.
               </p>
             </CardHeader>
-            <CardContent className="grid gap-6 sm:grid-cols-2">
+            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <PuntajeHuellas label="Obediencia" valor={boletin.obediencia} />
-              <PuntajeHuellas label="Interacción Social" valor={boletin.interaccion} />
+              <PuntajeHuellas label="Socialización" valor={boletin.socializacion} />
+              <PuntajeHuellas label="Energía" valor={boletin.energia} />
+              <PuntajeHuellas label="Consentición" valor={boletin.consenticion} />
+              <PuntajeHuellas label="Descanso" valor={boletin.descanso} />
             </CardContent>
           </Card>
         )}
@@ -237,10 +249,13 @@ const PeludoProfile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-5">
-                    {(v.obediencia !== null || v.interaccion_social !== null) && (
-                      <div className="grid grid-cols-2 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    {(v.obediencia !== null || v.interaccion_social !== null || v.energia !== null || v.consenticion !== null || v.descanso !== null) && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
                         <PuntajeHuellas label="Obediencia" valor={v.obediencia} compact />
-                        <PuntajeHuellas label="Interacción Social" valor={v.interaccion_social} compact />
+                        <PuntajeHuellas label="Socialización" valor={v.interaccion_social} compact />
+                        <PuntajeHuellas label="Energía" valor={v.energia} compact />
+                        <PuntajeHuellas label="Consentición" valor={v.consenticion} compact />
+                        <PuntajeHuellas label="Descanso" valor={v.descanso} compact />
                       </div>
                     )}
                     {v.comportamiento && (

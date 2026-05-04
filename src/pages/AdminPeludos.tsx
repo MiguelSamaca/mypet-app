@@ -37,6 +37,9 @@ interface Visita {
   fotos_galeria: string[] | null;
   obediencia: number | null;
   interaccion_social: number | null;
+  energia: number | null;
+  consenticion: number | null;
+  descanso: number | null;
   tarifa_pagada: number | null;
   notas_admin: string | null;
 }
@@ -79,6 +82,9 @@ const AdminPeludos = () => {
   const [vRecomendaciones, setVRecomendaciones] = useState("");
   const [vObediencia, setVObediencia] = useState<string>("");
   const [vInteraccion, setVInteraccion] = useState<string>("");
+  const [vEnergia, setVEnergia] = useState<string>("");
+  const [vConsenticion, setVConsenticion] = useState<string>("");
+  const [vDescanso, setVDescanso] = useState<string>("");
   const [vTarifa, setVTarifa] = useState<string>("");
   const [vNotasAdmin, setVNotasAdmin] = useState("");
   const [vFotos, setVFotos] = useState<FileList | null>(null);
@@ -172,7 +178,7 @@ const AdminPeludos = () => {
     setVEntrada(""); setVSalida(""); setVComportamiento("");
     setVActividades(""); setVRecomendaciones(""); setVFotos(null);
     setVFotosExistentes([]);
-    setVObediencia(""); setVInteraccion(""); setVTarifa(""); setVNotasAdmin("");
+    setVObediencia(""); setVInteraccion(""); setVEnergia(""); setVConsenticion(""); setVDescanso(""); setVTarifa(""); setVNotasAdmin("");
   };
 
   const openNuevaVisita = (p: Perro) => {
@@ -191,6 +197,9 @@ const AdminPeludos = () => {
     setVRecomendaciones(v.recomendaciones || "");
     setVObediencia(v.obediencia?.toString() || "");
     setVInteraccion(v.interaccion_social?.toString() || "");
+    setVEnergia(v.energia?.toString() || "");
+    setVConsenticion(v.consenticion?.toString() || "");
+    setVDescanso(v.descanso?.toString() || "");
     setVTarifa(v.tarifa_pagada?.toString() || "");
     setVNotasAdmin(v.notas_admin || "");
     setVFotos(null);
@@ -219,6 +228,9 @@ const AdminPeludos = () => {
         fotos_galeria: fotos,
         obediencia: vObediencia ? Number(vObediencia) : null,
         interaccion_social: vInteraccion ? Number(vInteraccion) : null,
+        energia: vEnergia ? Number(vEnergia) : null,
+        consenticion: vConsenticion ? Number(vConsenticion) : null,
+        descanso: vDescanso ? Number(vDescanso) : null,
         tarifa_pagada: vTarifa ? Number(vTarifa) : null,
         notas_admin: vNotasAdmin || null,
       };
@@ -441,8 +453,20 @@ const AdminPeludos = () => {
                   <Input type="number" min={1} max={10} value={vObediencia} onChange={(e) => setVObediencia(e.target.value)} placeholder="1-10" />
                 </div>
                 <div>
-                  <Label className="text-xs">Interacción social</Label>
+                  <Label className="text-xs">Socialización</Label>
                   <Input type="number" min={1} max={10} value={vInteraccion} onChange={(e) => setVInteraccion(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Energía</Label>
+                  <Input type="number" min={1} max={10} value={vEnergia} onChange={(e) => setVEnergia(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Consentición</Label>
+                  <Input type="number" min={1} max={10} value={vConsenticion} onChange={(e) => setVConsenticion(e.target.value)} placeholder="1-10" />
+                </div>
+                <div>
+                  <Label className="text-xs">Descanso</Label>
+                  <Input type="number" min={1} max={10} value={vDescanso} onChange={(e) => setVDescanso(e.target.value)} placeholder="1-10" />
                 </div>
               </div>
             </div>
