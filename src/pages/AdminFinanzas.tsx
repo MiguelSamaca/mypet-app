@@ -179,6 +179,7 @@ const AdminFinanzas = () => {
     e.preventDefault();
     const payload = {
       fecha: fFecha,
+      fecha_salida: fFechaSalida || null,
       tipo: fTipo,
       categoria_id: fCategoria || null,
       unidad_negocio: fUnidad,
