@@ -82,6 +82,7 @@ const AdminFinanzas = () => {
   const [openNuevo, setOpenNuevo] = useState(false);
   const [fTipo, setFTipo] = useState<Tipo>("ingreso");
   const [fFecha, setFFecha] = useState(new Date().toISOString().slice(0, 10));
+  const [fFechaSalida, setFFechaSalida] = useState("");
   const [fCategoria, setFCategoria] = useState<string>("");
   const [fUnidad, setFUnidad] = useState<Unidad>("HOTEL");
   const [fTarifa, setFTarifa] = useState<string>("");
