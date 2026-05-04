@@ -101,11 +101,17 @@ const PeludoProfile = () => {
 
   // Promedios del boletín a partir de todas las visitas calificadas
   const boletin = useMemo(() => {
-    const oVals = visitas.map((v) => v.obediencia).filter((n): n is number => typeof n === "number");
-    const sVals = visitas.map((v) => v.interaccion_social).filter((n): n is number => typeof n === "number");
-    const avg = (arr: number[]) =>
-      arr.length ? Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10 : null;
-    return { obediencia: avg(oVals), interaccion: avg(sVals) };
+    const avg = (key: keyof Visita) => {
+      const arr = visitas.map((v) => v[key]).filter((n): n is number => typeof n === "number");
+      return arr.length ? Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10 : null;
+    };
+    return {
+      obediencia: avg("obediencia"),
+      socializacion: avg("interaccion_social"),
+      energia: avg("energia"),
+      consenticion: avg("consenticion"),
+      descanso: avg("descanso"),
+    };
   }, [visitas]);
 
   if (loading) {
