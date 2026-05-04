@@ -178,7 +178,7 @@ const AdminPeludos = () => {
     setVEntrada(""); setVSalida(""); setVComportamiento("");
     setVActividades(""); setVRecomendaciones(""); setVFotos(null);
     setVFotosExistentes([]);
-    setVObediencia(""); setVInteraccion(""); setVTarifa(""); setVNotasAdmin("");
+    setVObediencia(""); setVInteraccion(""); setVEnergia(""); setVConsenticion(""); setVDescanso(""); setVTarifa(""); setVNotasAdmin("");
   };
 
   const openNuevaVisita = (p: Perro) => {
