@@ -490,7 +490,7 @@ const AdminFinanzas = () => {
                         {m.tipo}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs">{m.unidad_negocio}</TableCell>
+                    <TableCell className="text-xs">{UNIDAD_LABEL[m.unidad_negocio] || m.unidad_negocio}</TableCell>
                     <TableCell className="font-medium">{m.producto}</TableCell>
                     <TableCell className="text-xs">{m.categorias_finanzas?.nombre || "—"}</TableCell>
                     <TableCell className="text-right text-xs">{m.costo > 0 ? COP(Number(m.costo)) : "—"}</TableCell>
