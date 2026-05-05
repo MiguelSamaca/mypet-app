@@ -9,6 +9,7 @@ import PeludoProfile from "./pages/PeludoProfile";
 import AdminAuth from "./pages/AdminAuth";
 import AdminPeludos from "./pages/AdminPeludos";
 import AdminFinanzas from "./pages/AdminFinanzas";
+import AdminBoutique from "./pages/AdminBoutique";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
