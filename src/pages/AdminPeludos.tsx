@@ -404,6 +404,9 @@ const AdminPeludos = () => {
                       </a>
                     </div>
                     <div className="flex gap-2 flex-wrap">
+                      <Button size="sm" variant="outline" onClick={() => openEditarPerro(p)}>
+                        <Pencil className="w-4 h-4 mr-1" /> Editar
+                      </Button>
                       <Button size="sm" variant="outline" onClick={() => openFicha(p)}>
                         <FileText className="w-4 h-4 mr-1" /> Ficha
                       </Button>
