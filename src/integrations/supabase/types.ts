@@ -73,6 +73,45 @@ export type Database = {
         }
         Relationships: []
       }
+      clientes_boutique: {
+        Row: {
+          activo: boolean
+          ciudad: string | null
+          created_at: string
+          email: string | null
+          fecha_creacion: string
+          id: string
+          nombre: string
+          notas: string | null
+          telefono: string | null
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          ciudad?: string | null
+          created_at?: string
+          email?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre: string
+          notas?: string | null
+          telefono?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          ciudad?: string | null
+          created_at?: string
+          email?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre?: string
+          notas?: string | null
+          telefono?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       compras: {
         Row: {
           articulo: string
@@ -182,6 +221,7 @@ export type Database = {
           cantidad: number
           categoria_id: string | null
           cliente: string | null
+          cliente_boutique_id: string | null
           costo: number
           created_at: string
           detalle: string | null
@@ -204,6 +244,7 @@ export type Database = {
           cantidad?: number
           categoria_id?: string | null
           cliente?: string | null
+          cliente_boutique_id?: string | null
           costo?: number
           created_at?: string
           detalle?: string | null
@@ -226,6 +267,7 @@ export type Database = {
           cantidad?: number
           categoria_id?: string | null
           cliente?: string | null
+          cliente_boutique_id?: string | null
           costo?: number
           created_at?: string
           detalle?: string | null
