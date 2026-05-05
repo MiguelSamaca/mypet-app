@@ -433,9 +433,11 @@ const AdminFinanzas = () => {
                     </div>
                   )}
 
-                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                  {((fTipo === "ingreso" && fUnidad === "TIENDA") || fTipo === "gasto") && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
-                      <Label className="text-xs uppercase">Producto de Boutique (descuenta inventario)</Label>
+                      <Label className="text-xs uppercase">
+                        {fTipo === "gasto" ? "Producto de inventario (autocompleta costo)" : "Producto de Boutique (descuenta inventario)"}
+                      </Label>
                       {productosBoutique.length === 0 ? (
                         <p className="text-xs text-muted-foreground">
                           No hay productos registrados. <Link to="/admin/boutique" className="underline">Crear productos →</Link>
@@ -446,7 +448,7 @@ const AdminFinanzas = () => {
                           <SelectContent>
                             {productosBoutique.map((p) => (
                               <SelectItem key={p.id} value={p.id}>
-                                {p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} — {COP(p.precio_venta)} (stock: {p.stock})
+                                {p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} — {COP(fTipo === "gasto" ? p.costo_unitario : p.precio_venta)} (stock: {p.stock})
                               </SelectItem>
                             ))}
                           </SelectContent>
