@@ -70,6 +70,7 @@ const AdminFinanzas = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [perros, setPerros] = useState<Perro[]>([]);
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
+  const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number }>>([]);
 
   // filtros
   const [filtroPeriodo, setFiltroPeriodo] = useState<"mes" | "anio" | "todo">("mes");
@@ -96,6 +97,7 @@ const AdminFinanzas = () => {
   const [fPerro, setFPerro] = useState<string>("");
   const [fManada, setFManada] = useState(false);
   const [fNotas, setFNotas] = useState("");
+  const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -107,16 +109,18 @@ const AdminFinanzas = () => {
   useEffect(() => { if (authChecked) loadAll(); }, [authChecked]);
 
   const loadAll = async () => {
-    const [t, c, p, m] = await Promise.all([
+    const [t, c, p, m, pb] = await Promise.all([
       supabase.from("tarifas").select("*").eq("activo", true).order("orden"),
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
       supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
       supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
+      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock").eq("activo", true).order("nombre"),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
     if (c.data) setCategorias(c.data as Categoria[]);
     if (p.data) setPerros(p.data as Perro[]);
     if (m.data) setMovimientos(m.data as Movimiento[]);
+    if (pb.data) setProductosBoutique(pb.data as any);
   };
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
@@ -126,6 +130,17 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
+    setFProductoBoutique("");
+  };
+
+  const handleProductoBoutiqueChange = (id: string) => {
+    setFProductoBoutique(id);
+    const pb = productosBoutique.find((x) => x.id === id);
+    if (!pb) return;
+    setFProducto(pb.nombre);
+    const cant = parseFloat(fCantidad) || 1;
+    setFVentas(String(pb.precio_venta * cant));
+    setFCosto(String(pb.costo_unitario * cant));
   };
 
   const handlePerroChange = (id: string) => {
@@ -196,6 +211,16 @@ const AdminFinanzas = () => {
     };
     const { error } = await supabase.from("movimientos").insert(payload);
     if (error) { toast.error(error.message); return; }
+    // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
+    if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
+      await supabase.from("movimientos_inventario").insert({
+        producto_id: fProductoBoutique,
+        tipo: "salida",
+        cantidad: parseFloat(fCantidad) || 1,
+        costo_unitario: 0,
+        notas: `Venta · ${fNoVenta || fFecha}`,
+      });
+    }
     toast.success("Movimiento registrado");
     setOpenNuevo(false);
     resetForm();
@@ -312,7 +337,7 @@ const AdminFinanzas = () => {
                     <div><Label>Fecha de salida</Label><Input type="date" value={fFechaSalida} onChange={(e) => setFFechaSalida(e.target.value)} /></div>
                   )}
 
-                  {fTipo === "ingreso" && (
+                  {fTipo === "ingreso" && fUnidad === "HOTEL" && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
                       <Label className="text-xs uppercase">Tarifa del hotel (autocompleta)</Label>
                       <Select value={fTarifa} onValueChange={handleTarifaChange}>
@@ -329,6 +354,28 @@ const AdminFinanzas = () => {
                         <input type="checkbox" checked={fManada} onChange={(e) => handleManadaToggle(e.target.checked)} />
                         🐶🐶 Plan Manada (precio x1.8)
                       </label>
+                    </div>
+                  )}
+
+                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                    <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                      <Label className="text-xs uppercase">Producto de Boutique (descuenta inventario)</Label>
+                      {productosBoutique.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">
+                          No hay productos registrados. <Link to="/admin/boutique" className="underline">Crear productos →</Link>
+                        </p>
+                      ) : (
+                        <Select value={fProductoBoutique} onValueChange={handleProductoBoutiqueChange}>
+                          <SelectTrigger><SelectValue placeholder="Selecciona producto..." /></SelectTrigger>
+                          <SelectContent>
+                            {productosBoutique.map((p) => (
+                              <SelectItem key={p.id} value={p.id}>
+                                {p.nombre} — {COP(p.precio_venta)} (stock: {p.stock})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                   )}
 

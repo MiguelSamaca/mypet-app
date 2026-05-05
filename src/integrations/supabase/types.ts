@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      categorias_boutique: {
+        Row: {
+          activo: boolean
+          created_at: string
+          id: string
+          nombre: string
+          proveedor_id: string
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre: string
+          proveedor_id: string
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre?: string
+          proveedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categorias_boutique_proveedor_id_fkey"
+            columns: ["proveedor_id"]
+            isOneToOne: false
+            referencedRelation: "proveedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categorias_finanzas: {
         Row: {
           activo: boolean
@@ -113,6 +145,38 @@ export type Database = {
         }
         Relationships: []
       }
+      marcas_boutique: {
+        Row: {
+          activo: boolean
+          created_at: string
+          id: string
+          nombre: string
+          proveedor_id: string
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre: string
+          proveedor_id: string
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre?: string
+          proveedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marcas_boutique_proveedor_id_fkey"
+            columns: ["proveedor_id"]
+            isOneToOne: false
+            referencedRelation: "proveedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       movimientos: {
         Row: {
           cantidad: number
@@ -211,6 +275,47 @@ export type Database = {
           },
         ]
       }
+      movimientos_inventario: {
+        Row: {
+          cantidad: number
+          costo_unitario: number
+          created_at: string
+          fecha: string
+          id: string
+          notas: string | null
+          producto_id: string
+          tipo: string
+        }
+        Insert: {
+          cantidad: number
+          costo_unitario?: number
+          created_at?: string
+          fecha?: string
+          id?: string
+          notas?: string | null
+          producto_id: string
+          tipo: string
+        }
+        Update: {
+          cantidad?: number
+          costo_unitario?: number
+          created_at?: string
+          fecha?: string
+          id?: string
+          notas?: string | null
+          producto_id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movimientos_inventario_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos_boutique"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       perros: {
         Row: {
           codigo_acceso: string
@@ -252,6 +357,109 @@ export type Database = {
           nombre?: string
           notas?: string | null
           raza?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      productos_boutique: {
+        Row: {
+          activo: boolean
+          categoria_id: string | null
+          costo_unitario: number
+          created_at: string
+          id: string
+          marca_id: string | null
+          nombre: string
+          notas: string | null
+          precio_venta: number
+          proveedor_id: string
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          categoria_id?: string | null
+          costo_unitario?: number
+          created_at?: string
+          id?: string
+          marca_id?: string | null
+          nombre: string
+          notas?: string | null
+          precio_venta?: number
+          proveedor_id: string
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          categoria_id?: string | null
+          costo_unitario?: number
+          created_at?: string
+          id?: string
+          marca_id?: string | null
+          nombre?: string
+          notas?: string | null
+          precio_venta?: number
+          proveedor_id?: string
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "productos_boutique_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_boutique"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_boutique_marca_id_fkey"
+            columns: ["marca_id"]
+            isOneToOne: false
+            referencedRelation: "marcas_boutique"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_boutique_proveedor_id_fkey"
+            columns: ["proveedor_id"]
+            isOneToOne: false
+            referencedRelation: "proveedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proveedores: {
+        Row: {
+          activo: boolean
+          contacto: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nombre: string
+          notas: string | null
+          telefono: string | null
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          contacto?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nombre: string
+          notas?: string | null
+          telefono?: string | null
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          contacto?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nombre?: string
+          notas?: string | null
+          telefono?: string | null
           updated_at?: string
         }
         Relationships: []
