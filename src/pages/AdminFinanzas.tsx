@@ -71,6 +71,10 @@ const AdminFinanzas = () => {
   const [perros, setPerros] = useState<Perro[]>([]);
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
   const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number }>>([]);
+  const [clientesBoutique, setClientesBoutique] = useState<Array<{ id: string; nombre: string; telefono: string | null; email: string | null; ciudad: string | null }>>([]);
+  const [fClienteBoutique, setFClienteBoutique] = useState<string>("");
+  const [openNuevoCli, setOpenNuevoCli] = useState(false);
+  const [nuevoCli, setNuevoCli] = useState({ nombre: "", telefono: "", email: "", ciudad: "", fecha_creacion: new Date().toISOString().slice(0, 10) });
 
   // filtros
   const [filtroPeriodo, setFiltroPeriodo] = useState<"mes" | "anio" | "todo">("mes");
