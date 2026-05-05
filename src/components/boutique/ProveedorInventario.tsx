@@ -117,19 +117,43 @@ const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, 
         </Card>
       </div>
 
+      {/* Categorías clickeables como filtro */}
+      {categorias.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 items-center">
+          <span className="text-xs text-muted-foreground mr-1">Categorías:</span>
+          <button
+            type="button"
+            onClick={() => setCatFilter("__all")}
+            className={`px-2.5 py-0.5 rounded-full text-xs border transition-colors ${
+              catFilter === "__all" ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted"
+            }`}
+          >
+            Todas
+          </button>
+          {categorias.map((c) => {
+            const sel = catFilter === c.id;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setCatFilter(sel ? "__all" : c.id)}
+                className={`px-2.5 py-0.5 rounded-full text-xs border transition-colors ${
+                  sel ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted"
+                }`}
+              >
+                {c.nombre}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Filtros */}
       <div className="flex flex-wrap gap-2 items-end">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Buscar producto..." value={q} onChange={(e) => setQ(e.target.value)} className="pl-8" />
         </div>
-        <Select value={catFilter} onValueChange={setCatFilter}>
-          <SelectTrigger className="w-[160px]"><SelectValue placeholder="Categoría" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__all">Todas las categorías</SelectItem>
-            {categorias.map((c) => <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>)}
-          </SelectContent>
-        </Select>
         {marcas.length > 0 && (
           <Select value={marcaFilter} onValueChange={setMarcaFilter}>
             <SelectTrigger className="w-[140px]"><SelectValue placeholder="Marca" /></SelectTrigger>
