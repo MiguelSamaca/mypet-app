@@ -324,13 +324,13 @@ const AdminPeludos = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">🐾 Admin · Peludos</h1>
           <div className="flex gap-2">
-            <Dialog open={perroOpen} onOpenChange={setPerroOpen}>
+            <Dialog open={perroOpen} onOpenChange={(o) => { setPerroOpen(o); if (!o) resetPerroForm(); }}>
               <DialogTrigger asChild>
-                <Button><Plus className="w-4 h-4 mr-1" /> Nuevo peludo</Button>
+                <Button onClick={resetPerroForm}><Plus className="w-4 h-4 mr-1" /> Nuevo peludo</Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto">
-                <DialogHeader><DialogTitle>Registrar peludo</DialogTitle></DialogHeader>
-                <form onSubmit={handleCreatePerro} className="space-y-3">
+                <DialogHeader><DialogTitle>{editingPerro ? "Editar peludo" : "Registrar peludo"}</DialogTitle></DialogHeader>
+                <form onSubmit={handleSavePerro} className="space-y-3">
                   <div className="flex justify-end">
                     <AudioDictado
                       modo="perfil"
@@ -357,8 +357,17 @@ const AdminPeludos = () => {
                   <div><Label>Dueño (nombre)</Label><Input value={pDuenoNombre} onChange={(e) => setPDuenoNombre(e.target.value)} /></div>
                   <div><Label>Dueño (email)</Label><Input type="email" value={pDuenoEmail} onChange={(e) => setPDuenoEmail(e.target.value)} /></div>
                   <div><Label>Dueño (teléfono)</Label><Input value={pDuenoTel} onChange={(e) => setPDuenoTel(e.target.value)} /></div>
-                  <div><Label>Foto de perfil</Label><Input type="file" accept="image/*" onChange={(e) => setPFoto(e.target.files?.[0] || null)} /></div>
-                  <Button type="submit" className="w-full">Registrar</Button>
+                  <div>
+                    <Label>Foto de perfil</Label>
+                    {pFotoActual && !pFoto && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <img src={pFotoActual} alt="actual" className="w-14 h-14 rounded-full object-cover" />
+                        <span className="text-xs text-muted-foreground">Foto actual (sube una nueva para reemplazar)</span>
+                      </div>
+                    )}
+                    <Input type="file" accept="image/*" onChange={(e) => setPFoto(e.target.files?.[0] || null)} />
+                  </div>
+                  <Button type="submit" className="w-full">{editingPerro ? "Guardar cambios" : "Registrar"}</Button>
                 </form>
               </DialogContent>
             </Dialog>
