@@ -241,8 +241,9 @@ const AdminFinanzas = () => {
       perro_id: fPerro || null,
       tarifa_id: fTarifa || null,
       notas: fNotas || null,
+      cliente_boutique_id: fClienteBoutique || null,
     };
-    const { error } = await supabase.from("movimientos").insert(payload);
+    const { error } = await supabase.from("movimientos").insert(payload as any);
     if (error) { toast.error(error.message); return; }
     // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
     if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
