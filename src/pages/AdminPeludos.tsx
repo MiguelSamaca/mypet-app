@@ -149,13 +149,33 @@ const AdminPeludos = () => {
     return data.publicUrl;
   };
 
-  const handleCreatePerro = async (e: React.FormEvent) => {
+  const resetPerroForm = () => {
+    setEditingPerro(null);
+    setPNombre(""); setPRaza(""); setPCodigo(""); setPDuenoNombre("");
+    setPDuenoEmail(""); setPDuenoTel(""); setPFoto(null); setPFotoActual(null); setPDescripcion("");
+  };
+
+  const openEditarPerro = (p: Perro) => {
+    setEditingPerro(p);
+    setPNombre(p.nombre);
+    setPRaza(p.raza || "");
+    setPCodigo(p.codigo_acceso);
+    setPDuenoNombre(p.dueno_nombre || "");
+    setPDuenoEmail(p.dueno_email || "");
+    setPDuenoTel(p.dueno_telefono || "");
+    setPDescripcion(p.descripcion_especial || "");
+    setPFoto(null);
+    setPFotoActual(p.foto_url);
+    setPerroOpen(true);
+  };
+
+  const handleSavePerro = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const codigo = pCodigo.trim() || slugify(pNombre);
-      let foto_url: string | null = null;
+      let foto_url: string | null = pFotoActual;
       if (pFoto) foto_url = await uploadPhoto(pFoto, `perfil/${codigo}`);
-      const { error } = await supabase.from("perros").insert({
+      const payload = {
         nombre: pNombre,
         raza: pRaza || null,
         codigo_acceso: codigo,
@@ -164,15 +184,21 @@ const AdminPeludos = () => {
         dueno_email: pDuenoEmail || null,
         dueno_telefono: pDuenoTel || null,
         descripcion_especial: pDescripcion || null,
-      });
-      if (error) throw error;
-      toast.success("Peludo registrado");
+      };
+      if (editingPerro) {
+        const { error } = await supabase.from("perros").update(payload).eq("id", editingPerro.id);
+        if (error) throw error;
+        toast.success("Peludo actualizado");
+      } else {
+        const { error } = await supabase.from("perros").insert(payload);
+        if (error) throw error;
+        toast.success("Peludo registrado");
+      }
       setPerroOpen(false);
-      setPNombre(""); setPRaza(""); setPCodigo(""); setPDuenoNombre("");
-      setPDuenoEmail(""); setPDuenoTel(""); setPFoto(null); setPDescripcion("");
+      resetPerroForm();
       loadData();
     } catch (err: any) {
-      toast.error(err.message || "Error al registrar");
+      toast.error(err.message || "Error al guardar");
     }
   };
 
