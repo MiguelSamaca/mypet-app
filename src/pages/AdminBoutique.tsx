@@ -157,15 +157,19 @@ const AdminBoutique = () => {
     // CREATE mode
     const stockInicial = parseFloat(prodStock) || 0;
 
-    let variantes: Array<{ talla: string; color: string | null }> = [{ talla: "Talla Única", color: null }];
-    if (prodVariante === "talla") {
+    let tallas: string[] = ["Talla Única"];
+    let colores: (string | null)[] = [null];
+    if (prodUsaTalla) {
       if (prodTallasSel.length === 0) return toast.error("Selecciona al menos una talla");
-      variantes = prodTallasSel.map((t) => ({ talla: t, color: null }));
-    } else if (prodVariante === "color") {
-      const colores = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
-      if (colores.length === 0) return toast.error("Indica al menos un color (separados por coma)");
-      variantes = colores.map((c) => ({ talla: "Talla Única", color: c }));
+      tallas = prodTallasSel;
     }
+    if (prodUsaColor) {
+      const cs = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
+      if (cs.length === 0) return toast.error("Indica al menos un color (separados por coma)");
+      colores = cs;
+    }
+    const variantes: Array<{ talla: string; color: string | null }> = [];
+    tallas.forEach((t) => colores.forEach((c) => variantes.push({ talla: t, color: c })));
 
     const rows = variantes.map((v) => ({
       proveedor_id: openProd,
