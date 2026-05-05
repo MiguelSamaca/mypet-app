@@ -317,44 +317,15 @@ const AdminBoutique = () => {
                   )}
 
                   {provProds.length > 0 && (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Producto</TableHead>
-                            <TableHead>Talla</TableHead>
-                            <TableHead>Color</TableHead>
-                            <TableHead>Marca</TableHead>
-                            <TableHead>Categoría</TableHead>
-                            <TableHead className="text-right">Stock</TableHead>
-                            <TableHead className="text-right">Costo</TableHead>
-                            <TableHead className="text-right">Precio</TableHead>
-                            <TableHead></TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {provProds.map((p) => (
-                            <TableRow key={p.id}>
-                              <TableCell className="font-medium">{p.nombre}</TableCell>
-                              <TableCell className="text-xs">{p.talla || "—"}</TableCell>
-                              <TableCell className="text-xs">{p.color || "—"}</TableCell>
-                              <TableCell>{marcas.find((m) => m.id === p.marca_id)?.nombre || "—"}</TableCell>
-                              <TableCell>{categorias.find((c) => c.id === p.categoria_id)?.nombre || "—"}</TableCell>
-                              <TableCell className="text-right">
-                                <Badge variant={p.stock <= 0 ? "destructive" : "secondary"}>{p.stock}</Badge>
-                              </TableCell>
-                              <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
-                              <TableCell className="text-right text-xs">{COP(p.precio_venta)}</TableCell>
-                              <TableCell className="text-right whitespace-nowrap">
-                                <Button size="sm" variant="ghost" onClick={() => openEditarProducto(p)}><Pencil className="w-3 h-3" /></Button>
-                                <Button size="sm" variant="outline" onClick={() => setOpenEntrada(p)}>+ Stock</Button>
-                                <Button size="sm" variant="ghost" onClick={() => deleteProducto(p.id)}><Trash2 className="w-3 h-3" /></Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                    <ProveedorInventario
+                      productos={provProds}
+                      marcas={provMarcas}
+                      categorias={provCats}
+                      onEdit={openEditarProducto}
+                      onDelete={deleteProducto}
+                      onEntrada={(p) => setOpenEntrada(p)}
+                      proveedorNombre={prov.nombre}
+                    />
                   )}
                 </AccordionContent>
               </AccordionItem>
