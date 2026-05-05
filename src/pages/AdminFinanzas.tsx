@@ -196,8 +196,13 @@ const AdminFinanzas = () => {
     if (!pb) return;
     setFProducto(pb.nombre);
     const cant = parseFloat(fCantidad) || 1;
-    setFVentas(String(pb.precio_venta * cant));
-    setFCosto(String(pb.costo_unitario * cant));
+    if (fTipo === "gasto") {
+      setFCosto(String(pb.costo_unitario * cant));
+      setFVentas(String(pb.costo_unitario * cant));
+    } else {
+      setFVentas(String(pb.precio_venta * cant));
+      setFCosto(String(pb.costo_unitario * cant));
+    }
   };
 
   const handlePerroChange = (id: string) => {
