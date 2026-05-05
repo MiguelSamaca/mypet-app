@@ -518,7 +518,7 @@ const AdminFinanzas = () => {
 
                   <div><Label>Notas internas</Label><Textarea value={fNotas} onChange={(e) => setFNotas(e.target.value)} rows={2} /></div>
 
-                  <Button type="submit" className="w-full">Guardar movimiento</Button>
+                  <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : "Guardar movimiento"}</Button>
                 </form>
               </DialogContent>
             </Dialog>
