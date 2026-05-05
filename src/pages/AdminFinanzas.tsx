@@ -71,6 +71,10 @@ const AdminFinanzas = () => {
   const [perros, setPerros] = useState<Perro[]>([]);
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
   const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number }>>([]);
+  const [clientesBoutique, setClientesBoutique] = useState<Array<{ id: string; nombre: string; telefono: string | null; email: string | null; ciudad: string | null }>>([]);
+  const [fClienteBoutique, setFClienteBoutique] = useState<string>("");
+  const [openNuevoCli, setOpenNuevoCli] = useState(false);
+  const [nuevoCli, setNuevoCli] = useState({ nombre: "", telefono: "", email: "", ciudad: "", fecha_creacion: new Date().toISOString().slice(0, 10) });
 
   // filtros
   const [filtroPeriodo, setFiltroPeriodo] = useState<"mes" | "anio" | "todo">("mes");
@@ -109,18 +113,20 @@ const AdminFinanzas = () => {
   useEffect(() => { if (authChecked) loadAll(); }, [authChecked]);
 
   const loadAll = async () => {
-    const [t, c, p, m, pb] = await Promise.all([
+    const [t, c, p, m, pb, cb] = await Promise.all([
       supabase.from("tarifas").select("*").eq("activo", true).order("orden"),
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
       supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
       supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
       supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock").eq("activo", true).order("nombre"),
+      supabase.from("clientes_boutique" as any).select("id,nombre,telefono,email,ciudad").eq("activo", true).order("nombre"),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
     if (c.data) setCategorias(c.data as Categoria[]);
     if (p.data) setPerros(p.data as Perro[]);
     if (m.data) setMovimientos(m.data as Movimiento[]);
     if (pb.data) setProductosBoutique(pb.data as any);
+    if (cb.data) setClientesBoutique(cb.data as any);
   };
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
@@ -130,7 +136,34 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique("");
+    setFProductoBoutique(""); setFClienteBoutique("");
+  };
+
+  const handleClienteBoutiqueChange = (id: string) => {
+    setFClienteBoutique(id);
+    const c = clientesBoutique.find((x) => x.id === id);
+    if (c) setFCliente(c.nombre);
+  };
+
+  const handleCrearClienteBoutique = async () => {
+    if (!nuevoCli.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
+    const { data, error } = await supabase.from("clientes_boutique" as any).insert({
+      nombre: nuevoCli.nombre.trim(),
+      telefono: nuevoCli.telefono || null,
+      email: nuevoCli.email || null,
+      ciudad: nuevoCli.ciudad || null,
+      fecha_creacion: nuevoCli.fecha_creacion,
+    }).select().single();
+    if (error) { toast.error(error.message); return; }
+    toast.success("Cliente creado");
+    setOpenNuevoCli(false);
+    setNuevoCli({ nombre: "", telefono: "", email: "", ciudad: "", fecha_creacion: new Date().toISOString().slice(0, 10) });
+    const newId = (data as any)?.id;
+    await loadAll();
+    if (newId) {
+      setFClienteBoutique(newId);
+      setFCliente(nuevoCli.nombre.trim());
+    }
   };
 
   const handleProductoBoutiqueChange = (id: string) => {
@@ -208,8 +241,9 @@ const AdminFinanzas = () => {
       perro_id: fPerro || null,
       tarifa_id: fTarifa || null,
       notas: fNotas || null,
+      cliente_boutique_id: fClienteBoutique || null,
     };
-    const { error } = await supabase.from("movimientos").insert(payload);
+    const { error } = await supabase.from("movimientos").insert(payload as any);
     if (error) { toast.error(error.message); return; }
     // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
     if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
@@ -291,7 +325,14 @@ const AdminFinanzas = () => {
   if (!authChecked) return null;
 
   const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const categoriasFiltro = categorias.filter((c) => c.tipo === fTipo);
+  const categoriasFiltro = categorias.filter((c) => {
+    if (c.tipo !== fTipo) return false;
+    if (fTipo === "ingreso" && fUnidad === "TIENDA") {
+      const n = c.nombre.toLowerCase();
+      return n.includes("tienda") || n.includes("boutique") || n.includes("producto");
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -401,7 +442,32 @@ const AdminFinanzas = () => {
                     <div><Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label><Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} /></div>
                   </div>
 
-                  {fTipo === "ingreso" && (
+                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                    <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs uppercase">Cliente Boutique</Label>
+                        <Button type="button" variant="outline" size="sm" onClick={() => setOpenNuevoCli(true)}>
+                          <Plus className="w-3 h-3 mr-1" /> Nuevo cliente
+                        </Button>
+                      </div>
+                      {clientesBoutique.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">No hay clientes registrados. Crea uno para asociar la venta.</p>
+                      ) : (
+                        <Select value={fClienteBoutique} onValueChange={handleClienteBoutiqueChange}>
+                          <SelectTrigger><SelectValue placeholder="Selecciona cliente..." /></SelectTrigger>
+                          <SelectContent>
+                            {clientesBoutique.map((c) => (
+                              <SelectItem key={c.id} value={c.id}>
+                                {c.nombre}{c.ciudad ? ` · ${c.ciudad}` : ""}{c.telefono ? ` · ${c.telefono}` : ""}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                  )}
+
+                  {fTipo === "ingreso" && fUnidad !== "TIENDA" && (
                     <div className="grid grid-cols-2 gap-3">
                       <div><Label>Cliente</Label><Input value={fCliente} onChange={(e) => setFCliente(e.target.value)} /></div>
                       <div><Label>Peludo (vincular estadía)</Label>
@@ -424,6 +490,20 @@ const AdminFinanzas = () => {
 
                   <Button type="submit" className="w-full">Guardar movimiento</Button>
                 </form>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog open={openNuevoCli} onOpenChange={setOpenNuevoCli}>
+              <DialogContent className="max-w-md">
+                <DialogHeader><DialogTitle>Nuevo cliente Boutique</DialogTitle></DialogHeader>
+                <div className="space-y-3">
+                  <div><Label>Nombre *</Label><Input value={nuevoCli.nombre} onChange={(e) => setNuevoCli({ ...nuevoCli, nombre: e.target.value })} /></div>
+                  <div><Label>Teléfono</Label><Input value={nuevoCli.telefono} onChange={(e) => setNuevoCli({ ...nuevoCli, telefono: e.target.value })} /></div>
+                  <div><Label>Correo</Label><Input type="email" value={nuevoCli.email} onChange={(e) => setNuevoCli({ ...nuevoCli, email: e.target.value })} /></div>
+                  <div><Label>Ciudad</Label><Input value={nuevoCli.ciudad} onChange={(e) => setNuevoCli({ ...nuevoCli, ciudad: e.target.value })} /></div>
+                  <div><Label>Fecha de creación</Label><Input type="date" value={nuevoCli.fecha_creacion} onChange={(e) => setNuevoCli({ ...nuevoCli, fecha_creacion: e.target.value })} /></div>
+                  <Button type="button" className="w-full" onClick={handleCrearClienteBoutique}>Guardar cliente</Button>
+                </div>
               </DialogContent>
             </Dialog>
             <Button variant="outline" size="sm" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
