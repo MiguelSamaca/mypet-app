@@ -492,6 +492,20 @@ const AdminFinanzas = () => {
                 </form>
               </DialogContent>
             </Dialog>
+
+            <Dialog open={openNuevoCli} onOpenChange={setOpenNuevoCli}>
+              <DialogContent className="max-w-md">
+                <DialogHeader><DialogTitle>Nuevo cliente Boutique</DialogTitle></DialogHeader>
+                <div className="space-y-3">
+                  <div><Label>Nombre *</Label><Input value={nuevoCli.nombre} onChange={(e) => setNuevoCli({ ...nuevoCli, nombre: e.target.value })} /></div>
+                  <div><Label>Teléfono</Label><Input value={nuevoCli.telefono} onChange={(e) => setNuevoCli({ ...nuevoCli, telefono: e.target.value })} /></div>
+                  <div><Label>Correo</Label><Input type="email" value={nuevoCli.email} onChange={(e) => setNuevoCli({ ...nuevoCli, email: e.target.value })} /></div>
+                  <div><Label>Ciudad</Label><Input value={nuevoCli.ciudad} onChange={(e) => setNuevoCli({ ...nuevoCli, ciudad: e.target.value })} /></div>
+                  <div><Label>Fecha de creación</Label><Input type="date" value={nuevoCli.fecha_creacion} onChange={(e) => setNuevoCli({ ...nuevoCli, fecha_creacion: e.target.value })} /></div>
+                  <Button type="button" className="w-full" onClick={handleCrearClienteBoutique}>Guardar cliente</Button>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Button variant="outline" size="sm" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
           </div>
         </div>
