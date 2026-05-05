@@ -129,9 +129,8 @@ const AdminBoutique = () => {
     setProdCosto(String(p.costo_unitario));
     setProdPrecio(String(p.precio_venta));
     setProdStock("0");
-    setProdVariante("ninguna");
-    setProdTallasSel([]);
-    setProdColoresStr("");
+    setProdUsaTalla(false); setProdTallasSel([]);
+    setProdUsaColor(false); setProdColoresStr("");
   };
 
   const submitProducto = async (e: React.FormEvent) => {
