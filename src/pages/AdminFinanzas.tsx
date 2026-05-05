@@ -211,6 +211,16 @@ const AdminFinanzas = () => {
     };
     const { error } = await supabase.from("movimientos").insert(payload);
     if (error) { toast.error(error.message); return; }
+    // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
+    if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
+      await supabase.from("movimientos_inventario").insert({
+        producto_id: fProductoBoutique,
+        tipo: "salida",
+        cantidad: parseFloat(fCantidad) || 1,
+        costo_unitario: 0,
+        notas: `Venta · ${fNoVenta || fFecha}`,
+      });
+    }
     toast.success("Movimiento registrado");
     setOpenNuevo(false);
     resetForm();
