@@ -439,7 +439,7 @@ const AdminBoutique = () => {
                         <button
                           key={t}
                           type="button"
-                          onClick={() => setProdTallasSel((prev) => sel ? prev.filter((x) => x !== t) : [...prev, t])}
+                          onClick={() => setProdTallasSel(sel ? [] : [t])}
                           className={`px-3 py-1 rounded-md text-sm border ${sel ? "bg-primary text-primary-foreground border-primary" : "bg-background"}`}
                         >
                           {t}

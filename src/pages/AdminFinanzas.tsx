@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, LogOut, Download, Trash2, ArrowLeft, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { Plus, LogOut, Download, Trash2, ArrowLeft, TrendingUp, TrendingDown, Wallet, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 type Tipo = "ingreso" | "gasto";
@@ -85,6 +85,7 @@ const AdminFinanzas = () => {
 
   // form nuevo movimiento
   const [openNuevo, setOpenNuevo] = useState(false);
+  const [editingMov, setEditingMov] = useState<Movimiento | null>(null);
   const [fTipo, setFTipo] = useState<Tipo>("ingreso");
   const [fFecha, setFFecha] = useState(new Date().toISOString().slice(0, 10));
   const [fFechaSalida, setFFechaSalida] = useState("");
@@ -136,7 +137,30 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique(""); setFClienteBoutique("");
+    setFProductoBoutique(""); setFClienteBoutique(""); setEditingMov(null);
+  };
+
+  const openEditarMovimiento = (m: Movimiento) => {
+    setEditingMov(m);
+    setFTipo(m.tipo);
+    setFFecha(m.fecha);
+    setFFechaSalida(m.fecha_salida || "");
+    setFCategoria(m.categoria_id || "");
+    setFUnidad(m.unidad_negocio);
+    setFTarifa(m.tarifa_id || "");
+    setFProducto(m.producto || "");
+    setFCantidad(String(m.cantidad ?? 1));
+    setFCosto(String(m.costo ?? 0));
+    setFVentas(String(m.ventas ?? 0));
+    setFCliente(m.cliente || "");
+    setFNoVenta(m.no_venta || "");
+    setFDetalle(m.detalle || "");
+    setFPerro(m.perro_id || "");
+    setFManada(false);
+    setFNotas(m.notas || "");
+    setFProductoBoutique("");
+    setFClienteBoutique((m as any).cliente_boutique_id || "");
+    setOpenNuevo(true);
   };
 
   const handleClienteBoutiqueChange = (id: string) => {
@@ -243,19 +267,25 @@ const AdminFinanzas = () => {
       notas: fNotas || null,
       cliente_boutique_id: fClienteBoutique || null,
     };
-    const { error } = await supabase.from("movimientos").insert(payload as any);
-    if (error) { toast.error(error.message); return; }
-    // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
-    if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
-      await supabase.from("movimientos_inventario").insert({
-        producto_id: fProductoBoutique,
-        tipo: "salida",
-        cantidad: parseFloat(fCantidad) || 1,
-        costo_unitario: 0,
-        notas: `Venta · ${fNoVenta || fFecha}`,
-      });
+    if (editingMov) {
+      const { error } = await supabase.from("movimientos").update(payload as any).eq("id", editingMov.id);
+      if (error) { toast.error(error.message); return; }
+      toast.success("Movimiento actualizado");
+    } else {
+      const { error } = await supabase.from("movimientos").insert(payload as any);
+      if (error) { toast.error(error.message); return; }
+      // Si es ingreso de Boutique con producto vinculado → registrar salida de inventario
+      if (fTipo === "ingreso" && fUnidad === "TIENDA" && fProductoBoutique) {
+        await supabase.from("movimientos_inventario").insert({
+          producto_id: fProductoBoutique,
+          tipo: "salida",
+          cantidad: parseFloat(fCantidad) || 1,
+          costo_unitario: 0,
+          notas: `Venta · ${fNoVenta || fFecha}`,
+        });
+      }
+      toast.success("Movimiento registrado");
     }
-    toast.success("Movimiento registrado");
     setOpenNuevo(false);
     resetForm();
     loadAll();
@@ -350,7 +380,7 @@ const AdminFinanzas = () => {
                 <Button size="sm"><Plus className="w-4 h-4 mr-1" /> Nuevo movimiento</Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
-                <DialogHeader><DialogTitle>Registrar movimiento</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{editingMov ? "Editar movimiento" : "Registrar movimiento"}</DialogTitle></DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <Tabs value={fTipo} onValueChange={(v) => { setFTipo(v as Tipo); setFCategoria(""); }}>
                     <TabsList className="grid grid-cols-2 w-full">
@@ -488,7 +518,7 @@ const AdminFinanzas = () => {
 
                   <div><Label>Notas internas</Label><Textarea value={fNotas} onChange={(e) => setFNotas(e.target.value)} rows={2} /></div>
 
-                  <Button type="submit" className="w-full">Guardar movimiento</Button>
+                  <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : "Guardar movimiento"}</Button>
                 </form>
               </DialogContent>
             </Dialog>
@@ -626,6 +656,7 @@ const AdminFinanzas = () => {
                       {m.perros?.nombre ? <Link to={`/peludos/${m.perros.codigo_acceso}`} className="text-primary underline">🐾 {m.perros.nombre}</Link> : (m.cliente || "—")}
                     </TableCell>
                     <TableCell>
+                      <Button variant="ghost" size="sm" onClick={() => openEditarMovimiento(m)}><Pencil className="w-3 h-3" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => handleDelete(m.id)}><Trash2 className="w-3 h-3" /></Button>
                     </TableCell>
                   </TableRow>
