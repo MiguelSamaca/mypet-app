@@ -309,12 +309,6 @@ const AdminBoutique = () => {
                       {provMarcas.map((m) => <Badge key={m.id} variant="secondary">{m.nombre}</Badge>)}
                     </div>
                   )}
-                  {provCats.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      <span className="text-xs text-muted-foreground self-center mr-1">Categorías:</span>
-                      {provCats.map((c) => <Badge key={c.id} variant="outline">{c.nombre}</Badge>)}
-                    </div>
-                  )}
 
                   {provProds.length > 0 && (
                     <ProveedorInventario
