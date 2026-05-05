@@ -63,6 +63,7 @@ const AdminPeludos = () => {
 
   // form perro
   const [perroOpen, setPerroOpen] = useState(false);
+  const [editingPerro, setEditingPerro] = useState<Perro | null>(null);
   const [pNombre, setPNombre] = useState("");
   const [pRaza, setPRaza] = useState("");
   const [pCodigo, setPCodigo] = useState("");
@@ -70,6 +71,7 @@ const AdminPeludos = () => {
   const [pDuenoEmail, setPDuenoEmail] = useState("");
   const [pDuenoTel, setPDuenoTel] = useState("");
   const [pFoto, setPFoto] = useState<File | null>(null);
+  const [pFotoActual, setPFotoActual] = useState<string | null>(null);
   const [pDescripcion, setPDescripcion] = useState("");
 
   // form visita
