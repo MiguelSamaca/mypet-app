@@ -324,7 +324,14 @@ const AdminFinanzas = () => {
   if (!authChecked) return null;
 
   const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const categoriasFiltro = categorias.filter((c) => c.tipo === fTipo);
+  const categoriasFiltro = categorias.filter((c) => {
+    if (c.tipo !== fTipo) return false;
+    if (fTipo === "ingreso" && fUnidad === "TIENDA") {
+      const n = c.nombre.toLowerCase();
+      return n.includes("tienda") || n.includes("boutique") || n.includes("producto");
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-background">
