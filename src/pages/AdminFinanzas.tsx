@@ -136,7 +136,34 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique("");
+    setFProductoBoutique(""); setFClienteBoutique("");
+  };
+
+  const handleClienteBoutiqueChange = (id: string) => {
+    setFClienteBoutique(id);
+    const c = clientesBoutique.find((x) => x.id === id);
+    if (c) setFCliente(c.nombre);
+  };
+
+  const handleCrearClienteBoutique = async () => {
+    if (!nuevoCli.nombre.trim()) { toast.error("El nombre es obligatorio"); return; }
+    const { data, error } = await supabase.from("clientes_boutique" as any).insert({
+      nombre: nuevoCli.nombre.trim(),
+      telefono: nuevoCli.telefono || null,
+      email: nuevoCli.email || null,
+      ciudad: nuevoCli.ciudad || null,
+      fecha_creacion: nuevoCli.fecha_creacion,
+    }).select().single();
+    if (error) { toast.error(error.message); return; }
+    toast.success("Cliente creado");
+    setOpenNuevoCli(false);
+    setNuevoCli({ nombre: "", telefono: "", email: "", ciudad: "", fecha_creacion: new Date().toISOString().slice(0, 10) });
+    const newId = (data as any)?.id;
+    await loadAll();
+    if (newId) {
+      setFClienteBoutique(newId);
+      setFCliente(nuevoCli.nombre.trim());
+    }
   };
 
   const handleProductoBoutiqueChange = (id: string) => {
