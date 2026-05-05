@@ -337,7 +337,7 @@ const AdminFinanzas = () => {
                     <div><Label>Fecha de salida</Label><Input type="date" value={fFechaSalida} onChange={(e) => setFFechaSalida(e.target.value)} /></div>
                   )}
 
-                  {fTipo === "ingreso" && (
+                  {fTipo === "ingreso" && fUnidad === "HOTEL" && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
                       <Label className="text-xs uppercase">Tarifa del hotel (autocompleta)</Label>
                       <Select value={fTarifa} onValueChange={handleTarifaChange}>
@@ -354,6 +354,28 @@ const AdminFinanzas = () => {
                         <input type="checkbox" checked={fManada} onChange={(e) => handleManadaToggle(e.target.checked)} />
                         🐶🐶 Plan Manada (precio x1.8)
                       </label>
+                    </div>
+                  )}
+
+                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                    <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                      <Label className="text-xs uppercase">Producto de Boutique (descuenta inventario)</Label>
+                      {productosBoutique.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">
+                          No hay productos registrados. <Link to="/admin/boutique" className="underline">Crear productos →</Link>
+                        </p>
+                      ) : (
+                        <Select value={fProductoBoutique} onValueChange={handleProductoBoutiqueChange}>
+                          <SelectTrigger><SelectValue placeholder="Selecciona producto..." /></SelectTrigger>
+                          <SelectContent>
+                            {productosBoutique.map((p) => (
+                              <SelectItem key={p.id} value={p.id}>
+                                {p.nombre} — {COP(p.precio_venta)} (stock: {p.stock})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                   )}
 
