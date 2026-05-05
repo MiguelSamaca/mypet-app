@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import ProveedorInventario from "@/components/boutique/ProveedorInventario";
 
 interface Proveedor { id: string; nombre: string; contacto: string | null; telefono: string | null; email: string | null; notas: string | null; }
 interface Marca { id: string; proveedor_id: string; nombre: string; }
