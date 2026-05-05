@@ -40,6 +40,7 @@ const AdminBoutique = () => {
   const [openMarca, setOpenMarca] = useState<string | null>(null); // proveedor_id
   const [openCat, setOpenCat] = useState<string | null>(null);
   const [openProd, setOpenProd] = useState<string | null>(null);
+  const [editingProd, setEditingProd] = useState<Producto | null>(null);
   const [openEntrada, setOpenEntrada] = useState<Producto | null>(null);
 
   // Forms
@@ -52,10 +53,9 @@ const AdminBoutique = () => {
   const [prodNombre, setProdNombre] = useState(""); const [prodMarca, setProdMarca] = useState("");
   const [prodCat, setProdCat] = useState(""); const [prodCosto, setProdCosto] = useState("0");
   const [prodPrecio, setProdPrecio] = useState("0"); const [prodStock, setProdStock] = useState("0");
-  // Variantes
-  const [prodTipoTalla, setProdTipoTalla] = useState<"unica" | "variable">("unica");
+  // Variante única: "ninguna" | "talla" | "color"
+  const [prodVariante, setProdVariante] = useState<"ninguna" | "talla" | "color">("ninguna");
   const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
-  const [prodUsaColor, setProdUsaColor] = useState(false);
   const [prodColoresStr, setProdColoresStr] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
