@@ -23,7 +23,7 @@ interface Producto {
   talla: string | null; color: string | null;
 }
 
-const TALLAS = ["S", "M", "L", "XL"] as const;
+const TALLAS = ["Única", "S", "M", "L", "XL"] as const;
 
 const COP = (n: number) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
 
