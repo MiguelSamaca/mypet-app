@@ -380,7 +380,7 @@ const AdminFinanzas = () => {
                 <Button size="sm"><Plus className="w-4 h-4 mr-1" /> Nuevo movimiento</Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
-                <DialogHeader><DialogTitle>Registrar movimiento</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{editingMov ? "Editar movimiento" : "Registrar movimiento"}</DialogTitle></DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <Tabs value={fTipo} onValueChange={(v) => { setFTipo(v as Tipo); setFCategoria(""); }}>
                     <TabsList className="grid grid-cols-2 w-full">
