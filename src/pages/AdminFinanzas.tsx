@@ -70,7 +70,7 @@ const AdminFinanzas = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [perros, setPerros] = useState<Perro[]>([]);
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
-  const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number }>>([]);
+  const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number; talla: string | null; color: string | null }>>([]);
   const [clientesBoutique, setClientesBoutique] = useState<Array<{ id: string; nombre: string; telefono: string | null; email: string | null; ciudad: string | null }>>([]);
   const [fClienteBoutique, setFClienteBoutique] = useState<string>("");
   const [openNuevoCli, setOpenNuevoCli] = useState(false);
@@ -118,7 +118,7 @@ const AdminFinanzas = () => {
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
       supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
       supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
-      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock").eq("activo", true).order("nombre"),
+      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock,talla,color").eq("activo", true).order("nombre"),
       supabase.from("clientes_boutique" as any).select("id,nombre,telefono,email,ciudad").eq("activo", true).order("nombre"),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
@@ -411,7 +411,7 @@ const AdminFinanzas = () => {
                           <SelectContent>
                             {productosBoutique.map((p) => (
                               <SelectItem key={p.id} value={p.id}>
-                                {p.nombre} — {COP(p.precio_venta)} (stock: {p.stock})
+                                {p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} — {COP(p.precio_venta)} (stock: {p.stock})
                               </SelectItem>
                             ))}
                           </SelectContent>
