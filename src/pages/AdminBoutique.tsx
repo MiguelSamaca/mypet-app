@@ -341,6 +341,7 @@ const AdminBoutique = () => {
                               <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
                               <TableCell className="text-right text-xs">{COP(p.precio_venta)}</TableCell>
                               <TableCell className="text-right whitespace-nowrap">
+                                <Button size="sm" variant="ghost" onClick={() => openEditarProducto(p)}><Pencil className="w-3 h-3" /></Button>
                                 <Button size="sm" variant="outline" onClick={() => setOpenEntrada(p)}>+ Stock</Button>
                                 <Button size="sm" variant="ghost" onClick={() => deleteProducto(p.id)}><Trash2 className="w-3 h-3" /></Button>
                               </TableCell>
