@@ -53,9 +53,10 @@ const AdminBoutique = () => {
   const [prodNombre, setProdNombre] = useState(""); const [prodMarca, setProdMarca] = useState("");
   const [prodCat, setProdCat] = useState(""); const [prodCosto, setProdCosto] = useState("0");
   const [prodPrecio, setProdPrecio] = useState("0"); const [prodStock, setProdStock] = useState("0");
-  // Variante única: "ninguna" | "talla" | "color"
-  const [prodVariante, setProdVariante] = useState<"ninguna" | "talla" | "color">("ninguna");
+  // Variantes: puede usar talla y/o color (ambas combinadas generan variantes por combinación)
+  const [prodUsaTalla, setProdUsaTalla] = useState(false);
   const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
+  const [prodUsaColor, setProdUsaColor] = useState(false);
   const [prodColoresStr, setProdColoresStr] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
@@ -115,7 +116,7 @@ const AdminBoutique = () => {
 
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
-    setProdVariante("ninguna"); setProdTallasSel([]); setProdColoresStr("");
+    setProdUsaTalla(false); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
     setEditingProd(null); setOpenProd(null);
   };
 
@@ -128,9 +129,8 @@ const AdminBoutique = () => {
     setProdCosto(String(p.costo_unitario));
     setProdPrecio(String(p.precio_venta));
     setProdStock("0");
-    setProdVariante("ninguna");
-    setProdTallasSel([]);
-    setProdColoresStr("");
+    setProdUsaTalla(false); setProdTallasSel([]);
+    setProdUsaColor(false); setProdColoresStr("");
   };
 
   const submitProducto = async (e: React.FormEvent) => {
@@ -157,15 +157,19 @@ const AdminBoutique = () => {
     // CREATE mode
     const stockInicial = parseFloat(prodStock) || 0;
 
-    let variantes: Array<{ talla: string; color: string | null }> = [{ talla: "Talla Única", color: null }];
-    if (prodVariante === "talla") {
+    let tallas: string[] = ["Talla Única"];
+    let colores: (string | null)[] = [null];
+    if (prodUsaTalla) {
       if (prodTallasSel.length === 0) return toast.error("Selecciona al menos una talla");
-      variantes = prodTallasSel.map((t) => ({ talla: t, color: null }));
-    } else if (prodVariante === "color") {
-      const colores = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
-      if (colores.length === 0) return toast.error("Indica al menos un color (separados por coma)");
-      variantes = colores.map((c) => ({ talla: "Talla Única", color: c }));
+      tallas = prodTallasSel;
     }
+    if (prodUsaColor) {
+      const cs = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
+      if (cs.length === 0) return toast.error("Indica al menos un color (separados por coma)");
+      colores = cs;
+    }
+    const variantes: Array<{ talla: string; color: string | null }> = [];
+    tallas.forEach((t) => colores.forEach((c) => variantes.push({ talla: t, color: c })));
 
     const rows = variantes.map((v) => ({
       proveedor_id: openProd,
@@ -420,44 +424,52 @@ const AdminBoutique = () => {
 
             {!editingProd && (
               <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
-                <Label className="text-xs uppercase">Variante (solo una)</Label>
+                <Label className="text-xs uppercase">Variantes (puede combinar talla y color)</Label>
 
-                <Select value={prodVariante} onValueChange={(v) => { setProdVariante(v as any); setProdTallasSel([]); setProdColoresStr(""); }}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ninguna">Sin variante (Talla Única)</SelectItem>
-                    <SelectItem value="talla">Tamaño/Talla (S, M, L, XL)</SelectItem>
-                    <SelectItem value="color">Color (personalizado)</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" checked={prodUsaTalla} onChange={(e) => { setProdUsaTalla(e.target.checked); if (!e.target.checked) setProdTallasSel([]); }} />
+                    Tamaño/Talla (S, M, L, XL)
+                  </label>
+                  {prodUsaTalla && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {TALLAS.map((t) => {
+                        const sel = prodTallasSel.includes(t);
+                        return (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => setProdTallasSel((prev) => sel ? prev.filter((x) => x !== t) : [...prev, t])}
+                            className={`px-3 py-1 rounded-md text-sm border ${sel ? "bg-primary text-primary-foreground border-primary" : "bg-background"}`}
+                          >
+                            {t}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
-                {prodVariante === "talla" && (
-                  <div className="flex flex-wrap gap-2">
-                    {TALLAS.map((t) => {
-                      const sel = prodTallasSel.includes(t);
-                      return (
-                        <button
-                          key={t}
-                          type="button"
-                          onClick={() => setProdTallasSel(sel ? [] : [t])}
-                          className={`px-3 py-1 rounded-md text-sm border ${sel ? "bg-primary text-primary-foreground border-primary" : "bg-background"}`}
-                        >
-                          {t}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                <div>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" checked={prodUsaColor} onChange={(e) => { setProdUsaColor(e.target.checked); if (!e.target.checked) setProdColoresStr(""); }} />
+                    Color (personalizado)
+                  </label>
+                  {prodUsaColor && (
+                    <>
+                      <Input
+                        className="mt-2"
+                        placeholder="Ej: Rosa, Azul, Negro"
+                        value={prodColoresStr}
+                        onChange={(e) => setProdColoresStr(e.target.value)}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma.</p>
+                    </>
+                  )}
+                </div>
 
-                {prodVariante === "color" && (
-                  <div>
-                    <Input
-                      placeholder="Ej: Rosa, Azul, Negro"
-                      value={prodColoresStr}
-                      onChange={(e) => setProdColoresStr(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada color.</p>
-                  </div>
+                {(prodUsaTalla && prodUsaColor) && (
+                  <p className="text-xs text-muted-foreground">Se creará una variante por cada combinación talla × color.</p>
                 )}
               </div>
             )}
