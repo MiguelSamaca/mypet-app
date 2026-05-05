@@ -411,7 +411,7 @@ const AdminFinanzas = () => {
                           <SelectContent>
                             {productosBoutique.map((p) => (
                               <SelectItem key={p.id} value={p.id}>
-                                {p.nombre} — {COP(p.precio_venta)} (stock: {p.stock})
+                                {p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} — {COP(p.precio_venta)} (stock: {p.stock})
                               </SelectItem>
                             ))}
                           </SelectContent>
