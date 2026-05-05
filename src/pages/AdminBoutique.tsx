@@ -23,7 +23,7 @@ interface Producto {
   talla: string | null; color: string | null;
 }
 
-const TALLAS = ["S", "M", "L", "XL"] as const;
+const TALLAS = ["Única", "S", "M", "L", "XL"] as const;
 
 const COP = (n: number) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
 
@@ -429,7 +429,7 @@ const AdminBoutique = () => {
                 <div>
                   <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input type="checkbox" checked={prodUsaTalla} onChange={(e) => { setProdUsaTalla(e.target.checked); if (!e.target.checked) setProdTallasSel([]); }} />
-                    Tamaño/Talla (S, M, L, XL)
+                    Tamaño/Talla (Única, S, M, L, XL)
                   </label>
                   {prodUsaTalla && (
                     <div className="flex flex-wrap gap-2 mt-2">
