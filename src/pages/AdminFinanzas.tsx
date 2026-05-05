@@ -118,7 +118,7 @@ const AdminFinanzas = () => {
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
       supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
       supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
-      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock").eq("activo", true).order("nombre"),
+      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock,talla,color").eq("activo", true).order("nombre"),
       supabase.from("clientes_boutique" as any).select("id,nombre,telefono,email,ciudad").eq("activo", true).order("nombre"),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
