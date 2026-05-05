@@ -109,16 +109,18 @@ const AdminFinanzas = () => {
   useEffect(() => { if (authChecked) loadAll(); }, [authChecked]);
 
   const loadAll = async () => {
-    const [t, c, p, m] = await Promise.all([
+    const [t, c, p, m, pb] = await Promise.all([
       supabase.from("tarifas").select("*").eq("activo", true).order("orden"),
       supabase.from("categorias_finanzas").select("*").eq("activo", true).order("nombre"),
       supabase.from("perros").select("id,nombre,codigo_acceso,dueno_nombre").order("nombre"),
       supabase.from("movimientos").select("*, categorias_finanzas(*), perros(nombre,codigo_acceso,dueno_nombre)").order("fecha", { ascending: false }).limit(1000),
+      supabase.from("productos_boutique").select("id,nombre,precio_venta,costo_unitario,stock").eq("activo", true).order("nombre"),
     ]);
     if (t.data) setTarifas(t.data as Tarifa[]);
     if (c.data) setCategorias(c.data as Categoria[]);
     if (p.data) setPerros(p.data as Perro[]);
     if (m.data) setMovimientos(m.data as Movimiento[]);
+    if (pb.data) setProductosBoutique(pb.data as any);
   };
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
