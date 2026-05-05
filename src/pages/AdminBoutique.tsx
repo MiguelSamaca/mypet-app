@@ -113,23 +113,59 @@ const AdminBoutique = () => {
     setCNombre(""); setOpenCat(null); loadAll();
   };
 
+  const resetProdForm = () => {
+    setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
+    setProdVariante("ninguna"); setProdTallasSel([]); setProdColoresStr("");
+    setEditingProd(null); setOpenProd(null);
+  };
+
+  const openEditarProducto = (p: Producto) => {
+    setEditingProd(p);
+    setOpenProd(p.proveedor_id);
+    setProdNombre(p.nombre);
+    setProdMarca(p.marca_id || "");
+    setProdCat(p.categoria_id || "");
+    setProdCosto(String(p.costo_unitario));
+    setProdPrecio(String(p.precio_venta));
+    setProdStock("0");
+    setProdVariante("ninguna");
+    setProdTallasSel([]);
+    setProdColoresStr("");
+  };
+
   const submitProducto = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!openProd) return;
-    const stockInicial = parseFloat(prodStock) || 0;
     const costo = parseFloat(prodCosto) || 0;
     const precio = parseFloat(prodPrecio) || 0;
 
-    const tallas = prodTipoTalla === "variable" && prodTallasSel.length > 0 ? prodTallasSel : ["Talla Única"];
-    const colores = prodUsaColor
-      ? prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean)
-      : [null as string | null];
-    if (prodUsaColor && colores.length === 0) {
-      return toast.error("Indica al menos un color (separados por coma)");
+    // EDIT mode
+    if (editingProd) {
+      const { error } = await supabase.from("productos_boutique").update({
+        nombre: prodNombre,
+        marca_id: prodMarca || null,
+        categoria_id: prodCat || null,
+        costo_unitario: costo,
+        precio_venta: precio,
+      }).eq("id", editingProd.id);
+      if (error) return toast.error(error.message);
+      toast.success("Producto actualizado");
+      resetProdForm(); loadAll();
+      return;
     }
 
-    const variantes: Array<{ talla: string; color: string | null }> = [];
-    tallas.forEach((t) => colores.forEach((c) => variantes.push({ talla: t, color: c })));
+    // CREATE mode
+    const stockInicial = parseFloat(prodStock) || 0;
+
+    let variantes: Array<{ talla: string; color: string | null }> = [{ talla: "Talla Única", color: null }];
+    if (prodVariante === "talla") {
+      if (prodTallasSel.length === 0) return toast.error("Selecciona al menos una talla");
+      variantes = prodTallasSel.map((t) => ({ talla: t, color: null }));
+    } else if (prodVariante === "color") {
+      const colores = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
+      if (colores.length === 0) return toast.error("Indica al menos un color (separados por coma)");
+      variantes = colores.map((c) => ({ talla: "Talla Única", color: c }));
+    }
 
     const rows = variantes.map((v) => ({
       proveedor_id: openProd,
@@ -156,9 +192,7 @@ const AdminBoutique = () => {
     }
 
     toast.success(`Producto creado (${rows.length} variante${rows.length > 1 ? "s" : ""})`);
-    setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
-    setProdTipoTalla("unica"); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
-    setOpenProd(null); loadAll();
+    resetProdForm(); loadAll();
   };
 
   const submitEntrada = async (e: React.FormEvent) => {
