@@ -85,6 +85,7 @@ const AdminFinanzas = () => {
 
   // form nuevo movimiento
   const [openNuevo, setOpenNuevo] = useState(false);
+  const [editingMov, setEditingMov] = useState<Movimiento | null>(null);
   const [fTipo, setFTipo] = useState<Tipo>("ingreso");
   const [fFecha, setFFecha] = useState(new Date().toISOString().slice(0, 10));
   const [fFechaSalida, setFFechaSalida] = useState("");
