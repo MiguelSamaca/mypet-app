@@ -118,24 +118,46 @@ const AdminBoutique = () => {
     if (!openProd) return;
     const stockInicial = parseFloat(prodStock) || 0;
     const costo = parseFloat(prodCosto) || 0;
-    const { data, error } = await supabase.from("productos_boutique").insert({
+    const precio = parseFloat(prodPrecio) || 0;
+
+    const tallas = prodTipoTalla === "variable" && prodTallasSel.length > 0 ? prodTallasSel : ["Talla Única"];
+    const colores = prodUsaColor
+      ? prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean)
+      : [null as string | null];
+    if (prodUsaColor && colores.length === 0) {
+      return toast.error("Indica al menos un color (separados por coma)");
+    }
+
+    const variantes: Array<{ talla: string; color: string | null }> = [];
+    tallas.forEach((t) => colores.forEach((c) => variantes.push({ talla: t, color: c })));
+
+    const rows = variantes.map((v) => ({
       proveedor_id: openProd,
       marca_id: prodMarca || null,
       categoria_id: prodCat || null,
       nombre: prodNombre,
+      talla: v.talla,
+      color: v.color,
       costo_unitario: costo,
-      precio_venta: parseFloat(prodPrecio) || 0,
+      precio_venta: precio,
       stock: 0,
-    }).select().single();
+    }));
+
+    const { data, error } = await supabase.from("productos_boutique").insert(rows).select();
     if (error) return toast.error(error.message);
-    if (stockInicial > 0 && data) {
+
+    if (stockInicial > 0 && data && data.length === 1) {
       await supabase.from("movimientos_inventario").insert({
-        producto_id: data.id, tipo: "entrada", cantidad: stockInicial, costo_unitario: costo,
+        producto_id: data[0].id, tipo: "entrada", cantidad: stockInicial, costo_unitario: costo,
         notas: "Stock inicial",
       });
+    } else if (stockInicial > 0 && data && data.length > 1) {
+      toast.info("Producto con variantes creado. Carga el stock por variante con '+ Stock'.");
     }
-    toast.success("Producto creado");
+
+    toast.success(`Producto creado (${rows.length} variante${rows.length > 1 ? "s" : ""})`);
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
+    setProdTipoTalla("unica"); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
     setOpenProd(null); loadAll();
   };
 
