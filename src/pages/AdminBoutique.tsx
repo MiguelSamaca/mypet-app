@@ -429,7 +429,7 @@ const AdminBoutique = () => {
                 <div>
                   <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input type="checkbox" checked={prodUsaTalla} onChange={(e) => { setProdUsaTalla(e.target.checked); if (!e.target.checked) setProdTallasSel([]); }} />
-                    Tamaño/Talla (S, M, L, XL)
+                    Tamaño/Talla (Única, S, M, L, XL)
                   </label>
                   {prodUsaTalla && (
                     <div className="flex flex-wrap gap-2 mt-2">
