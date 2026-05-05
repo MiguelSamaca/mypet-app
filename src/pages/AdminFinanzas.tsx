@@ -441,7 +441,32 @@ const AdminFinanzas = () => {
                     <div><Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label><Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} /></div>
                   </div>
 
-                  {fTipo === "ingreso" && (
+                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                    <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs uppercase">Cliente Boutique</Label>
+                        <Button type="button" variant="outline" size="sm" onClick={() => setOpenNuevoCli(true)}>
+                          <Plus className="w-3 h-3 mr-1" /> Nuevo cliente
+                        </Button>
+                      </div>
+                      {clientesBoutique.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">No hay clientes registrados. Crea uno para asociar la venta.</p>
+                      ) : (
+                        <Select value={fClienteBoutique} onValueChange={handleClienteBoutiqueChange}>
+                          <SelectTrigger><SelectValue placeholder="Selecciona cliente..." /></SelectTrigger>
+                          <SelectContent>
+                            {clientesBoutique.map((c) => (
+                              <SelectItem key={c.id} value={c.id}>
+                                {c.nombre}{c.ciudad ? ` · ${c.ciudad}` : ""}{c.telefono ? ` · ${c.telefono}` : ""}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                  )}
+
+                  {fTipo === "ingreso" && fUnidad !== "TIENDA" && (
                     <div className="grid grid-cols-2 gap-3">
                       <div><Label>Cliente</Label><Input value={fCliente} onChange={(e) => setFCliente(e.target.value)} /></div>
                       <div><Label>Peludo (vincular estadía)</Label>
