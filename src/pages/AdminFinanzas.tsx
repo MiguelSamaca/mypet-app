@@ -137,7 +137,30 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique(""); setFClienteBoutique("");
+    setFProductoBoutique(""); setFClienteBoutique(""); setEditingMov(null);
+  };
+
+  const openEditarMovimiento = (m: Movimiento) => {
+    setEditingMov(m);
+    setFTipo(m.tipo);
+    setFFecha(m.fecha);
+    setFFechaSalida(m.fecha_salida || "");
+    setFCategoria(m.categoria_id || "");
+    setFUnidad(m.unidad_negocio);
+    setFTarifa(m.tarifa_id || "");
+    setFProducto(m.producto || "");
+    setFCantidad(String(m.cantidad ?? 1));
+    setFCosto(String(m.costo ?? 0));
+    setFVentas(String(m.ventas ?? 0));
+    setFCliente(m.cliente || "");
+    setFNoVenta(m.no_venta || "");
+    setFDetalle(m.detalle || "");
+    setFPerro(m.perro_id || "");
+    setFManada(false);
+    setFNotas(m.notas || "");
+    setFProductoBoutique("");
+    setFClienteBoutique((m as any).cliente_boutique_id || "");
+    setOpenNuevo(true);
   };
 
   const handleClienteBoutiqueChange = (id: string) => {
