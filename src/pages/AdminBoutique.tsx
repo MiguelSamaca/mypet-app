@@ -283,6 +283,8 @@ const AdminBoutique = () => {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Producto</TableHead>
+                            <TableHead>Talla</TableHead>
+                            <TableHead>Color</TableHead>
                             <TableHead>Marca</TableHead>
                             <TableHead>Categoría</TableHead>
                             <TableHead className="text-right">Stock</TableHead>
@@ -295,6 +297,8 @@ const AdminBoutique = () => {
                           {provProds.map((p) => (
                             <TableRow key={p.id}>
                               <TableCell className="font-medium">{p.nombre}</TableCell>
+                              <TableCell className="text-xs">{p.talla || "—"}</TableCell>
+                              <TableCell className="text-xs">{p.color || "—"}</TableCell>
                               <TableCell>{marcas.find((m) => m.id === p.marca_id)?.nombre || "—"}</TableCell>
                               <TableCell>{categorias.find((c) => c.id === p.categoria_id)?.nombre || "—"}</TableCell>
                               <TableCell className="text-right">
