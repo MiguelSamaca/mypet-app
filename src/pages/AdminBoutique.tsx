@@ -380,9 +380,9 @@ const AdminBoutique = () => {
       </Dialog>
 
       {/* Dialog: Producto */}
-      <Dialog open={!!openProd} onOpenChange={(o) => !o && setOpenProd(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>Nuevo producto</DialogTitle></DialogHeader>
+      <Dialog open={!!openProd} onOpenChange={(o) => { if (!o) resetProdForm(); }}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editingProd ? "Editar producto" : "Nuevo producto"}</DialogTitle></DialogHeader>
           <form onSubmit={submitProducto} className="space-y-3">
             <div><Label>Nombre del producto *</Label><Input value={prodNombre} onChange={(e) => setProdNombre(e.target.value)} required /></div>
             <div className="grid grid-cols-2 gap-3">
@@ -409,26 +409,29 @@ const AdminBoutique = () => {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className={`grid gap-3 ${editingProd ? "grid-cols-2" : "grid-cols-3"}`}>
               <div><Label>Costo unit.</Label><Input type="number" step="1" value={prodCosto} onChange={(e) => setProdCosto(e.target.value)} /></div>
               <div><Label>Precio venta</Label><Input type="number" step="1" value={prodPrecio} onChange={(e) => setProdPrecio(e.target.value)} /></div>
-              <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
+              {!editingProd && (
+                <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
+              )}
             </div>
 
-            <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
-              <Label className="text-xs uppercase">Variantes</Label>
+            {!editingProd && (
+              <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
+                <Label className="text-xs uppercase">Variante (solo una)</Label>
 
-              <div>
-                <Label className="text-xs">Talla</Label>
-                <Select value={prodTipoTalla} onValueChange={(v) => { setProdTipoTalla(v as any); setProdTallasSel([]); }}>
+                <Select value={prodVariante} onValueChange={(v) => { setProdVariante(v as any); setProdTallasSel([]); setProdColoresStr(""); }}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="unica">Talla Única</SelectItem>
-                    <SelectItem value="variable">Variable (S, M, L, XL)</SelectItem>
+                    <SelectItem value="ninguna">Sin variante (Talla Única)</SelectItem>
+                    <SelectItem value="talla">Tamaño/Talla (S, M, L, XL)</SelectItem>
+                    <SelectItem value="color">Color (personalizado)</SelectItem>
                   </SelectContent>
                 </Select>
-                {prodTipoTalla === "variable" && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+
+                {prodVariante === "talla" && (
+                  <div className="flex flex-wrap gap-2">
                     {TALLAS.map((t) => {
                       const sel = prodTallasSel.includes(t);
                       return (
@@ -444,26 +447,21 @@ const AdminBoutique = () => {
                     })}
                   </div>
                 )}
-              </div>
 
-              <div>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" checked={prodUsaColor} onChange={(e) => setProdUsaColor(e.target.checked)} />
-                  Tiene variantes de color
-                </label>
-                {prodUsaColor && (
-                  <Input
-                    className="mt-2"
-                    placeholder="Ej: Rosa, Azul, Negro"
-                    value={prodColoresStr}
-                    onChange={(e) => setProdColoresStr(e.target.value)}
-                  />
+                {prodVariante === "color" && (
+                  <div>
+                    <Input
+                      placeholder="Ej: Rosa, Azul, Negro"
+                      value={prodColoresStr}
+                      onChange={(e) => setProdColoresStr(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada color.</p>
+                  </div>
                 )}
-                {prodUsaColor && <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada combinación.</p>}
               </div>
-            </div>
+            )}
 
-            <Button type="submit" className="w-full">Guardar producto</Button>
+            <Button type="submit" className="w-full">{editingProd ? "Actualizar producto" : "Guardar producto"}</Button>
           </form>
         </DialogContent>
       </Dialog>
