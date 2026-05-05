@@ -116,7 +116,7 @@ const AdminBoutique = () => {
 
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
-    setProdVariante("ninguna"); setProdTallasSel([]); setProdColoresStr("");
+    setProdUsaTalla(false); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
     setEditingProd(null); setOpenProd(null);
   };
 
