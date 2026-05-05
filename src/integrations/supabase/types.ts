@@ -407,6 +407,7 @@ export type Database = {
         Row: {
           activo: boolean
           categoria_id: string | null
+          color: string | null
           costo_unitario: number
           created_at: string
           id: string
@@ -414,13 +415,16 @@ export type Database = {
           nombre: string
           notas: string | null
           precio_venta: number
+          producto_padre_id: string | null
           proveedor_id: string
           stock: number
+          talla: string | null
           updated_at: string
         }
         Insert: {
           activo?: boolean
           categoria_id?: string | null
+          color?: string | null
           costo_unitario?: number
           created_at?: string
           id?: string
@@ -428,13 +432,16 @@ export type Database = {
           nombre: string
           notas?: string | null
           precio_venta?: number
+          producto_padre_id?: string | null
           proveedor_id: string
           stock?: number
+          talla?: string | null
           updated_at?: string
         }
         Update: {
           activo?: boolean
           categoria_id?: string | null
+          color?: string | null
           costo_unitario?: number
           created_at?: string
           id?: string
@@ -442,8 +449,10 @@ export type Database = {
           nombre?: string
           notas?: string | null
           precio_venta?: number
+          producto_padre_id?: string | null
           proveedor_id?: string
           stock?: number
+          talla?: string | null
           updated_at?: string
         }
         Relationships: [
