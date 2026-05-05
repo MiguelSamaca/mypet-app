@@ -52,6 +52,11 @@ const AdminBoutique = () => {
   const [prodNombre, setProdNombre] = useState(""); const [prodMarca, setProdMarca] = useState("");
   const [prodCat, setProdCat] = useState(""); const [prodCosto, setProdCosto] = useState("0");
   const [prodPrecio, setProdPrecio] = useState("0"); const [prodStock, setProdStock] = useState("0");
+  // Variantes
+  const [prodTipoTalla, setProdTipoTalla] = useState<"unica" | "variable">("unica");
+  const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
+  const [prodUsaColor, setProdUsaColor] = useState(false);
+  const [prodColoresStr, setProdColoresStr] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
 
