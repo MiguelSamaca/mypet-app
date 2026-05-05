@@ -656,6 +656,7 @@ const AdminFinanzas = () => {
                       {m.perros?.nombre ? <Link to={`/peludos/${m.perros.codigo_acceso}`} className="text-primary underline">🐾 {m.perros.nombre}</Link> : (m.cliente || "—")}
                     </TableCell>
                     <TableCell>
+                      <Button variant="ghost" size="sm" onClick={() => openEditarMovimiento(m)}><Pencil className="w-3 h-3" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => handleDelete(m.id)}><Trash2 className="w-3 h-3" /></Button>
                     </TableCell>
                   </TableRow>
