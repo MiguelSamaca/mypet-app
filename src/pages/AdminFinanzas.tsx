@@ -130,6 +130,17 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
+    setFProductoBoutique("");
+  };
+
+  const handleProductoBoutiqueChange = (id: string) => {
+    setFProductoBoutique(id);
+    const pb = productosBoutique.find((x) => x.id === id);
+    if (!pb) return;
+    setFProducto(pb.nombre);
+    const cant = parseFloat(fCantidad) || 1;
+    setFVentas(String(pb.precio_venta * cant));
+    setFCosto(String(pb.costo_unitario * cant));
   };
 
   const handlePerroChange = (id: string) => {
