@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut } from "lucide-react";
+import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 interface Proveedor { id: string; nombre: string; contacto: string | null; telefono: string | null; email: string | null; notas: string | null; }
@@ -40,6 +40,7 @@ const AdminBoutique = () => {
   const [openMarca, setOpenMarca] = useState<string | null>(null); // proveedor_id
   const [openCat, setOpenCat] = useState<string | null>(null);
   const [openProd, setOpenProd] = useState<string | null>(null);
+  const [editingProd, setEditingProd] = useState<Producto | null>(null);
   const [openEntrada, setOpenEntrada] = useState<Producto | null>(null);
 
   // Forms
@@ -52,10 +53,9 @@ const AdminBoutique = () => {
   const [prodNombre, setProdNombre] = useState(""); const [prodMarca, setProdMarca] = useState("");
   const [prodCat, setProdCat] = useState(""); const [prodCosto, setProdCosto] = useState("0");
   const [prodPrecio, setProdPrecio] = useState("0"); const [prodStock, setProdStock] = useState("0");
-  // Variantes
-  const [prodTipoTalla, setProdTipoTalla] = useState<"unica" | "variable">("unica");
+  // Variante única: "ninguna" | "talla" | "color"
+  const [prodVariante, setProdVariante] = useState<"ninguna" | "talla" | "color">("ninguna");
   const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
-  const [prodUsaColor, setProdUsaColor] = useState(false);
   const [prodColoresStr, setProdColoresStr] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
@@ -113,23 +113,59 @@ const AdminBoutique = () => {
     setCNombre(""); setOpenCat(null); loadAll();
   };
 
+  const resetProdForm = () => {
+    setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
+    setProdVariante("ninguna"); setProdTallasSel([]); setProdColoresStr("");
+    setEditingProd(null); setOpenProd(null);
+  };
+
+  const openEditarProducto = (p: Producto) => {
+    setEditingProd(p);
+    setOpenProd(p.proveedor_id);
+    setProdNombre(p.nombre);
+    setProdMarca(p.marca_id || "");
+    setProdCat(p.categoria_id || "");
+    setProdCosto(String(p.costo_unitario));
+    setProdPrecio(String(p.precio_venta));
+    setProdStock("0");
+    setProdVariante("ninguna");
+    setProdTallasSel([]);
+    setProdColoresStr("");
+  };
+
   const submitProducto = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!openProd) return;
-    const stockInicial = parseFloat(prodStock) || 0;
     const costo = parseFloat(prodCosto) || 0;
     const precio = parseFloat(prodPrecio) || 0;
 
-    const tallas = prodTipoTalla === "variable" && prodTallasSel.length > 0 ? prodTallasSel : ["Talla Única"];
-    const colores = prodUsaColor
-      ? prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean)
-      : [null as string | null];
-    if (prodUsaColor && colores.length === 0) {
-      return toast.error("Indica al menos un color (separados por coma)");
+    // EDIT mode
+    if (editingProd) {
+      const { error } = await supabase.from("productos_boutique").update({
+        nombre: prodNombre,
+        marca_id: prodMarca || null,
+        categoria_id: prodCat || null,
+        costo_unitario: costo,
+        precio_venta: precio,
+      }).eq("id", editingProd.id);
+      if (error) return toast.error(error.message);
+      toast.success("Producto actualizado");
+      resetProdForm(); loadAll();
+      return;
     }
 
-    const variantes: Array<{ talla: string; color: string | null }> = [];
-    tallas.forEach((t) => colores.forEach((c) => variantes.push({ talla: t, color: c })));
+    // CREATE mode
+    const stockInicial = parseFloat(prodStock) || 0;
+
+    let variantes: Array<{ talla: string; color: string | null }> = [{ talla: "Talla Única", color: null }];
+    if (prodVariante === "talla") {
+      if (prodTallasSel.length === 0) return toast.error("Selecciona al menos una talla");
+      variantes = prodTallasSel.map((t) => ({ talla: t, color: null }));
+    } else if (prodVariante === "color") {
+      const colores = prodColoresStr.split(",").map((c) => c.trim()).filter(Boolean);
+      if (colores.length === 0) return toast.error("Indica al menos un color (separados por coma)");
+      variantes = colores.map((c) => ({ talla: "Talla Única", color: c }));
+    }
 
     const rows = variantes.map((v) => ({
       proveedor_id: openProd,
@@ -156,9 +192,7 @@ const AdminBoutique = () => {
     }
 
     toast.success(`Producto creado (${rows.length} variante${rows.length > 1 ? "s" : ""})`);
-    setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
-    setProdTipoTalla("unica"); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
-    setOpenProd(null); loadAll();
+    resetProdForm(); loadAll();
   };
 
   const submitEntrada = async (e: React.FormEvent) => {
@@ -307,6 +341,7 @@ const AdminBoutique = () => {
                               <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
                               <TableCell className="text-right text-xs">{COP(p.precio_venta)}</TableCell>
                               <TableCell className="text-right whitespace-nowrap">
+                                <Button size="sm" variant="ghost" onClick={() => openEditarProducto(p)}><Pencil className="w-3 h-3" /></Button>
                                 <Button size="sm" variant="outline" onClick={() => setOpenEntrada(p)}>+ Stock</Button>
                                 <Button size="sm" variant="ghost" onClick={() => deleteProducto(p.id)}><Trash2 className="w-3 h-3" /></Button>
                               </TableCell>
@@ -346,9 +381,9 @@ const AdminBoutique = () => {
       </Dialog>
 
       {/* Dialog: Producto */}
-      <Dialog open={!!openProd} onOpenChange={(o) => !o && setOpenProd(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>Nuevo producto</DialogTitle></DialogHeader>
+      <Dialog open={!!openProd} onOpenChange={(o) => { if (!o) resetProdForm(); }}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editingProd ? "Editar producto" : "Nuevo producto"}</DialogTitle></DialogHeader>
           <form onSubmit={submitProducto} className="space-y-3">
             <div><Label>Nombre del producto *</Label><Input value={prodNombre} onChange={(e) => setProdNombre(e.target.value)} required /></div>
             <div className="grid grid-cols-2 gap-3">
@@ -375,26 +410,29 @@ const AdminBoutique = () => {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className={`grid gap-3 ${editingProd ? "grid-cols-2" : "grid-cols-3"}`}>
               <div><Label>Costo unit.</Label><Input type="number" step="1" value={prodCosto} onChange={(e) => setProdCosto(e.target.value)} /></div>
               <div><Label>Precio venta</Label><Input type="number" step="1" value={prodPrecio} onChange={(e) => setProdPrecio(e.target.value)} /></div>
-              <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
+              {!editingProd && (
+                <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
+              )}
             </div>
 
-            <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
-              <Label className="text-xs uppercase">Variantes</Label>
+            {!editingProd && (
+              <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
+                <Label className="text-xs uppercase">Variante (solo una)</Label>
 
-              <div>
-                <Label className="text-xs">Talla</Label>
-                <Select value={prodTipoTalla} onValueChange={(v) => { setProdTipoTalla(v as any); setProdTallasSel([]); }}>
+                <Select value={prodVariante} onValueChange={(v) => { setProdVariante(v as any); setProdTallasSel([]); setProdColoresStr(""); }}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="unica">Talla Única</SelectItem>
-                    <SelectItem value="variable">Variable (S, M, L, XL)</SelectItem>
+                    <SelectItem value="ninguna">Sin variante (Talla Única)</SelectItem>
+                    <SelectItem value="talla">Tamaño/Talla (S, M, L, XL)</SelectItem>
+                    <SelectItem value="color">Color (personalizado)</SelectItem>
                   </SelectContent>
                 </Select>
-                {prodTipoTalla === "variable" && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+
+                {prodVariante === "talla" && (
+                  <div className="flex flex-wrap gap-2">
                     {TALLAS.map((t) => {
                       const sel = prodTallasSel.includes(t);
                       return (
@@ -410,26 +448,21 @@ const AdminBoutique = () => {
                     })}
                   </div>
                 )}
-              </div>
 
-              <div>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" checked={prodUsaColor} onChange={(e) => setProdUsaColor(e.target.checked)} />
-                  Tiene variantes de color
-                </label>
-                {prodUsaColor && (
-                  <Input
-                    className="mt-2"
-                    placeholder="Ej: Rosa, Azul, Negro"
-                    value={prodColoresStr}
-                    onChange={(e) => setProdColoresStr(e.target.value)}
-                  />
+                {prodVariante === "color" && (
+                  <div>
+                    <Input
+                      placeholder="Ej: Rosa, Azul, Negro"
+                      value={prodColoresStr}
+                      onChange={(e) => setProdColoresStr(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada color.</p>
+                  </div>
                 )}
-                {prodUsaColor && <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada combinación.</p>}
               </div>
-            </div>
+            )}
 
-            <Button type="submit" className="w-full">Guardar producto</Button>
+            <Button type="submit" className="w-full">{editingProd ? "Actualizar producto" : "Guardar producto"}</Button>
           </form>
         </DialogContent>
       </Dialog>
