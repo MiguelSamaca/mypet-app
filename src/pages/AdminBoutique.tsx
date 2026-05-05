@@ -380,6 +380,55 @@ const AdminBoutique = () => {
               <div><Label>Precio venta</Label><Input type="number" step="1" value={prodPrecio} onChange={(e) => setProdPrecio(e.target.value)} /></div>
               <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
             </div>
+
+            <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
+              <Label className="text-xs uppercase">Variantes</Label>
+
+              <div>
+                <Label className="text-xs">Talla</Label>
+                <Select value={prodTipoTalla} onValueChange={(v) => { setProdTipoTalla(v as any); setProdTallasSel([]); }}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="unica">Talla Única</SelectItem>
+                    <SelectItem value="variable">Variable (S, M, L, XL)</SelectItem>
+                  </SelectContent>
+                </Select>
+                {prodTipoTalla === "variable" && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {TALLAS.map((t) => {
+                      const sel = prodTallasSel.includes(t);
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => setProdTallasSel((prev) => sel ? prev.filter((x) => x !== t) : [...prev, t])}
+                          className={`px-3 py-1 rounded-md text-sm border ${sel ? "bg-primary text-primary-foreground border-primary" : "bg-background"}`}
+                        >
+                          {t}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input type="checkbox" checked={prodUsaColor} onChange={(e) => setProdUsaColor(e.target.checked)} />
+                  Tiene variantes de color
+                </label>
+                {prodUsaColor && (
+                  <Input
+                    className="mt-2"
+                    placeholder="Ej: Rosa, Azul, Negro"
+                    value={prodColoresStr}
+                    onChange={(e) => setProdColoresStr(e.target.value)}
+                  />
+                )}
+                {prodUsaColor && <p className="text-xs text-muted-foreground mt-1">Separa los colores con coma. Se creará una variante por cada combinación.</p>}
+              </div>
+            </div>
+
             <Button type="submit" className="w-full">Guardar producto</Button>
           </form>
         </DialogContent>
