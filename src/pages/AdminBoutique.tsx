@@ -20,7 +20,10 @@ interface Categoria { id: string; proveedor_id: string; nombre: string; }
 interface Producto {
   id: string; proveedor_id: string; marca_id: string | null; categoria_id: string | null;
   nombre: string; costo_unitario: number; precio_venta: number; stock: number; notas: string | null;
+  talla: string | null; color: string | null;
 }
+
+const TALLAS = ["S", "M", "L", "XL"] as const;
 
 const COP = (n: number) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
 
