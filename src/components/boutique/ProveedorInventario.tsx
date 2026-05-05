@@ -11,7 +11,7 @@ import { Pencil, Trash2, Search, LayoutGrid, List, Download } from "lucide-react
 interface Producto {
   id: string; proveedor_id: string; marca_id: string | null; categoria_id: string | null;
   nombre: string; costo_unitario: number; precio_venta: number; stock: number;
-  talla: string | null; color: string | null;
+  talla: string | null; color: string | null; notas: string | null;
 }
 interface Marca { id: string; nombre: string; }
 interface Categoria { id: string; nombre: string; }
