@@ -1,0 +1,1 @@
+ALTER TABLE public.movimientos ADD COLUMN IF NOT EXISTS pagado_por_miguel boolean NOT NULL DEFAULT false;

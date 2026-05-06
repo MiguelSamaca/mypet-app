@@ -231,6 +231,7 @@ export type Database = {
           no_pro_serv: string | null
           no_venta: string | null
           notas: string | null
+          pagado_por_miguel: boolean
           perro_id: string | null
           producto: string
           tarifa_id: string | null
@@ -254,6 +255,7 @@ export type Database = {
           no_pro_serv?: string | null
           no_venta?: string | null
           notas?: string | null
+          pagado_por_miguel?: boolean
           perro_id?: string | null
           producto: string
           tarifa_id?: string | null
@@ -277,6 +279,7 @@ export type Database = {
           no_pro_serv?: string | null
           no_venta?: string | null
           notas?: string | null
+          pagado_por_miguel?: boolean
           perro_id?: string | null
           producto?: string
           tarifa_id?: string | null
