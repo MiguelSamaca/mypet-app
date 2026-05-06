@@ -273,6 +273,7 @@ const AdminFinanzas = () => {
       tarifa_id: fTarifa || null,
       notas: fNotas || null,
       cliente_boutique_id: fClienteBoutique || null,
+      pagado_por_miguel: fTipo === "gasto" ? fPagadoMiguel : false,
     };
     if (editingMov) {
       const { error } = await supabase.from("movimientos").update(payload as any).eq("id", editingMov.id);
