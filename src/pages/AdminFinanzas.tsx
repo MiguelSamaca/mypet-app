@@ -103,6 +103,7 @@ const AdminFinanzas = () => {
   const [fManada, setFManada] = useState(false);
   const [fNotas, setFNotas] = useState("");
   const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
+  const [fPagadoMiguel, setFPagadoMiguel] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
