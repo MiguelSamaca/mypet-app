@@ -161,6 +161,7 @@ const AdminFinanzas = () => {
     setFNotas(m.notas || "");
     setFProductoBoutique("");
     setFClienteBoutique((m as any).cliente_boutique_id || "");
+    setFPagadoMiguel(Boolean((m as any).pagado_por_miguel));
     setOpenNuevo(true);
   };
 
