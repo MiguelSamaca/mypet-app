@@ -138,7 +138,7 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique(""); setFClienteBoutique(""); setEditingMov(null);
+    setFProductoBoutique(""); setFClienteBoutique(""); setFPagadoMiguel(false); setEditingMov(null);
   };
 
   const openEditarMovimiento = (m: Movimiento) => {
