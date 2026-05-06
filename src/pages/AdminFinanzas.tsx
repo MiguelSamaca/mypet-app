@@ -103,6 +103,7 @@ const AdminFinanzas = () => {
   const [fManada, setFManada] = useState(false);
   const [fNotas, setFNotas] = useState("");
   const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
+  const [fPagadoMiguel, setFPagadoMiguel] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -137,7 +138,7 @@ const AdminFinanzas = () => {
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
-    setFProductoBoutique(""); setFClienteBoutique(""); setEditingMov(null);
+    setFProductoBoutique(""); setFClienteBoutique(""); setFPagadoMiguel(false); setEditingMov(null);
   };
 
   const openEditarMovimiento = (m: Movimiento) => {
@@ -160,6 +161,7 @@ const AdminFinanzas = () => {
     setFNotas(m.notas || "");
     setFProductoBoutique("");
     setFClienteBoutique((m as any).cliente_boutique_id || "");
+    setFPagadoMiguel(Boolean((m as any).pagado_por_miguel));
     setOpenNuevo(true);
   };
 
@@ -271,6 +273,7 @@ const AdminFinanzas = () => {
       tarifa_id: fTarifa || null,
       notas: fNotas || null,
       cliente_boutique_id: fClienteBoutique || null,
+      pagado_por_miguel: fTipo === "gasto" ? fPagadoMiguel : false,
     };
     if (editingMov) {
       const { error } = await supabase.from("movimientos").update(payload as any).eq("id", editingMov.id);
@@ -524,6 +527,18 @@ const AdminFinanzas = () => {
                   </div>
 
                   <div><Label>Notas internas</Label><Textarea value={fNotas} onChange={(e) => setFNotas(e.target.value)} rows={2} /></div>
+
+                  {fTipo === "gasto" && (
+                    <label className="flex items-center gap-2 text-sm cursor-pointer bg-muted/30 p-3 rounded-lg">
+                      <input
+                        type="checkbox"
+                        checked={fPagadoMiguel}
+                        onChange={(e) => setFPagadoMiguel(e.target.checked)}
+                        className="h-4 w-4"
+                      />
+                      💳 Pago por Miguel
+                    </label>
+                  )}
 
                   <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : "Guardar movimiento"}</Button>
                 </form>
