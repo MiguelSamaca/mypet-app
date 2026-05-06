@@ -546,7 +546,7 @@ const AdminPeludos = () => {
                   <div className="space-y-2 pt-1">
                     <div>
                       <Label className="text-xs flex items-center gap-1"><DollarSign className="w-3 h-3" />Tarifa pagada (COP)</Label>
-                      <Input type="number" min={0} step="1000" value={vTarifa} onChange={(e) => setVTarifa(e.target.value)} placeholder="Ej: 150000" />
+                      <Input type="number" min={0} step="1" value={vTarifa} onChange={(e) => setVTarifa(e.target.value)} placeholder="Ej: 285600" />
                     </div>
                     <div>
                       <Label className="text-xs">Notas internas</Label>
