@@ -528,6 +528,18 @@ const AdminFinanzas = () => {
 
                   <div><Label>Notas internas</Label><Textarea value={fNotas} onChange={(e) => setFNotas(e.target.value)} rows={2} /></div>
 
+                  {fTipo === "gasto" && (
+                    <label className="flex items-center gap-2 text-sm cursor-pointer bg-muted/30 p-3 rounded-lg">
+                      <input
+                        type="checkbox"
+                        checked={fPagadoMiguel}
+                        onChange={(e) => setFPagadoMiguel(e.target.checked)}
+                        className="h-4 w-4"
+                      />
+                      💳 Pago por Miguel
+                    </label>
+                  )}
+
                   <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : "Guardar movimiento"}</Button>
                 </form>
               </DialogContent>
