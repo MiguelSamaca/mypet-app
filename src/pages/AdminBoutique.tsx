@@ -14,6 +14,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import ProveedorInventario from "@/components/boutique/ProveedorInventario";
+import ClientesBoutique from "@/components/boutique/ClientesBoutique";
 
 interface Proveedor { id: string; nombre: string; contacto: string | null; telefono: string | null; email: string | null; notas: string | null; }
 interface Marca { id: string; proveedor_id: string; nombre: string; }
