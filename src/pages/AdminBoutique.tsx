@@ -117,7 +117,7 @@ const AdminBoutique = () => {
 
   const renameCategoria = async (id: string, nuevoNombre: string) => {
     const { error } = await supabase.from("categorias_boutique").update({ nombre: nuevoNombre }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Categoría renombrada");
     loadAll();
   };
