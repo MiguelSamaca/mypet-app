@@ -251,9 +251,6 @@ const AdminBoutique = () => {
             <h1 className="text-xl font-bold">🛍️ Boutique · Inventario</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Link to="/admin/crm">
-              <Button size="sm" variant="outline">Clientes / Proveedores (CRM)</Button>
-            </Link>
             <Link to="/admin/boutique/maestros">
               <Button size="sm" variant="outline"><Settings2 className="w-4 h-4 mr-1" /> Marcas · Categorías</Button>
             </Link>
