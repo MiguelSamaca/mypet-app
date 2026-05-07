@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Pencil, Trash2, Search, LayoutGrid, List, Download, Check, X } from "lucide-react";
+import { Pencil, Trash2, Search, LayoutGrid, List, Download } from "lucide-react";
 
 interface Producto {
   id: string; proveedor_id: string; marca_id: string | null; categoria_id: string | null;
