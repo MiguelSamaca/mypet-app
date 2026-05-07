@@ -11,6 +11,7 @@ import AdminPeludos from "./pages/AdminPeludos";
 import AdminFinanzas from "./pages/AdminFinanzas";
 import AdminBoutique from "./pages/AdminBoutique";
 import AdminBoutiqueMaestros from "./pages/AdminBoutiqueMaestros";
+import AdminCRM from "./pages/AdminCRM";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
