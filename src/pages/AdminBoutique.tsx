@@ -60,6 +60,9 @@ const AdminBoutique = () => {
   const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
   const [prodUsaColor, setProdUsaColor] = useState(false);
   const [prodColoresStr, setProdColoresStr] = useState("");
+  // Edición: talla y color por variante
+  const [prodTalla, setProdTalla] = useState("");
+  const [prodColor, setProdColor] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
 
@@ -121,6 +124,7 @@ const AdminBoutique = () => {
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
     setProdUsaTalla(false); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
+    setProdTalla(""); setProdColor("");
     setEditingProd(null); setOpenProd(null);
   };
 
@@ -133,6 +137,8 @@ const AdminBoutique = () => {
     setProdCosto(String(p.costo_unitario));
     setProdPrecio(String(p.precio_venta));
     setProdStock("0");
+    setProdTalla(p.talla || "");
+    setProdColor(p.color || "");
     setProdUsaTalla(false); setProdTallasSel([]);
     setProdUsaColor(false); setProdColoresStr("");
   };
@@ -151,6 +157,8 @@ const AdminBoutique = () => {
         categoria_id: prodCat || null,
         costo_unitario: costo,
         precio_venta: precio,
+        talla: prodTalla.trim() || null,
+        color: prodColor.trim() || null,
       }).eq("id", editingProd.id);
       if (error) return toast.error(error.message);
       toast.success("Producto actualizado");
@@ -381,6 +389,13 @@ const AdminBoutique = () => {
                 <div><Label>Stock inicial</Label><Input type="number" step="1" value={prodStock} onChange={(e) => setProdStock(e.target.value)} /></div>
               )}
             </div>
+
+            {editingProd && (
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Talla</Label><Input value={prodTalla} onChange={(e) => setProdTalla(e.target.value)} placeholder="Ej: M, Única, 32cm" /></div>
+                <div><Label>Color</Label><Input value={prodColor} onChange={(e) => setProdColor(e.target.value)} placeholder="Ej: Rosa" /></div>
+              </div>
+            )}
 
             {!editingProd && (
               <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
