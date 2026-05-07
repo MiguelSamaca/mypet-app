@@ -124,6 +124,7 @@ const AdminBoutique = () => {
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
     setProdUsaTalla(false); setProdTallasSel([]); setProdUsaColor(false); setProdColoresStr("");
+    setProdTalla(""); setProdColor("");
     setEditingProd(null); setOpenProd(null);
   };
 
@@ -136,6 +137,8 @@ const AdminBoutique = () => {
     setProdCosto(String(p.costo_unitario));
     setProdPrecio(String(p.precio_venta));
     setProdStock("0");
+    setProdTalla(p.talla || "");
+    setProdColor(p.color || "");
     setProdUsaTalla(false); setProdTallasSel([]);
     setProdUsaColor(false); setProdColoresStr("");
   };
@@ -154,6 +157,8 @@ const AdminBoutique = () => {
         categoria_id: prodCat || null,
         costo_unitario: costo,
         precio_venta: precio,
+        talla: prodTalla.trim() || null,
+        color: prodColor.trim() || null,
       }).eq("id", editingProd.id);
       if (error) return toast.error(error.message);
       toast.success("Producto actualizado");
