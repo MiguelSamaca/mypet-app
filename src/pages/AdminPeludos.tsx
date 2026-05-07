@@ -194,6 +194,30 @@ const AdminPeludos = () => {
         if (error) throw error;
         toast.success("Peludo registrado");
       }
+      // Sincronizar dueño como Cliente Boutique (si hay nombre)
+      if (pDuenoNombre.trim()) {
+        const tel = pDuenoTel.trim() || null;
+        const email = pDuenoEmail.trim() || null;
+        let existing: { id: string } | null = null;
+        if (tel) {
+          const r = await supabase.from("clientes_boutique").select("id").eq("telefono", tel).maybeSingle();
+          if (r.data) existing = r.data;
+        }
+        if (!existing && email) {
+          const r = await supabase.from("clientes_boutique").select("id").eq("email", email).maybeSingle();
+          if (r.data) existing = r.data;
+        }
+        if (existing) {
+          await supabase.from("clientes_boutique").update({
+            nombre: pDuenoNombre, telefono: tel, email,
+          }).eq("id", existing.id);
+        } else {
+          await supabase.from("clientes_boutique").insert({
+            nombre: pDuenoNombre, telefono: tel, email,
+            notas: `Dueño de ${pNombre}`,
+          });
+        }
+      }
       setPerroOpen(false);
       resetPerroForm();
       loadData();
