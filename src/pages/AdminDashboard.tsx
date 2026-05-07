@@ -41,6 +41,14 @@ const tiles: Tile[] = [
     available: true,
   },
   {
+    to: "/admin/crm",
+    title: "CRM · Clientes y Proveedores",
+    desc: "Base de clientes de boutique, dueños de peludos y proveedores.",
+    icon: Users,
+    accent: "from-blue-500/20 to-blue-500/5",
+    available: true,
+  },
+  {
     to: "/recordatorio-compras",
     title: "Recordatorio de Compras",
     desc: "Registro y seguimiento de compras de clientes.",
