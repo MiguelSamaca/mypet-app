@@ -247,7 +247,10 @@ const AdminBoutique = () => {
             <Link to="/admin/dashboard"><Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4 mr-1" /> Panel</Button></Link>
             <h1 className="text-xl font-bold">🛍️ Boutique · Inventario</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Link to="/admin/boutique/maestros">
+              <Button size="sm" variant="outline"><Settings2 className="w-4 h-4 mr-1" /> Proveedores · Marcas · Categorías</Button>
+            </Link>
             <Dialog open={openProv} onOpenChange={setOpenProv}>
               <DialogTrigger asChild><Button size="sm"><Plus className="w-4 h-4 mr-1" /> Proveedor</Button></DialogTrigger>
               <DialogContent>
