@@ -14,7 +14,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import ProveedorInventario from "@/components/boutique/ProveedorInventario";
-import ClientesBoutique from "@/components/boutique/ClientesBoutique";
+
 
 interface Proveedor { id: string; nombre: string; contacto: string | null; telefono: string | null; email: string | null; notas: string | null; }
 interface Marca { id: string; proveedor_id: string; nombre: string; }
@@ -243,32 +243,18 @@ const AdminBoutique = () => {
             <h1 className="text-xl font-bold">🛍️ Boutique · Inventario</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Link to="/admin/boutique/maestros">
-              <Button size="sm" variant="outline"><Settings2 className="w-4 h-4 mr-1" /> Proveedores · Marcas · Categorías</Button>
+            <Link to="/admin/crm">
+              <Button size="sm" variant="outline">Clientes / Proveedores (CRM)</Button>
             </Link>
-            <Dialog open={openProv} onOpenChange={setOpenProv}>
-              <DialogTrigger asChild><Button size="sm"><Plus className="w-4 h-4 mr-1" /> Proveedor</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Nuevo proveedor</DialogTitle></DialogHeader>
-                <form onSubmit={submitProveedor} className="space-y-3">
-                  <div><Label>Nombre *</Label><Input value={pNombre} onChange={(e) => setPNombre(e.target.value)} required /></div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div><Label>Contacto</Label><Input value={pContacto} onChange={(e) => setPContacto(e.target.value)} /></div>
-                    <div><Label>Teléfono</Label><Input value={pTel} onChange={(e) => setPTel(e.target.value)} /></div>
-                  </div>
-                  <div><Label>Email</Label><Input type="email" value={pEmail} onChange={(e) => setPEmail(e.target.value)} /></div>
-                  <div><Label>Notas</Label><Textarea value={pNotas} onChange={(e) => setPNotas(e.target.value)} rows={2} /></div>
-                  <Button type="submit" className="w-full">Guardar</Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Link to="/admin/boutique/maestros">
+              <Button size="sm" variant="outline"><Settings2 className="w-4 h-4 mr-1" /> Marcas · Categorías</Button>
+            </Link>
             <Button variant="outline" size="sm" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-6 space-y-4">
-        <ClientesBoutique />
 
         {proveedores.length === 0 && (
           <Card className="p-8 text-center text-muted-foreground">

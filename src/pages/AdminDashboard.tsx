@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles } from "lucide-react";
+import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 
 type Tile = {
@@ -38,6 +38,14 @@ const tiles: Tile[] = [
     desc: "Proveedores, marcas, productos y entradas de inventario.",
     icon: ShoppingBag,
     accent: "from-amber-500/20 to-amber-500/5",
+    available: true,
+  },
+  {
+    to: "/admin/crm",
+    title: "CRM · Clientes y Proveedores",
+    desc: "Base de clientes de boutique, dueños de peludos y proveedores.",
+    icon: Users,
+    accent: "from-blue-500/20 to-blue-500/5",
     available: true,
   },
   {

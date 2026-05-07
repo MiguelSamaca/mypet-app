@@ -11,6 +11,7 @@ import AdminPeludos from "./pages/AdminPeludos";
 import AdminFinanzas from "./pages/AdminFinanzas";
 import AdminBoutique from "./pages/AdminBoutique";
 import AdminBoutiqueMaestros from "./pages/AdminBoutiqueMaestros";
+import AdminCRM from "./pages/AdminCRM";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/admin/finanzas" element={<AdminFinanzas />} />
           <Route path="/admin/boutique" element={<AdminBoutique />} />
           <Route path="/admin/boutique/maestros" element={<AdminBoutiqueMaestros />} />
+          <Route path="/admin/crm" element={<AdminCRM />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
