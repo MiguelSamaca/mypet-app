@@ -390,6 +390,13 @@ const AdminBoutique = () => {
               )}
             </div>
 
+            {editingProd && (
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Talla</Label><Input value={prodTalla} onChange={(e) => setProdTalla(e.target.value)} placeholder="Ej: M, Única, 32cm" /></div>
+                <div><Label>Color</Label><Input value={prodColor} onChange={(e) => setProdColor(e.target.value)} placeholder="Ej: Rosa" /></div>
+              </div>
+            )}
+
             {!editingProd && (
               <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
                 <Label className="text-xs uppercase">Variantes (puede combinar talla y color)</Label>
