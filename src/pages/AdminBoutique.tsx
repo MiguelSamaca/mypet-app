@@ -331,7 +331,6 @@ const AdminBoutique = () => {
                       onEdit={openEditarProducto}
                       onDelete={deleteProducto}
                       onEntrada={(p) => setOpenEntrada(p)}
-                      onRenameCategoria={renameCategoria}
                       proveedorNombre={prov.nombre}
                     />
                   )}
