@@ -270,6 +270,8 @@ const AdminBoutique = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 space-y-4">
+        <ClientesBoutique />
+
         {proveedores.length === 0 && (
           <Card className="p-8 text-center text-muted-foreground">
             <Truck className="w-10 h-10 mx-auto mb-2 opacity-40" />
