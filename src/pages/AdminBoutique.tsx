@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil } from "lucide-react";
+import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import ProveedorInventario from "@/components/boutique/ProveedorInventario";
 import ClientesBoutique from "@/components/boutique/ClientesBoutique";
@@ -116,12 +116,7 @@ const AdminBoutique = () => {
     setCNombre(""); setOpenCat(null); loadAll();
   };
 
-  const renameCategoria = async (id: string, nuevoNombre: string) => {
-    const { error } = await supabase.from("categorias_boutique").update({ nombre: nuevoNombre }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Categoría renombrada");
-    loadAll();
-  };
+
 
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
@@ -247,7 +242,10 @@ const AdminBoutique = () => {
             <Link to="/admin/dashboard"><Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4 mr-1" /> Panel</Button></Link>
             <h1 className="text-xl font-bold">🛍️ Boutique · Inventario</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Link to="/admin/boutique/maestros">
+              <Button size="sm" variant="outline"><Settings2 className="w-4 h-4 mr-1" /> Proveedores · Marcas · Categorías</Button>
+            </Link>
             <Dialog open={openProv} onOpenChange={setOpenProv}>
               <DialogTrigger asChild><Button size="sm"><Plus className="w-4 h-4 mr-1" /> Proveedor</Button></DialogTrigger>
               <DialogContent>
@@ -328,7 +326,6 @@ const AdminBoutique = () => {
                       onEdit={openEditarProducto}
                       onDelete={deleteProducto}
                       onEntrada={(p) => setOpenEntrada(p)}
-                      onRenameCategoria={renameCategoria}
                       proveedorNombre={prov.nombre}
                     />
                   )}
