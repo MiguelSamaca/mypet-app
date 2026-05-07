@@ -148,17 +148,50 @@ const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, 
           </button>
           {categorias.map((c) => {
             const sel = catFilter === c.id;
+            const editing = editCatId === c.id;
+            if (editing) {
+              return (
+                <div key={c.id} className="flex items-center gap-1 border rounded-full pl-2 pr-1 py-0.5 bg-background">
+                  <Input
+                    value={editCatNombre}
+                    onChange={(e) => setEditCatNombre(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") saveEditCat(); if (e.key === "Escape") setEditCatId(null); }}
+                    autoFocus
+                    className="h-6 text-xs px-1 w-32 border-0 focus-visible:ring-0"
+                  />
+                  <button type="button" onClick={saveEditCat} className="text-green-600 hover:text-green-700">
+                    <Check className="w-3.5 h-3.5" />
+                  </button>
+                  <button type="button" onClick={() => setEditCatId(null)} className="text-muted-foreground hover:text-foreground">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              );
+            }
             return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setCatFilter(sel ? "__all" : c.id)}
-                className={`px-2.5 py-0.5 rounded-full text-xs border transition-colors ${
-                  sel ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted"
-                }`}
-              >
-                {c.nombre}
-              </button>
+              <div key={c.id} className="inline-flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setCatFilter(sel ? "__all" : c.id)}
+                  className={`px-2.5 py-0.5 rounded-l-full text-xs border transition-colors ${
+                    sel ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted"
+                  }`}
+                >
+                  {c.nombre}
+                </button>
+                {onRenameCategoria && (
+                  <button
+                    type="button"
+                    onClick={(e) => startEditCat(e, c)}
+                    title="Renombrar categoría"
+                    className={`px-1.5 py-0.5 rounded-r-full text-xs border border-l-0 transition-colors ${
+                      sel ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90" : "bg-background hover:bg-muted"
+                    }`}
+                  >
+                    <Pencil className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
             );
           })}
         </div>
