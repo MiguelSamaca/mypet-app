@@ -116,12 +116,7 @@ const AdminBoutique = () => {
     setCNombre(""); setOpenCat(null); loadAll();
   };
 
-  const renameCategoria = async (id: string, nuevoNombre: string) => {
-    const { error } = await supabase.from("categorias_boutique").update({ nombre: nuevoNombre }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Categoría renombrada");
-    loadAll();
-  };
+
 
   const resetProdForm = () => {
     setProdNombre(""); setProdMarca(""); setProdCat(""); setProdCosto("0"); setProdPrecio("0"); setProdStock("0");
