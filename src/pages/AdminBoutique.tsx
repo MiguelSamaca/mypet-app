@@ -60,6 +60,9 @@ const AdminBoutique = () => {
   const [prodTallasSel, setProdTallasSel] = useState<string[]>([]);
   const [prodUsaColor, setProdUsaColor] = useState(false);
   const [prodColoresStr, setProdColoresStr] = useState("");
+  // Edición: talla y color por variante
+  const [prodTalla, setProdTalla] = useState("");
+  const [prodColor, setProdColor] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
 
