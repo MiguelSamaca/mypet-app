@@ -25,31 +25,15 @@ interface Props {
   onEdit: (p: Producto) => void;
   onDelete: (id: string) => void;
   onEntrada: (p: Producto) => void;
-  onRenameCategoria?: (id: string, nuevoNombre: string) => Promise<void> | void;
   proveedorNombre: string;
 }
 
-const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, onEntrada, onRenameCategoria, proveedorNombre }: Props) => {
+const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, onEntrada, proveedorNombre }: Props) => {
   const [q, setQ] = useState("");
   const [catFilter, setCatFilter] = useState<string>("__all");
   const [marcaFilter, setMarcaFilter] = useState<string>("__all");
   const [stockFilter, setStockFilter] = useState<"todos" | "con_stock" | "bajo" | "agotado">("todos");
   const [vista, setVista] = useState<"agrupada" | "tabla">("agrupada");
-  const [editCatId, setEditCatId] = useState<string | null>(null);
-  const [editCatNombre, setEditCatNombre] = useState("");
-
-  const startEditCat = (e: React.MouseEvent, c: Categoria) => {
-    e.stopPropagation();
-    setEditCatId(c.id);
-    setEditCatNombre(c.nombre);
-  };
-  const saveEditCat = async () => {
-    if (!editCatId || !onRenameCategoria) return;
-    const nuevo = editCatNombre.trim();
-    if (!nuevo) return;
-    await onRenameCategoria(editCatId, nuevo);
-    setEditCatId(null);
-  };
 
   const filtrados = useMemo(() => {
     const ql = q.trim().toLowerCase();
