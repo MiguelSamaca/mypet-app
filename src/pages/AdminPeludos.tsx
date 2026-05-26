@@ -142,9 +142,20 @@ const AdminPeludos = () => {
   };
 
   const uploadPhoto = async (file: File, folder: string) => {
-    const ext = file.name.split(".").pop();
+    // Comprime y convierte a WebP antes de subir para mejorar velocidad y peso
+    const optimized = await compressImage(file, {
+      maxWidth: 1600,
+      maxHeight: 1600,
+      quality: 0.8,
+      mimeType: "image/webp",
+    });
+    const ext = optimized.name.split(".").pop() || "webp";
     const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from("peludos").upload(path, file);
+    const { error } = await supabase.storage.from("peludos").upload(path, optimized, {
+      contentType: optimized.type,
+      cacheControl: "3600",
+      upsert: false,
+    });
     if (error) throw error;
     const { data } = supabase.storage.from("peludos").getPublicUrl(path);
     return data.publicUrl;
