@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, LogOut, Download, Trash2, ArrowLeft, TrendingUp, TrendingDown, Wallet, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import Seo from "@/components/Seo";
 
 type Tipo = "ingreso" | "gasto";
 type Unidad = "HOTEL" | "TIENDA" | "PASEOS" | "OTRO";
@@ -374,6 +375,7 @@ const AdminFinanzas = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Admin · Finanzas | Mayte Pet Hotel" description="Control interno de finanzas, ingresos, gastos y tarifas de Mayte Pet Hotel." path="/admin/finanzas" noindex />
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
+import Seo from "@/components/Seo";
 
 type Tile = {
   to: string;
@@ -92,6 +93,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="Panel de administración | Mayte Pet Hotel" description="Centro de control interno de Mayte Pet Hotel: peludos, finanzas, boutique y CRM." path="/admin/dashboard" noindex />
       <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>

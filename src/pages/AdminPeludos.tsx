@@ -15,6 +15,7 @@ import { es } from "date-fns/locale";
 import AudioDictado from "@/components/AudioDictado";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { compressImage } from "@/lib/imageCompression";
+import Seo from "@/components/Seo";
 
 interface Perro {
   id: string;
@@ -356,6 +357,7 @@ const AdminPeludos = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Admin · Peludos | Mayte Pet Hotel" description="Gestión interna de peludos, visitas y galería de Mayte Pet Hotel." path="/admin/peludos" noindex />
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">🐾 Admin · Peludos</h1>

@@ -14,6 +14,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import ProveedorInventario from "@/components/boutique/ProveedorInventario";
+import Seo from "@/components/Seo";
 
 
 interface Proveedor { id: string; nombre: string; contacto: string | null; telefono: string | null; email: string | null; notas: string | null; }
@@ -244,6 +245,7 @@ const AdminBoutique = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Admin · Boutique Inventario | Mayte Pet Hotel" description="Inventario de productos, marcas y proveedores de la boutique Mayte." path="/admin/boutique" noindex />
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">

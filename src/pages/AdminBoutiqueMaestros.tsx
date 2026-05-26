@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Pencil, Trash2, Check, X, Search, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import Seo from "@/components/Seo";
 
 interface Proveedor { id: string; nombre: string; telefono: string | null; email: string | null; }
 interface Marca { id: string; proveedor_id: string; nombre: string; }
@@ -141,6 +142,7 @@ const AdminBoutiqueMaestros = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Admin · Maestros Boutique | Mayte Pet Hotel" description="Edición de proveedores, marcas y categorías maestras de la boutique." path="/admin/boutique/maestros" noindex />
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">
