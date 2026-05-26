@@ -12,10 +12,16 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import LeadPopup from "@/components/LeadPopup";
+import Seo from "@/components/Seo";
 
 const Index = () => {
   return (
     <main className="min-h-screen">
+      <Seo
+        title="Mayte Pet Hotel - Hotel canino en Bogotá, cuidado como en casa"
+        description="Hotel canino en Bogotá con atención personalizada 24/7. Tu peludo disfruta un espacio cálido, seguro y amoroso mientras estás fuera."
+        path="/"
+      />
       <Hero />
       <WhatWeDo />
       <WhatTheyEnjoy />

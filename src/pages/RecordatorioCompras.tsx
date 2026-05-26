@@ -3,31 +3,21 @@ import RepurchaseForm from "@/components/RepurchaseForm";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import Seo from "@/components/Seo";
 
 const RecordatorioCompras = () => {
   useEffect(() => {
-    document.title = "Recordatorio de recompra | Mayte Pet Hotel";
-    const desc =
-      "Registra tu compra y recibe un recordatorio antes de que se acabe el producto de tu mascota.";
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute("name", "description");
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", desc);
-
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", `${window.location.origin}/recordatorio-compras`);
+    // scroll to top on mount
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <main className="min-h-screen">
+      <Seo
+        title="Recordatorio de recompra de alimento | Mayte Pet Hotel"
+        description="Registra tu compra y recibe un recordatorio antes de que se acabe el alimento de tu mascota. Servicio gratuito de Mayte Pet Hotel."
+        path="/recordatorio-compras"
+      />
       <RepurchaseForm />
       <Footer />
       <ScrollToTop />
