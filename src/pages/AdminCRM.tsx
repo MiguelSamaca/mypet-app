@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Plus, Pencil, Trash2, Search, LogOut, RefreshCw, Users, Truck } from "lucide-react";
 import { toast } from "sonner";
+import Seo from "@/components/Seo";
 
 interface Cliente {
   id: string; nombre: string; telefono: string | null; email: string | null;
@@ -194,6 +195,7 @@ const AdminCRM = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="Admin · CRM | Mayte Pet Hotel" description="Gestión interna de clientes y proveedores de Mayte Pet Hotel." path="/admin/crm" noindex />
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">
