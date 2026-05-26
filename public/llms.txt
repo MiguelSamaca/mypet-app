@@ -1,0 +1,10 @@
+# Mayte Pet Hotel
+
+> Hotel canino en Bogotá, Colombia, con atención personalizada 24/7. Tu peludo disfruta un espacio cálido, seguro y amoroso mientras estás fuera.
+
+Mayte Pet Hotel ofrece hospedaje canino tipo casa, paseos, manada y servicios de cuidado personalizado. Contacto vía WhatsApp al 315 4148380.
+
+## Pages
+
+- [Inicio](/): Conoce el hotel, instalaciones, servicios, tarifas, testimonios y formulario de reserva.
+- [Recordatorio de compras](/recordatorio-compras): Te avisamos cuando se acerque la fecha de renovación del alimento de tu peludo.
