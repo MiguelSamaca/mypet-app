@@ -47,11 +47,8 @@ const PeludoProfile = () => {
   useEffect(() => {
     const load = async () => {
       if (!codigo) return;
-      const { data: p } = await supabase
-        .from("perros")
-        .select("*")
-        .eq("codigo_acceso", codigo)
-        .maybeSingle();
+      const { data: pRows } = await supabase.rpc("get_perro_publico", { _codigo: codigo });
+      const p = Array.isArray(pRows) ? pRows[0] : null;
 
       if (!p) {
         setNotFound(true);
@@ -60,11 +57,7 @@ const PeludoProfile = () => {
       }
       setPerro(p as Perro);
 
-      const { data: v } = await supabase
-        .from("visitas")
-        .select("*")
-        .eq("perro_id", p.id)
-        .order("fecha_entrada", { ascending: false });
+      const { data: v } = await supabase.rpc("get_visitas_publicas", { _codigo: codigo });
 
       setVisitas((v as Visita[]) || []);
       setLoading(false);

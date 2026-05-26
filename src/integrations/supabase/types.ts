@@ -651,6 +651,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_perro_publico: {
+        Args: { _codigo: string }
+        Returns: {
+          codigo_acceso: string
+          descripcion_especial: string
+          dueno_nombre: string
+          foto_url: string
+          id: string
+          nombre: string
+          notas: string
+          raza: string
+        }[]
+      }
+      get_visitas_publicas: {
+        Args: { _codigo: string }
+        Returns: {
+          actividades: string
+          comportamiento: string
+          consenticion: number
+          descanso: number
+          energia: number
+          fecha_entrada: string
+          fecha_salida: string
+          fotos_galeria: string[]
+          id: string
+          interaccion_social: number
+          obediencia: number
+          recomendaciones: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
