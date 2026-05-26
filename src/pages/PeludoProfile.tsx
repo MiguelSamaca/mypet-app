@@ -8,6 +8,7 @@ import { CalendarDays, Heart, Sparkles, MessageCircle, Dog, PawPrint } from "luc
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import Seo from "@/components/Seo";
 import { format, eachDayOfInterval, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -140,6 +141,14 @@ const PeludoProfile = () => {
 
   return (
     <main className="min-h-screen bg-background">
+      <Seo
+        title={`${perro.nombre} · Ficha del peludo | Mayte Pet Hotel`}
+        description={`Historial de visitas, calificaciones y galería de ${perro.nombre}${perro.raza ? ` (${perro.raza})` : ""} en Mayte Pet Hotel.`}
+        path={`/peludos/${codigo}`}
+        image={perro.foto_url || undefined}
+        type="profile"
+        noindex
+      />
       {/* Hero del peludo */}
       <section className="bg-gradient-to-b from-primary/10 to-background py-12 md:py-16">
         <div className="container mx-auto px-4">
