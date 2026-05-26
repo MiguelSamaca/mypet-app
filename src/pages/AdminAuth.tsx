@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import Seo from "@/components/Seo";
+
 
 const AdminAuth = () => {
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ const AdminAuth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Seo title="Acceso administrador | Mayte Pet Hotel" description="Panel privado de Mayte Pet Hotel. Acceso solo para personal autorizado." path="/admin" noindex />
       <Card className="w-full max-w-md p-8">
         <h1 className="text-2xl font-bold mb-2">Panel Admin · Peludos</h1>
         <p className="text-sm text-muted-foreground mb-6">

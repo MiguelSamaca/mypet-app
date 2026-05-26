@@ -15,6 +15,7 @@ import { es } from "date-fns/locale";
 import AudioDictado from "@/components/AudioDictado";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { compressImage } from "@/lib/imageCompression";
+import Seo from "@/components/Seo";
 
 interface Perro {
   id: string;
