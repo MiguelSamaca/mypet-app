@@ -322,19 +322,20 @@ const AdminFinanzas = () => {
 
   // KPIs
   const kpis = useMemo(() => {
-    let ingresos = 0, gastosFijos = 0, gastosVar = 0, costos = 0;
+    let ingresos = 0, gastosFijos = 0, gastosVar = 0, costoVentas = 0;
     movFiltrados.forEach((m) => {
-      if (m.tipo === "ingreso") ingresos += Number(m.ventas) || 0;
-      else {
+      if (m.tipo === "ingreso") {
+        ingresos += Number(m.ventas) || 0;
+        costoVentas += Number(m.costo) || 0;
+      } else {
         const nat = m.categorias_finanzas?.naturaleza;
         if (nat === "fijo") gastosFijos += Number(m.costo || m.ventas) || 0;
         else gastosVar += Number(m.costo || m.ventas) || 0;
       }
-      costos += Number(m.costo) || 0;
     });
-    const totalGastos = gastosFijos + gastosVar;
+    const totalGastos = gastosFijos + gastosVar + costoVentas;
     const utilidad = ingresos - totalGastos;
-    return { ingresos, gastosFijos, gastosVar, totalGastos, utilidad, costos };
+    return { ingresos, gastosFijos, gastosVar: gastosVar + costoVentas, totalGastos, utilidad, costos: costoVentas };
   }, [movFiltrados]);
 
   const exportCSV = () => {
