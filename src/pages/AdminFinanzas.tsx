@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, LogOut, Download, Trash2, ArrowLeft, TrendingUp, TrendingDown, Wallet, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import Seo from "@/components/Seo";
+import DashboardFinanzas from "@/components/finanzas/DashboardFinanzas";
 
 type Tipo = "ingreso" | "gasto";
 type Unidad = "HOTEL" | "TIENDA" | "PASEOS" | "OTRO";
@@ -84,6 +85,7 @@ const AdminFinanzas = () => {
   const [filtroUnidad, setFiltroUnidad] = useState<Unidad | "TODAS">("TODAS");
   const [filtroTipo, setFiltroTipo] = useState<Tipo | "todos">("todos");
   const [filtroNaturalezaGasto, setFiltroNaturalezaGasto] = useState<"todos" | "fijo" | "variable">("todos");
+  const [vista, setVista] = useState<"tabla" | "dashboard">("tabla");
 
   // form nuevo movimiento
   const [openNuevo, setOpenNuevo] = useState(false);
@@ -621,7 +623,23 @@ const AdminFinanzas = () => {
               </SelectContent>
             </Select>
           </div>
+          <div>
+            <Label className="text-xs">Vista</Label>
+            <Tabs value={vista} onValueChange={(v) => setVista(v as any)}>
+              <TabsList>
+                <TabsTrigger value="tabla">📋 Tabla</TabsTrigger>
+                <TabsTrigger value="dashboard">📊 Dashboard</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </Card>
+
+        {vista === "dashboard" && (
+          <DashboardFinanzas movimientos={movimientos} anio={anio} unidad={filtroUnidad} />
+        )}
+
+        {vista === "tabla" && (<>
+
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -724,7 +742,8 @@ const AdminFinanzas = () => {
               </TableBody>
             </Table>
           </div>
-        </Card>
+          </Card>
+        </>)}
       </main>
     </div>
   );
