@@ -314,9 +314,12 @@ const AdminFinanzas = () => {
   // Filtros aplicados
   const movFiltrados = useMemo(() => {
     return movimientos.filter((m) => {
-      const d = new Date(m.fecha);
-      if (filtroPeriodo === "anio" && d.getFullYear() !== anio) return false;
-      if (filtroPeriodo === "mes" && (d.getFullYear() !== anio || d.getMonth() + 1 !== mes)) return false;
+      const [yStr, mStr] = String(m.fecha).slice(0, 10).split("-");
+      const fYear = Number(yStr);
+      const fMonth = Number(mStr);
+      if (filtroPeriodo === "anio" && fYear !== anio) return false;
+      if (filtroPeriodo === "mes" && (fYear !== anio || fMonth !== mes)) return false;
+
       if (filtroUnidad !== "TODAS" && m.unidad_negocio !== filtroUnidad) return false;
       if (filtroTipo !== "todos" && m.tipo !== filtroTipo) return false;
       if (filtroNaturalezaGasto !== "todos" && m.tipo === "gasto" && m.categorias_finanzas?.naturaleza !== filtroNaturalezaGasto) return false;
