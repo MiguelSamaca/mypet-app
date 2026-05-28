@@ -216,12 +216,12 @@ function calcularPerfil(respuestas: Opcion[]) {
 const WHATSAPP = "573154148380";
 
 export default function TestMascota() {
-  const [paso, setPaso] = useState<"intro" | "quiz" | "resultado">("intro");
+  const [paso, setPaso] = useState<"intro" | "quiz" | "form" | "resultado">("intro");
   const [nombreMascota, setNombreMascota] = useState("");
   const [respuestas, setRespuestas] = useState<Opcion[]>([]);
   const [idx, setIdx] = useState(0);
 
-  // Lead form (capturado ANTES del test)
+  // Lead form (capturado ANTES de mostrar el resultado)
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -241,7 +241,7 @@ export default function TestMascota() {
     if (idx + 1 < PREGUNTAS.length) {
       setIdx(idx + 1);
     } else {
-      setPaso("resultado");
+      setPaso("form");
     }
   };
 
@@ -256,18 +256,32 @@ export default function TestMascota() {
     setError("");
   };
 
-  const iniciarTest = async (e: React.FormEvent) => {
+  const iniciarTest = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!nombreMascota.trim()) {
+      setError("Cuéntanos cómo se llama tu peludo");
+      return;
+    }
+    setPaso("quiz");
+  };
+
+  const verResultado = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!nombre.trim()) {
+      setError("Ingresa tu nombre");
+      return;
+    }
     if (!email.trim() || !email.includes("@")) {
-      setError("Ingresa un correo válido para empezar");
+      setError("Ingresa un correo válido");
       return;
     }
     setEnviando(true);
     try {
       const { error: dbError } = await supabase.from("leads").insert({
         email: email.trim(),
-        nombre: nombre.trim() || null,
+        nombre: nombre.trim(),
         telefono: telefono.trim() || null,
         origen: "quiz_comportamiento",
       });
@@ -289,7 +303,7 @@ export default function TestMascota() {
         })
         .catch(console.error);
 
-      setPaso("quiz");
+      setPaso("resultado");
     } catch {
       setError("Hubo un error, intenta de nuevo.");
     } finally {
@@ -350,47 +364,23 @@ export default function TestMascota() {
             <form onSubmit={iniciarTest} className="space-y-3 text-left">
               <input
                 type="text"
-                placeholder="¿Cómo se llama tu peludo? (opcional)"
+                placeholder="¿Cómo se llama tu peludo? *"
                 value={nombreMascota}
                 onChange={(e) => setNombreMascota(e.target.value)}
-                maxLength={40}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="text"
-                placeholder="Tu nombre (opcional)"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                maxLength={100}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="email"
-                placeholder="Tu correo *"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 required
-                maxLength={255}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="tel"
-                placeholder="WhatsApp (opcional)"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                maxLength={20}
+                maxLength={40}
+                autoFocus
                 className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {error && <p className="text-xs text-destructive">{error}</p>}
               <button
                 type="submit"
-                disabled={enviando}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform"
               >
-                {enviando ? "Cargando..." : "¡Empezar el test! 🚀"}
+                ¡Empezar el test! 🚀
               </button>
               <p className="text-[11px] text-muted-foreground text-center">
-                Tu correo nos sirve para enviarte el cupón. No spam, lo prometemos 🐾
+                8 preguntas rápidas. Al final descubres su perfil y ganas tu cupón 🐾
               </p>
             </form>
           </div>
@@ -454,8 +444,63 @@ export default function TestMascota() {
           </div>
         )}
 
+        {/* FORM (antes del resultado) */}
+        {paso === "form" && (
+          <div className="bg-card rounded-3xl shadow-xl border-2 border-primary/20 p-6 sm:p-8 animate-in fade-in duration-500">
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">🎉</div>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                ¡Listo! Ya conocemos a {nombreMascota}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Déjanos tus datos para ver su perfil y enviarte tu <strong className="text-primary">10% OFF</strong>.
+              </p>
+            </div>
 
-        {/* RESULTADO */}
+            <form onSubmit={verResultado} className="space-y-3 text-left">
+              <input
+                type="text"
+                placeholder="Tu nombre *"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+                maxLength={100}
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="email"
+                placeholder="Tu correo *"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={255}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="tel"
+                placeholder="WhatsApp (opcional)"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                maxLength={20}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {error && <p className="text-xs text-destructive">{error}</p>}
+              <button
+                type="submit"
+                disabled={enviando}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+              >
+                {enviando ? "Cargando..." : "Ver resultado 🐾"}
+              </button>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Sin spam. Sólo te enviamos tu cupón y el perfil de {nombreMascota}.
+              </p>
+            </form>
+          </div>
+        )}
+
+
         {paso === "resultado" && resultado && (
           <div className="space-y-4 animate-in fade-in duration-500">
             {/* Perfil */}
