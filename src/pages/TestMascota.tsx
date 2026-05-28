@@ -216,12 +216,12 @@ function calcularPerfil(respuestas: Opcion[]) {
 const WHATSAPP = "573154148380";
 
 export default function TestMascota() {
-  const [paso, setPaso] = useState<"intro" | "quiz" | "form" | "resultado">("intro");
+  const [paso, setPaso] = useState<"intro" | "quiz" | "resultado">("intro");
   const [nombreMascota, setNombreMascota] = useState("");
   const [respuestas, setRespuestas] = useState<Opcion[]>([]);
   const [idx, setIdx] = useState(0);
 
-  // Lead form
+  // Lead form (capturado ANTES del test)
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -241,7 +241,7 @@ export default function TestMascota() {
     if (idx + 1 < PREGUNTAS.length) {
       setIdx(idx + 1);
     } else {
-      setPaso("form");
+      setPaso("resultado");
     }
   };
 
@@ -256,11 +256,11 @@ export default function TestMascota() {
     setError("");
   };
 
-  const enviarLead = async (e: React.FormEvent) => {
+  const iniciarTest = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!email.trim() || !email.includes("@")) {
-      setError("Ingresa un correo válido");
+      setError("Ingresa un correo válido para empezar");
       return;
     }
     setEnviando(true);
@@ -289,7 +289,7 @@ export default function TestMascota() {
         })
         .catch(console.error);
 
-      setPaso("resultado");
+      setPaso("quiz");
     } catch {
       setError("Hubo un error, intenta de nuevo.");
     } finally {
@@ -328,43 +328,71 @@ export default function TestMascota() {
           </Link>
         </div>
 
-        {/* INTRO */}
+        {/* INTRO + LEAD */}
         {paso === "intro" && (
           <div className="bg-card rounded-3xl shadow-xl border-2 border-primary/20 p-6 sm:p-8 text-center animate-in fade-in duration-500">
             <div className="text-6xl mb-3">🐾</div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               ¿Qué tipo de personalidad tiene tu peludo?
             </h1>
-            <p className="text-sm text-muted-foreground mb-6">
-              Test rápido y divertido: <strong className="text-primary">8 preguntas, 2 minutos</strong>. Conoce el perfil real
-              de comportamiento de tu mascota.
+            <p className="text-sm text-muted-foreground mb-5">
+              Test rápido y divertido: <strong className="text-primary">8 preguntas, 2 minutos</strong>. Descubre su perfil
+              + recibe <strong className="text-primary">10% OFF</strong> en su primera noche.
             </p>
 
-            <div className="grid grid-cols-4 gap-2 mb-6 text-3xl">
+            <div className="grid grid-cols-4 gap-2 mb-5 text-3xl">
               <div className="bg-primary/10 rounded-2xl py-3">🐶</div>
               <div className="bg-accent/10 rounded-2xl py-3">🦴</div>
               <div className="bg-secondary/10 rounded-2xl py-3">🎾</div>
               <div className="bg-primary/10 rounded-2xl py-3">❤️</div>
             </div>
 
-            <input
-              type="text"
-              placeholder="¿Cómo se llama tu peludo? (opcional)"
-              value={nombreMascota}
-              onChange={(e) => setNombreMascota(e.target.value)}
-              maxLength={40}
-              className="w-full px-4 py-3 mb-4 rounded-xl border-2 border-input bg-background text-foreground text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-
-            <button
-              onClick={() => setPaso("quiz")}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform"
-            >
-              ¡Empezar el test! 🚀
-            </button>
-            <p className="text-[11px] text-muted-foreground mt-3">
-              Sin datos al principio. Recibirás el resultado al final.
-            </p>
+            <form onSubmit={iniciarTest} className="space-y-3 text-left">
+              <input
+                type="text"
+                placeholder="¿Cómo se llama tu peludo? (opcional)"
+                value={nombreMascota}
+                onChange={(e) => setNombreMascota(e.target.value)}
+                maxLength={40}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="text"
+                placeholder="Tu nombre (opcional)"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                maxLength={100}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="email"
+                placeholder="Tu correo *"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={255}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="tel"
+                placeholder="WhatsApp (opcional)"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                maxLength={20}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {error && <p className="text-xs text-destructive">{error}</p>}
+              <button
+                type="submit"
+                disabled={enviando}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+              >
+                {enviando ? "Cargando..." : "¡Empezar el test! 🚀"}
+              </button>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Tu correo nos sirve para enviarte el cupón. No spam, lo prometemos 🐾
+              </p>
+            </form>
           </div>
         )}
 
@@ -426,62 +454,6 @@ export default function TestMascota() {
           </div>
         )}
 
-        {/* FORM */}
-        {paso === "form" && (
-          <div className="bg-card rounded-3xl shadow-xl border-2 border-primary/20 p-6 sm:p-8 animate-in fade-in duration-500">
-            <div className="text-center mb-5">
-              <div className="text-5xl mb-2">🎁</div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                ¡Tu resultado está listo!
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Déjanos tus datos y te mostramos el <strong className="text-primary">perfil completo</strong> de{" "}
-                {nombreMascota || "tu peludo"} + un <strong className="text-primary">10% OFF</strong> en la primera noche
-                de hospedaje.
-              </p>
-            </div>
-
-            <form onSubmit={enviarLead} className="space-y-3">
-              <input
-                type="text"
-                placeholder="Tu nombre *"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-                maxLength={100}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="email"
-                placeholder="Tu correo *"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                maxLength={255}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="tel"
-                placeholder="WhatsApp (opcional)"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                maxLength={20}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              {error && <p className="text-xs text-destructive">{error}</p>}
-              <button
-                type="submit"
-                disabled={enviando}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
-              >
-                {enviando ? "Cargando..." : "Ver resultado 🎉"}
-              </button>
-              <p className="text-[11px] text-muted-foreground text-center">
-                Tus datos están seguros. Te contactamos por WhatsApp con cariño 🐾
-              </p>
-            </form>
-          </div>
-        )}
 
         {/* RESULTADO */}
         {paso === "resultado" && resultado && (
