@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, LogOut, Download, Trash2, ArrowLeft, TrendingUp, TrendingDown, Wallet, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import Seo from "@/components/Seo";
+import DashboardFinanzas from "@/components/finanzas/DashboardFinanzas";
 
 type Tipo = "ingreso" | "gasto";
 type Unidad = "HOTEL" | "TIENDA" | "PASEOS" | "OTRO";
