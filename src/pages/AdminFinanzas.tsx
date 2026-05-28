@@ -625,9 +625,20 @@ const AdminFinanzas = () => {
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Card className="p-4">
+          <Card
+            className={`p-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] ${filtroTipo === "ingreso" ? "ring-2 ring-green-500 bg-green-50" : ""}`}
+            onClick={() => {
+              if (filtroTipo === "ingreso") {
+                setFiltroTipo("todos");
+              } else {
+                setFiltroTipo("ingreso");
+                setFiltroNaturalezaGasto("todos");
+              }
+            }}
+          >
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase"><TrendingUp className="w-4 h-4" /> Ingresos</div>
             <div className="text-2xl font-bold text-green-600 mt-1">{COP(kpis.ingresos)}</div>
+            {filtroTipo === "ingreso" && <Badge variant="outline" className="mt-1 text-[10px] border-green-500 text-green-600">Filtrado</Badge>}
           </Card>
           <Card
             className={`p-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] ${filtroNaturalezaGasto === "fijo" ? "ring-2 ring-orange-500 bg-orange-50" : ""}`}
