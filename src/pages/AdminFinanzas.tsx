@@ -623,7 +623,23 @@ const AdminFinanzas = () => {
               </SelectContent>
             </Select>
           </div>
+          <div>
+            <Label className="text-xs">Vista</Label>
+            <Tabs value={vista} onValueChange={(v) => setVista(v as any)}>
+              <TabsList>
+                <TabsTrigger value="tabla">📋 Tabla</TabsTrigger>
+                <TabsTrigger value="dashboard">📊 Dashboard</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </Card>
+
+        {vista === "dashboard" && (
+          <DashboardFinanzas movimientos={movimientos} anio={anio} unidad={filtroUnidad} />
+        )}
+
+        {vista === "tabla" && (<>
+
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
