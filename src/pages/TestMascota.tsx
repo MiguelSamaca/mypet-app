@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Helmet } from "react-helmet-async" /* fallback */;
+
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
@@ -317,6 +317,7 @@ export default function TestMascota() {
       <Seo
         title="Test de Comportamiento para tu Mascota | Mayte Pet Hotel"
         description="Descubre en 2 minutos el perfil de comportamiento de tu peludo. Test interactivo y gratis del Mayte Pet Hotel."
+        path="/test-mascota"
       />
 
       <div className="max-w-xl mx-auto">

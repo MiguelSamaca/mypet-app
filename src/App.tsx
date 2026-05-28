@@ -14,6 +14,7 @@ import AdminBoutiqueMaestros from "./pages/AdminBoutiqueMaestros";
 import AdminCRM from "./pages/AdminCRM";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import TestMascota from "./pages/TestMascota";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/recordatorio-compras" element={<RecordatorioCompras />} />
           <Route path="/recordatoriocompras" element={<RecordatorioCompras />} />
+          <Route path="/test-mascota" element={<TestMascota />} />
+          <Route path="/testmascota" element={<TestMascota />} />
           <Route path="/peludos/:codigo" element={<PeludoProfile />} />
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
