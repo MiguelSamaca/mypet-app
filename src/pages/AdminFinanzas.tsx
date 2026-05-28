@@ -629,13 +629,37 @@ const AdminFinanzas = () => {
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase"><TrendingUp className="w-4 h-4" /> Ingresos</div>
             <div className="text-2xl font-bold text-green-600 mt-1">{COP(kpis.ingresos)}</div>
           </Card>
-          <Card className="p-4">
+          <Card
+            className={`p-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] ${filtroNaturalezaGasto === "fijo" ? "ring-2 ring-orange-500 bg-orange-50" : ""}`}
+            onClick={() => {
+              if (filtroNaturalezaGasto === "fijo") {
+                setFiltroNaturalezaGasto("todos");
+                setFiltroTipo("todos");
+              } else {
+                setFiltroNaturalezaGasto("fijo");
+                setFiltroTipo("gasto");
+              }
+            }}
+          >
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase"><TrendingDown className="w-4 h-4" /> Gastos fijos</div>
             <div className="text-2xl font-bold text-orange-600 mt-1">{COP(kpis.gastosFijos)}</div>
+            {filtroNaturalezaGasto === "fijo" && <Badge variant="outline" className="mt-1 text-[10px] border-orange-500 text-orange-600">Filtrado</Badge>}
           </Card>
-          <Card className="p-4">
+          <Card
+            className={`p-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] ${filtroNaturalezaGasto === "variable" ? "ring-2 ring-orange-500 bg-orange-50" : ""}`}
+            onClick={() => {
+              if (filtroNaturalezaGasto === "variable") {
+                setFiltroNaturalezaGasto("todos");
+                setFiltroTipo("todos");
+              } else {
+                setFiltroNaturalezaGasto("variable");
+                setFiltroTipo("gasto");
+              }
+            }}
+          >
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase"><TrendingDown className="w-4 h-4" /> Gastos variables</div>
             <div className="text-2xl font-bold text-orange-600 mt-1">{COP(kpis.gastosVar)}</div>
+            {filtroNaturalezaGasto === "variable" && <Badge variant="outline" className="mt-1 text-[10px] border-orange-500 text-orange-600">Filtrado</Badge>}
           </Card>
           <Card className="p-4">
             <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase"><Wallet className="w-4 h-4" /> Utilidad</div>
