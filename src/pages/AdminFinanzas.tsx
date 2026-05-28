@@ -485,10 +485,10 @@ const AdminFinanzas = () => {
                     <div><Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label><Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} /></div>
                   </div>
 
-                  {fTipo === "ingreso" && fUnidad === "TIENDA" && (
+                  {fTipo === "ingreso" && (
                     <div className="bg-muted/30 p-3 rounded-lg space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs uppercase">Cliente Boutique</Label>
+                        <Label className="text-xs uppercase">Cliente</Label>
                         <Button type="button" variant="outline" size="sm" onClick={() => setOpenNuevoCli(true)}>
                           <Plus className="w-3 h-3 mr-1" /> Nuevo cliente
                         </Button>
@@ -507,20 +507,17 @@ const AdminFinanzas = () => {
                           </SelectContent>
                         </Select>
                       )}
-                    </div>
-                  )}
-
-                  {fTipo === "ingreso" && fUnidad !== "TIENDA" && (
-                    <div className="grid grid-cols-2 gap-3">
-                      <div><Label>Cliente</Label><Input value={fCliente} onChange={(e) => setFCliente(e.target.value)} /></div>
-                      <div><Label>Peludo (vincular estadía)</Label>
-                        <Select value={fPerro} onValueChange={handlePerroChange}>
-                          <SelectTrigger><SelectValue placeholder="Opcional..." /></SelectTrigger>
-                          <SelectContent>
-                            {perros.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      {fUnidad !== "TIENDA" && (
+                        <div className="pt-2">
+                          <Label className="text-xs uppercase">Peludo (vincular estadía)</Label>
+                          <Select value={fPerro} onValueChange={handlePerroChange}>
+                            <SelectTrigger><SelectValue placeholder="Opcional..." /></SelectTrigger>
+                            <SelectContent>
+                              {perros.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
                     </div>
                   )}
 
