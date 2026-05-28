@@ -317,9 +317,11 @@ const AdminFinanzas = () => {
       if (filtroPeriodo === "mes" && (d.getFullYear() !== anio || d.getMonth() + 1 !== mes)) return false;
       if (filtroUnidad !== "TODAS" && m.unidad_negocio !== filtroUnidad) return false;
       if (filtroTipo !== "todos" && m.tipo !== filtroTipo) return false;
+      if (filtroNaturalezaGasto !== "todos" && m.tipo === "gasto" && m.categorias_finanzas?.naturaleza !== filtroNaturalezaGasto) return false;
+      if (filtroNaturalezaGasto !== "todos" && m.tipo === "ingreso") return false;
       return true;
     });
-  }, [movimientos, filtroPeriodo, anio, mes, filtroUnidad, filtroTipo]);
+  }, [movimientos, filtroPeriodo, anio, mes, filtroUnidad, filtroTipo, filtroNaturalezaGasto]);
 
   // KPIs
   const kpis = useMemo(() => {
