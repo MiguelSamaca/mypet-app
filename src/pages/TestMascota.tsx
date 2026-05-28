@@ -216,12 +216,12 @@ function calcularPerfil(respuestas: Opcion[]) {
 const WHATSAPP = "573154148380";
 
 export default function TestMascota() {
-  const [paso, setPaso] = useState<"intro" | "quiz" | "form" | "resultado">("intro");
+  const [paso, setPaso] = useState<"intro" | "quiz" | "resultado">("intro");
   const [nombreMascota, setNombreMascota] = useState("");
   const [respuestas, setRespuestas] = useState<Opcion[]>([]);
   const [idx, setIdx] = useState(0);
 
-  // Lead form
+  // Lead form (capturado ANTES del test)
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -241,7 +241,7 @@ export default function TestMascota() {
     if (idx + 1 < PREGUNTAS.length) {
       setIdx(idx + 1);
     } else {
-      setPaso("form");
+      setPaso("resultado");
     }
   };
 
@@ -256,11 +256,11 @@ export default function TestMascota() {
     setError("");
   };
 
-  const enviarLead = async (e: React.FormEvent) => {
+  const iniciarTest = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!email.trim() || !email.includes("@")) {
-      setError("Ingresa un correo válido");
+      setError("Ingresa un correo válido para empezar");
       return;
     }
     setEnviando(true);
@@ -289,7 +289,7 @@ export default function TestMascota() {
         })
         .catch(console.error);
 
-      setPaso("resultado");
+      setPaso("quiz");
     } catch {
       setError("Hubo un error, intenta de nuevo.");
     } finally {
