@@ -216,12 +216,12 @@ function calcularPerfil(respuestas: Opcion[]) {
 const WHATSAPP = "573154148380";
 
 export default function TestMascota() {
-  const [paso, setPaso] = useState<"intro" | "quiz" | "resultado">("intro");
+  const [paso, setPaso] = useState<"intro" | "quiz" | "form" | "resultado">("intro");
   const [nombreMascota, setNombreMascota] = useState("");
   const [respuestas, setRespuestas] = useState<Opcion[]>([]);
   const [idx, setIdx] = useState(0);
 
-  // Lead form (capturado ANTES del test)
+  // Lead form (capturado ANTES de mostrar el resultado)
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -241,7 +241,7 @@ export default function TestMascota() {
     if (idx + 1 < PREGUNTAS.length) {
       setIdx(idx + 1);
     } else {
-      setPaso("resultado");
+      setPaso("form");
     }
   };
 
@@ -256,18 +256,32 @@ export default function TestMascota() {
     setError("");
   };
 
-  const iniciarTest = async (e: React.FormEvent) => {
+  const iniciarTest = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!nombreMascota.trim()) {
+      setError("Cuéntanos cómo se llama tu peludo");
+      return;
+    }
+    setPaso("quiz");
+  };
+
+  const verResultado = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!nombre.trim()) {
+      setError("Ingresa tu nombre");
+      return;
+    }
     if (!email.trim() || !email.includes("@")) {
-      setError("Ingresa un correo válido para empezar");
+      setError("Ingresa un correo válido");
       return;
     }
     setEnviando(true);
     try {
       const { error: dbError } = await supabase.from("leads").insert({
         email: email.trim(),
-        nombre: nombre.trim() || null,
+        nombre: nombre.trim(),
         telefono: telefono.trim() || null,
         origen: "quiz_comportamiento",
       });
@@ -289,7 +303,7 @@ export default function TestMascota() {
         })
         .catch(console.error);
 
-      setPaso("quiz");
+      setPaso("resultado");
     } catch {
       setError("Hubo un error, intenta de nuevo.");
     } finally {
