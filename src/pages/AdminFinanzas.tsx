@@ -366,7 +366,7 @@ const AdminFinanzas = () => {
 
   const aniosDisponibles = useMemo(() => {
     const set = new Set<number>([new Date().getFullYear()]);
-    movimientos.forEach((m) => set.add(new Date(m.fecha).getFullYear()));
+    movimientos.forEach((m) => set.add(Number(String(m.fecha).slice(0, 4))));
     return Array.from(set).sort((a, b) => b - a);
   }, [movimientos]);
 
