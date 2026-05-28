@@ -85,6 +85,7 @@ const AdminFinanzas = () => {
   const [filtroUnidad, setFiltroUnidad] = useState<Unidad | "TODAS">("TODAS");
   const [filtroTipo, setFiltroTipo] = useState<Tipo | "todos">("todos");
   const [filtroNaturalezaGasto, setFiltroNaturalezaGasto] = useState<"todos" | "fijo" | "variable">("todos");
+  const [vista, setVista] = useState<"tabla" | "dashboard">("tabla");
 
   // form nuevo movimiento
   const [openNuevo, setOpenNuevo] = useState(false);
