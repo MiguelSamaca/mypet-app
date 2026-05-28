@@ -444,8 +444,63 @@ export default function TestMascota() {
           </div>
         )}
 
+        {/* FORM (antes del resultado) */}
+        {paso === "form" && (
+          <div className="bg-card rounded-3xl shadow-xl border-2 border-primary/20 p-6 sm:p-8 animate-in fade-in duration-500">
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">🎉</div>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                ¡Listo! Ya conocemos a {nombreMascota}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Déjanos tus datos para ver su perfil y enviarte tu <strong className="text-primary">10% OFF</strong>.
+              </p>
+            </div>
 
-        {/* RESULTADO */}
+            <form onSubmit={verResultado} className="space-y-3 text-left">
+              <input
+                type="text"
+                placeholder="Tu nombre *"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+                maxLength={100}
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="email"
+                placeholder="Tu correo *"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={255}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <input
+                type="tel"
+                placeholder="WhatsApp (opcional)"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                maxLength={20}
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {error && <p className="text-xs text-destructive">{error}</p>}
+              <button
+                type="submit"
+                disabled={enviando}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+              >
+                {enviando ? "Cargando..." : "Ver resultado 🐾"}
+              </button>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Sin spam. Sólo te enviamos tu cupón y el perfil de {nombreMascota}.
+              </p>
+            </form>
+          </div>
+        )}
+
+
         {paso === "resultado" && resultado && (
           <div className="space-y-4 animate-in fade-in duration-500">
             {/* Perfil */}
