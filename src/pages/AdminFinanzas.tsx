@@ -742,7 +742,8 @@ const AdminFinanzas = () => {
               </TableBody>
             </Table>
           </div>
-        </Card>
+          </Card>
+        </>)}
       </main>
     </div>
   );
