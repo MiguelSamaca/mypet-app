@@ -364,47 +364,23 @@ export default function TestMascota() {
             <form onSubmit={iniciarTest} className="space-y-3 text-left">
               <input
                 type="text"
-                placeholder="¿Cómo se llama tu peludo? (opcional)"
+                placeholder="¿Cómo se llama tu peludo? *"
                 value={nombreMascota}
                 onChange={(e) => setNombreMascota(e.target.value)}
-                maxLength={40}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="text"
-                placeholder="Tu nombre (opcional)"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                maxLength={100}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="email"
-                placeholder="Tu correo *"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 required
-                maxLength={255}
-                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <input
-                type="tel"
-                placeholder="WhatsApp (opcional)"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                maxLength={20}
+                maxLength={40}
+                autoFocus
                 className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {error && <p className="text-xs text-destructive">{error}</p>}
               <button
                 type="submit"
-                disabled={enviando}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-lg hover:scale-[1.02] transition-transform"
               >
-                {enviando ? "Cargando..." : "¡Empezar el test! 🚀"}
+                ¡Empezar el test! 🚀
               </button>
               <p className="text-[11px] text-muted-foreground text-center">
-                Tu correo nos sirve para enviarte el cupón. No spam, lo prometemos 🐾
+                8 preguntas rápidas. Al final descubres su perfil y ganas tu cupón 🐾
               </p>
             </form>
           </div>
