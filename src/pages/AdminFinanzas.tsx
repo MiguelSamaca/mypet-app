@@ -83,6 +83,7 @@ const AdminFinanzas = () => {
   const [mes, setMes] = useState(new Date().getMonth() + 1);
   const [filtroUnidad, setFiltroUnidad] = useState<Unidad | "TODAS">("TODAS");
   const [filtroTipo, setFiltroTipo] = useState<Tipo | "todos">("todos");
+  const [filtroNaturalezaGasto, setFiltroNaturalezaGasto] = useState<"todos" | "fijo" | "variable">("todos");
 
   // form nuevo movimiento
   const [openNuevo, setOpenNuevo] = useState(false);
