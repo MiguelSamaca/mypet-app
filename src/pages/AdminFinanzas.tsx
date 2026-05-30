@@ -488,7 +488,11 @@ const AdminFinanzas = () => {
                   <div><Label>Producto / Concepto *</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required /></div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    <div><Label>Cantidad</Label><Input type="number" step="0.01" value={fCantidad} onChange={(e) => handleCantidadChange(e.target.value)} /></div>
+                    <div><Label>Cantidad</Label><Input type="number" step={fTipo === "ingreso" ? "1" : "0.01"} value={fCantidad} onChange={(e) => {
+                      const val = e.target.value;
+                      if (fTipo === "ingreso" && val.includes(".")) return;
+                      handleCantidadChange(val);
+                    }} /></div>
                     <div><Label>Costo (COP)</Label><Input type="number" step="1" value={fCosto} onChange={(e) => setFCosto(e.target.value)} /></div>
                     <div><Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label><Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} /></div>
                   </div>
