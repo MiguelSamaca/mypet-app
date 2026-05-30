@@ -288,7 +288,7 @@ const AdminFinanzas = () => {
       if (error) { toast.error(error.message); return; }
       toast.success("Movimiento actualizado");
     } else {
-      const { error } = await supabase.from("movimientos").insert(payload as any);
+      const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
       if (error) { toast.error(error.message); return; }
       // Si hay producto de inventario vinculado → registrar salida (venta o consumo/gasto)
       if (fProductoBoutique && (fTipo === "ingreso" || fTipo === "gasto")) {
@@ -298,7 +298,8 @@ const AdminFinanzas = () => {
           cantidad: parseFloat(fCantidad) || 1,
           costo_unitario: parseFloat(fCosto) / (parseFloat(fCantidad) || 1) || 0,
           notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
-        });
+          movimiento_id: insertedMov?.id ?? null,
+        } as any);
       }
       toast.success("Movimiento registrado");
     }
