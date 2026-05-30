@@ -273,6 +273,29 @@ const DashboardFinanzas = ({ movimientos, anio, unidad }: Props) => {
             </ResponsiveContainer>
           )}
         </div>
+
+        {/* Top ingresos */}
+        <div className="md:col-span-2">
+          <h3 className="text-sm font-semibold mb-1">
+            Top ingresos {unidadEfectiva !== "TODAS" && <span className="text-muted-foreground">· {unidadEfectiva}</span>}
+            {drillMes !== null && <span className="text-primary"> · {MESES_LARGO[drillMes]}</span>}
+          </h3>
+          <p className="text-[11px] text-muted-foreground mb-2">De mayor a menor por producto/servicio</p>
+          {topIngresos.length === 0 ? (
+            <p className="text-xs text-muted-foreground py-8 text-center">Sin datos</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={topIngresos} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                <XAxis type="number" tickFormatter={COP_SHORT} tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="nombre" tick={{ fontSize: 11 }} width={160} />
+                <Tooltip formatter={(v: number) => COP(v)} />
+                <Bar dataKey="total" fill="#10b981" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
       </div>
     </Card>
   );
