@@ -311,10 +311,10 @@ const AdminFinanzas = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("¿Eliminar este movimiento?")) return;
     // Revertir movimientos de inventario vinculados (las salidas se compensan con entradas)
-    const { data: invLinks } = await supabase
+    const { data: invLinks } = await (supabase as any)
       .from("movimientos_inventario")
       .select("producto_id, cantidad, costo_unitario, tipo")
-      .eq("movimiento_id" as any, id);
+      .eq("movimiento_id", id);
     if (invLinks && invLinks.length > 0) {
       const reversos = invLinks
         .filter((m: any) => m.tipo === "salida" || m.tipo === "entrada")
