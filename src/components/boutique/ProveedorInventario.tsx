@@ -225,7 +225,11 @@ const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, 
                   <TableCell className="text-xs">{p.talla || "—"}</TableCell>
                   <TableCell className="text-xs">{p.color || "—"}</TableCell>
                   <TableCell className="text-right">
-                    <Badge variant={p.stock <= 0 ? "destructive" : p.stock <= 2 ? "outline" : "secondary"}>{p.stock}</Badge>
+                    {p.stock <= 2 ? (
+                      <Badge variant={p.stock <= 0 ? "destructive" : "default"}>{p.stock}</Badge>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">{p.stock}</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
                   <TableCell className="text-right text-xs">{COP(p.precio_venta)}</TableCell>
