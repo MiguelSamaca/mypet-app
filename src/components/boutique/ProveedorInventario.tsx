@@ -228,7 +228,7 @@ const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, 
                     {p.stock <= 2 ? (
                       <Badge variant={p.stock <= 0 ? "destructive" : "default"}>{p.stock}</Badge>
                     ) : (
-                      <span className="text-sm text-muted-foreground">{p.stock}</span>
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-sm text-primary font-medium">{p.stock}</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
@@ -281,7 +281,7 @@ const ProveedorInventario = ({ productos, marcas, categorias, onEdit, onDelete, 
                               {p.stock <= 2 ? (
                                 <Badge variant={p.stock <= 0 ? "destructive" : "default"}>{p.stock}</Badge>
                               ) : (
-                                <span className="text-sm text-muted-foreground">{p.stock}</span>
+                                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-sm text-primary font-medium">{p.stock}</span>
                               )}
                             </TableCell>
                             <TableCell className="text-right text-xs">{COP(p.costo_unitario)}</TableCell>
