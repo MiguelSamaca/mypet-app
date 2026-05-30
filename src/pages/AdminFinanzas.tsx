@@ -461,16 +461,56 @@ const AdminFinanzas = () => {
                           No hay productos registrados. <Link to="/admin/boutique" className="underline">Crear productos →</Link>
                         </p>
                       ) : (
-                        <Select value={fProductoBoutique} onValueChange={handleProductoBoutiqueChange}>
-                          <SelectTrigger><SelectValue placeholder="Selecciona producto..." /></SelectTrigger>
-                          <SelectContent>
-                            {productosBoutique.map((p) => (
-                              <SelectItem key={p.id} value={p.id}>
-                                {p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} — {COP(fTipo === "gasto" ? p.costo_unitario : p.precio_venta)} (stock: {p.stock})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Popover open={productoBoutiqueOpen} onOpenChange={setProductoBoutiqueOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={productoBoutiqueOpen}
+                              className="w-full justify-between font-normal"
+                            >
+                              {(() => {
+                                const p = productosBoutique.find((x) => x.id === fProductoBoutique);
+                                if (!p) return <span className="text-muted-foreground">Selecciona producto...</span>;
+                                return <span className="truncate">{p.nombre}{p.talla ? ` · ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""} (stock: {p.stock})</span>;
+                              })()}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                            <Command
+                              filter={(value, search) => {
+                                if (!search) return 1;
+                                return value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
+                              }}
+                            >
+                              <CommandInput placeholder="Buscar producto..." />
+                              <CommandList>
+                                <CommandEmpty>No se encontraron productos.</CommandEmpty>
+                                <CommandGroup>
+                                  {productosBoutique.map((p) => {
+                                    const label = `${p.nombre}${p.talla ? ` · ${p.talla}` : ""}${p.color ? ` · ${p.color}` : ""}`;
+                                    return (
+                                      <CommandItem
+                                        key={p.id}
+                                        value={`${label} ${p.id}`}
+                                        onSelect={() => {
+                                          handleProductoBoutiqueChange(p.id);
+                                          setProductoBoutiqueOpen(false);
+                                        }}
+                                      >
+                                        <Check className={cn("mr-2 h-4 w-4", fProductoBoutique === p.id ? "opacity-100" : "opacity-0")} />
+                                        <span className="flex-1 truncate">{label}</span>
+                                        <span className="ml-2 text-xs text-muted-foreground">{COP(fTipo === "gasto" ? p.costo_unitario : p.precio_venta)} · stock {p.stock}</span>
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+
                       )}
                     </div>
                   )}
