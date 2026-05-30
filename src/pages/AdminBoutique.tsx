@@ -67,6 +67,12 @@ const AdminBoutique = () => {
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
 
+  // Búsqueda global de productos
+  const [busquedaGlobal, setBusquedaGlobal] = useState("");
+  const [mostrarResultados, setMostrarResultados] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { navigate("/admin"); return; }
