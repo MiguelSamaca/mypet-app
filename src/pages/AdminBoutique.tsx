@@ -554,6 +554,51 @@ const AdminBoutique = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog: Detalle producto seleccionado desde búsqueda global */}
+      <Dialog open={!!productoSeleccionado} onOpenChange={(o) => !o && setProductoSeleccionado(null)}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>{productoSeleccionado?.nombre}</DialogTitle></DialogHeader>
+          {productoSeleccionado && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div><span className="text-muted-foreground">Proveedor:</span> {proveedores.find((pr) => pr.id === productoSeleccionado.proveedor_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Marca:</span> {marcas.find((m) => m.id === productoSeleccionado.marca_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Categoría:</span> {categorias.find((c) => c.id === productoSeleccionado.categoria_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Stock:</span> <Badge variant={productoSeleccionado.stock <= 0 ? "destructive" : "secondary"}>{productoSeleccionado.stock}</Badge></div>
+                <div><span className="text-muted-foreground">Talla:</span> {productoSeleccionado.talla || "—"}</div>
+                <div><span className="text-muted-foreground">Color:</span> {productoSeleccionado.color || "—"}</div>
+                <div><span className="text-muted-foreground">Costo:</span> {COP(productoSeleccionado.costo_unitario)}</div>
+                <div><span className="text-muted-foreground">Precio:</span> {COP(productoSeleccionado.precio_venta)}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => { openEditarProducto(productoSeleccionado); setProductoSeleccionado(null); }}
+                >
+                  <Pencil className="w-4 h-4 mr-1" /> Editar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => { setOpenEntrada(productoSeleccionado); setProductoSeleccionado(null); }}
+                >
+                  + Stock
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => { deleteProducto(productoSeleccionado.id); setProductoSeleccionado(null); }}
+                >
+                  <Trash2 className="w-4 h-4 mr-1" /> Eliminar
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
