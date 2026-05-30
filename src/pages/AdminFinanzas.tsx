@@ -75,7 +75,7 @@ const AdminFinanzas = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [perros, setPerros] = useState<Perro[]>([]);
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
-  const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number; talla: string | null; color: string | null }>>([]);
+  const [productosBoutique, setProductosBoutique] = useState<Array<{ id: string; nombre: string; precio_venta: number; costo_unitario: number; stock: number; talla: string | null; color: string | null; categoria_nombre: string | null }>>([]);
   const [clientesBoutique, setClientesBoutique] = useState<Array<{ id: string; nombre: string; telefono: string | null; email: string | null; ciudad: string | null }>>([]);
   const [fClienteBoutique, setFClienteBoutique] = useState<string>("");
   const [openNuevoCli, setOpenNuevoCli] = useState(false);
