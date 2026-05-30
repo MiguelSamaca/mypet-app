@@ -17,6 +17,7 @@ interface Mov {
   unidad_negocio: Unidad;
   costo: number;
   ventas: number;
+  producto?: string | null;
   categorias_finanzas?: { nombre: string; naturaleza: "fijo" | "variable" | null } | null;
 }
 
