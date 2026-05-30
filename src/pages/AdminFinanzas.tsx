@@ -713,6 +713,7 @@ const AdminFinanzas = () => {
                   <TableHead>Tipo</TableHead>
                   <TableHead>Unidad</TableHead>
                   <TableHead>Producto</TableHead>
+                  <TableHead>Cantidad</TableHead>
                   <TableHead>Categoría</TableHead>
                   <TableHead className="text-right">Costo</TableHead>
                   <TableHead className="text-right">Ventas</TableHead>
@@ -734,6 +735,7 @@ const AdminFinanzas = () => {
                     </TableCell>
                     <TableCell className="text-xs">{UNIDAD_LABEL[m.unidad_negocio] || m.unidad_negocio}</TableCell>
                     <TableCell className="font-medium">{m.producto}</TableCell>
+                    <TableCell className="text-center text-xs">{m.cantidad}</TableCell>
                     <TableCell className="text-xs">{m.categorias_finanzas?.nombre || "—"}</TableCell>
                     <TableCell className="text-right text-xs">{m.costo > 0 ? COP(Number(m.costo)) : "—"}</TableCell>
                     <TableCell className="text-right font-semibold">{m.ventas > 0 ? COP(Number(m.ventas)) : "—"}</TableCell>
