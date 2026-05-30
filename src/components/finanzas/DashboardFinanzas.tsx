@@ -17,6 +17,7 @@ interface Mov {
   unidad_negocio: Unidad;
   costo: number;
   ventas: number;
+  producto?: string | null;
   categorias_finanzas?: { nombre: string; naturaleza: "fijo" | "variable" | null } | null;
 }
 
@@ -111,6 +112,21 @@ const DashboardFinanzas = ({ movimientos, anio, unidad }: Props) => {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
       .map(([k, v]) => ({ categoria: k, total: v }));
+  }, [datosAnio, drillMes]);
+
+  // Top ingresos — agrupa por producto (o categoría si no hay), aplica drillMes
+  const topIngresos = useMemo(() => {
+    const base = drillMes !== null ? datosAnio.filter((m) => new Date(m.fecha).getMonth() === drillMes) : datosAnio;
+    const map = new Map<string, number>();
+    base.forEach((m) => {
+      if (m.tipo !== "ingreso") return;
+      const k = (m.producto && m.producto.trim()) || m.categorias_finanzas?.nombre || "Sin nombre";
+      map.set(k, (map.get(k) || 0) + (Number(m.ventas) || 0));
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([k, v]) => ({ nombre: k, total: v }));
   }, [datosAnio, drillMes]);
 
   const hayFiltro = drillUnidad !== null || drillMes !== null;
@@ -257,6 +273,29 @@ const DashboardFinanzas = ({ movimientos, anio, unidad }: Props) => {
             </ResponsiveContainer>
           )}
         </div>
+
+        {/* Top ingresos */}
+        <div className="md:col-span-2">
+          <h3 className="text-sm font-semibold mb-1">
+            Top ingresos {unidadEfectiva !== "TODAS" && <span className="text-muted-foreground">· {unidadEfectiva}</span>}
+            {drillMes !== null && <span className="text-primary"> · {MESES_LARGO[drillMes]}</span>}
+          </h3>
+          <p className="text-[11px] text-muted-foreground mb-2">De mayor a menor por producto/servicio</p>
+          {topIngresos.length === 0 ? (
+            <p className="text-xs text-muted-foreground py-8 text-center">Sin datos</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={topIngresos} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                <XAxis type="number" tickFormatter={COP_SHORT} tick={{ fontSize: 11 }} />
+                <YAxis type="category" dataKey="nombre" tick={{ fontSize: 11 }} width={160} />
+                <Tooltip formatter={(v: number) => COP(v)} />
+                <Bar dataKey="total" fill="#10b981" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
       </div>
     </Card>
   );
