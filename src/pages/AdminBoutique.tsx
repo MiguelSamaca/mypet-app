@@ -295,6 +295,68 @@ const AdminBoutique = () => {
           </Card>
         )}
 
+        {/* Búsqueda global de productos */}
+        {productos.length > 0 && (
+          <div ref={searchRef} className="relative">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar producto en todo el inventario..."
+                value={busquedaGlobal}
+                onChange={(e) => { setBusquedaGlobal(e.target.value); setMostrarResultados(true); }}
+                onFocus={() => setMostrarResultados(true)}
+                className="pl-10 pr-10"
+              />
+              {busquedaGlobal && (
+                <button
+                  type="button"
+                  onClick={() => { setBusquedaGlobal(""); setMostrarResultados(false); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {mostrarResultados && resultadosBusqueda.length > 0 && (
+              <Card className="absolute z-50 w-full mt-1 max-h-80 overflow-y-auto shadow-lg">
+                <div className="p-2 space-y-1">
+                  {resultadosBusqueda.map((p) => {
+                    const prov = proveedores.find((pr) => pr.id === p.proveedor_id);
+                    const marca = marcas.find((m) => m.id === p.marca_id)?.nombre || "";
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          setProductoSeleccionado(p);
+                          setBusquedaGlobal("");
+                          setMostrarResultados(false);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-md hover:bg-muted transition-colors flex items-center justify-between gap-2"
+                      >
+                        <div className="min-w-0">
+                          <div className="font-medium text-sm truncate">{p.nombre}</div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            {prov?.nombre}{marca ? ` · ${marca}` : ""}{p.talla ? ` · Talla ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""}
+                          </div>
+                        </div>
+                        <Badge variant={p.stock <= 0 ? "destructive" : "secondary"} className="shrink-0 text-xs">
+                          Stock: {p.stock}
+                        </Badge>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+            {mostrarResultados && busquedaGlobal.trim() && resultadosBusqueda.length === 0 && (
+              <Card className="absolute z-50 w-full mt-1 p-3 text-sm text-muted-foreground shadow-lg">
+                No se encontraron productos.
+              </Card>
+            )}
+          </div>
+        )}
+
         <Accordion type="multiple" className="space-y-3">
           {proveedores.map((prov) => {
             const provMarcas = marcas.filter((m) => m.proveedor_id === prov.id);
