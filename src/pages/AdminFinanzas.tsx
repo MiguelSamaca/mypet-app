@@ -79,7 +79,7 @@ const AdminFinanzas = () => {
   const [nuevoCli, setNuevoCli] = useState({ nombre: "", telefono: "", email: "", ciudad: "", fecha_creacion: new Date().toISOString().slice(0, 10) });
 
   // filtros
-  const [filtroPeriodo, setFiltroPeriodo] = useState<"mes" | "anio" | "todo">("mes");
+  const [filtroPeriodo, setFiltroPeriodo] = useState<"mes" | "anio" | "todo">("todo");
   const [anio, setAnio] = useState(new Date().getFullYear());
   const [mes, setMes] = useState(new Date().getMonth() + 1);
   const [filtroUnidad, setFiltroUnidad] = useState<Unidad | "TODAS">("TODAS");
