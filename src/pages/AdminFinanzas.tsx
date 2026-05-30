@@ -213,6 +213,13 @@ const AdminFinanzas = () => {
       setFVentas(String(pb.precio_venta * cant));
       setFCosto(String(pb.costo_unitario * cant));
     }
+    if (pb.categoria_nombre) {
+      const match = categorias.find(
+        (c) => c.nombre.trim().toLowerCase() === pb.categoria_nombre!.trim().toLowerCase() &&
+          (fTipo === "ingreso" ? c.tipo === "ingreso" : c.tipo === "gasto")
+      );
+      if (match) setFCategoria(match.id);
+    }
   };
 
   const handlePerroChange = (id: string) => {
