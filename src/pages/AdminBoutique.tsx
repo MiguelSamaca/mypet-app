@@ -247,6 +247,25 @@ const AdminBoutique = () => {
     return m;
   }, [productos]);
 
+  // Resultados de búsqueda global
+  const resultadosBusqueda = useMemo(() => {
+    const ql = busquedaGlobal.trim().toLowerCase();
+    if (!ql) return [];
+    return productos
+      .filter((p) => p.nombre.toLowerCase().includes(ql))
+      .slice(0, 10);
+  }, [busquedaGlobal, productos]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setMostrarResultados(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (!authChecked) return null;
 
   return (
