@@ -110,6 +110,7 @@ const AdminFinanzas = () => {
   const [fManada, setFManada] = useState(false);
   const [fNotas, setFNotas] = useState("");
   const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
+  const [productoBoutiqueOpen, setProductoBoutiqueOpen] = useState(false);
   const [fPagadoMiguel, setFPagadoMiguel] = useState(false);
 
   useEffect(() => {
