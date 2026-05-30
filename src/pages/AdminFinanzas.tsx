@@ -260,11 +260,23 @@ const AdminFinanzas = () => {
 
   const handleCantidadChange = (v: string) => {
     setFCantidad(v);
+    const cant = parseFloat(v) || 0;
     if (fTarifa) {
       const tar = tarifas.find((t) => t.id === fTarifa);
       if (tar) {
         const precio = fManada ? tar.precio_manada : tar.precio_hotel;
-        setFVentas(String(precio * (parseFloat(v) || 0)));
+        setFVentas(String(precio * cant));
+      }
+    } else if (fProductoBoutique) {
+      const pb = productosBoutique.find((x) => x.id === fProductoBoutique);
+      if (pb) {
+        if (fTipo === "gasto") {
+          setFCosto(String(pb.costo_unitario * cant));
+          setFVentas(String(pb.costo_unitario * cant));
+        } else {
+          setFVentas(String(pb.precio_venta * cant));
+          setFCosto(String(pb.costo_unitario * cant));
+        }
       }
     }
   };
@@ -565,7 +577,15 @@ const AdminFinanzas = () => {
                       handleCantidadChange(val);
                     }} /></div>
                     <div><Label>Costo (COP)</Label><Input type="number" step="1" value={fCosto} onChange={(e) => setFCosto(e.target.value)} /></div>
-                    <div><Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label><Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} /></div>
+                    <div>
+                      <Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label>
+                      <Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} />
+                      {(parseFloat(fCantidad) || 0) > 1 && (parseFloat(fVentas) || 0) > 0 && (
+                        <p className="text-[10px] text-muted-foreground mt-1">
+                          Unitario: {COP((parseFloat(fVentas) || 0) / (parseFloat(fCantidad) || 1))}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {fTipo === "ingreso" && (
