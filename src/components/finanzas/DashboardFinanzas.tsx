@@ -114,6 +114,21 @@ const DashboardFinanzas = ({ movimientos, anio, unidad }: Props) => {
       .map(([k, v]) => ({ categoria: k, total: v }));
   }, [datosAnio, drillMes]);
 
+  // Top ingresos — agrupa por producto (o categoría si no hay), aplica drillMes
+  const topIngresos = useMemo(() => {
+    const base = drillMes !== null ? datosAnio.filter((m) => new Date(m.fecha).getMonth() === drillMes) : datosAnio;
+    const map = new Map<string, number>();
+    base.forEach((m) => {
+      if (m.tipo !== "ingreso") return;
+      const k = (m.producto && m.producto.trim()) || m.categorias_finanzas?.nombre || "Sin nombre";
+      map.set(k, (map.get(k) || 0) + (Number(m.ventas) || 0));
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([k, v]) => ({ nombre: k, total: v }));
+  }, [datosAnio, drillMes]);
+
   const hayFiltro = drillUnidad !== null || drillMes !== null;
 
   return (
