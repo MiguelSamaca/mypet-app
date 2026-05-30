@@ -310,9 +310,28 @@ const AdminFinanzas = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("¿Eliminar este movimiento?")) return;
+    // Revertir movimientos de inventario vinculados (las salidas se compensan con entradas)
+    const { data: invLinks } = await supabase
+      .from("movimientos_inventario")
+      .select("producto_id, cantidad, costo_unitario, tipo")
+      .eq("movimiento_id" as any, id);
+    if (invLinks && invLinks.length > 0) {
+      const reversos = invLinks
+        .filter((m: any) => m.tipo === "salida" || m.tipo === "entrada")
+        .map((m: any) => ({
+          producto_id: m.producto_id,
+          tipo: m.tipo === "salida" ? "entrada" : "salida",
+          cantidad: m.cantidad,
+          costo_unitario: m.costo_unitario ?? 0,
+          notas: `Reverso por eliminación de movimiento ${id}`,
+        }));
+      if (reversos.length > 0) {
+        await supabase.from("movimientos_inventario").insert(reversos as any);
+      }
+    }
     const { error } = await supabase.from("movimientos").delete().eq("id", id);
     if (error) { toast.error(error.message); return; }
-    toast.success("Eliminado");
+    toast.success("Eliminado y stock restaurado");
     loadAll();
   };
 
