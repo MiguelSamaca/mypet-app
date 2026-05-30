@@ -327,6 +327,7 @@ export type Database = {
           created_at: string
           fecha: string
           id: string
+          movimiento_id: string | null
           notas: string | null
           producto_id: string
           tipo: string
@@ -337,6 +338,7 @@ export type Database = {
           created_at?: string
           fecha?: string
           id?: string
+          movimiento_id?: string | null
           notas?: string | null
           producto_id: string
           tipo: string
@@ -347,6 +349,7 @@ export type Database = {
           created_at?: string
           fecha?: string
           id?: string
+          movimiento_id?: string | null
           notas?: string | null
           producto_id?: string
           tipo?: string
