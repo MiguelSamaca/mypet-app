@@ -722,7 +722,7 @@ const AdminFinanzas = () => {
               </TableHeader>
               <TableBody>
                 {movFiltrados.length === 0 && (
-                  <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-8">Sin movimientos en este periodo</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Sin movimientos en este periodo</TableCell></TableRow>
                 )}
                 {movFiltrados.map((m) => (
                   <TableRow key={m.id}>
