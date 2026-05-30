@@ -260,11 +260,23 @@ const AdminFinanzas = () => {
 
   const handleCantidadChange = (v: string) => {
     setFCantidad(v);
+    const cant = parseFloat(v) || 0;
     if (fTarifa) {
       const tar = tarifas.find((t) => t.id === fTarifa);
       if (tar) {
         const precio = fManada ? tar.precio_manada : tar.precio_hotel;
-        setFVentas(String(precio * (parseFloat(v) || 0)));
+        setFVentas(String(precio * cant));
+      }
+    } else if (fProductoBoutique) {
+      const pb = productosBoutique.find((x) => x.id === fProductoBoutique);
+      if (pb) {
+        if (fTipo === "gasto") {
+          setFCosto(String(pb.costo_unitario * cant));
+          setFVentas(String(pb.costo_unitario * cant));
+        } else {
+          setFVentas(String(pb.precio_venta * cant));
+          setFCosto(String(pb.costo_unitario * cant));
+        }
       }
     }
   };
