@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil, Settings2 } from "lucide-react";
+import { Plus, ArrowLeft, Trash2, Package, Truck, Tag, Layers, LogOut, Pencil, Settings2, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import ProveedorInventario from "@/components/boutique/ProveedorInventario";
 import Seo from "@/components/Seo";
@@ -66,6 +66,12 @@ const AdminBoutique = () => {
   const [prodColor, setProdColor] = useState("");
 
   const [entCantidad, setEntCantidad] = useState("0"); const [entCosto, setEntCosto] = useState("0");
+
+  // Búsqueda global de productos
+  const [busquedaGlobal, setBusquedaGlobal] = useState("");
+  const [mostrarResultados, setMostrarResultados] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -241,6 +247,25 @@ const AdminBoutique = () => {
     return m;
   }, [productos]);
 
+  // Resultados de búsqueda global
+  const resultadosBusqueda = useMemo(() => {
+    const ql = busquedaGlobal.trim().toLowerCase();
+    if (!ql) return [];
+    return productos
+      .filter((p) => p.nombre.toLowerCase().includes(ql))
+      .slice(0, 10);
+  }, [busquedaGlobal, productos]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setMostrarResultados(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (!authChecked) return null;
 
   return (
@@ -268,6 +293,68 @@ const AdminBoutique = () => {
             <Truck className="w-10 h-10 mx-auto mb-2 opacity-40" />
             Aún no hay proveedores. Crea el primero para empezar a registrar productos.
           </Card>
+        )}
+
+        {/* Búsqueda global de productos */}
+        {productos.length > 0 && (
+          <div ref={searchRef} className="relative">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar producto en todo el inventario..."
+                value={busquedaGlobal}
+                onChange={(e) => { setBusquedaGlobal(e.target.value); setMostrarResultados(true); }}
+                onFocus={() => setMostrarResultados(true)}
+                className="pl-10 pr-10"
+              />
+              {busquedaGlobal && (
+                <button
+                  type="button"
+                  onClick={() => { setBusquedaGlobal(""); setMostrarResultados(false); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {mostrarResultados && resultadosBusqueda.length > 0 && (
+              <Card className="absolute z-50 w-full mt-1 max-h-80 overflow-y-auto shadow-lg">
+                <div className="p-2 space-y-1">
+                  {resultadosBusqueda.map((p) => {
+                    const prov = proveedores.find((pr) => pr.id === p.proveedor_id);
+                    const marca = marcas.find((m) => m.id === p.marca_id)?.nombre || "";
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          setProductoSeleccionado(p);
+                          setBusquedaGlobal("");
+                          setMostrarResultados(false);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-md hover:bg-muted transition-colors flex items-center justify-between gap-2"
+                      >
+                        <div className="min-w-0">
+                          <div className="font-medium text-sm truncate">{p.nombre}</div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            {prov?.nombre}{marca ? ` · ${marca}` : ""}{p.talla ? ` · Talla ${p.talla}` : ""}{p.color ? ` · ${p.color}` : ""}
+                          </div>
+                        </div>
+                        <Badge variant={p.stock <= 0 ? "destructive" : "secondary"} className="shrink-0 text-xs">
+                          Stock: {p.stock}
+                        </Badge>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+            {mostrarResultados && busquedaGlobal.trim() && resultadosBusqueda.length === 0 && (
+              <Card className="absolute z-50 w-full mt-1 p-3 text-sm text-muted-foreground shadow-lg">
+                No se encontraron productos.
+              </Card>
+            )}
+          </div>
         )}
 
         <Accordion type="multiple" className="space-y-3">
@@ -465,6 +552,51 @@ const AdminBoutique = () => {
             <p className="text-xs text-muted-foreground">Stock actual: {openEntrada?.stock}</p>
             <Button type="submit" className="w-full">Registrar entrada</Button>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog: Detalle producto seleccionado desde búsqueda global */}
+      <Dialog open={!!productoSeleccionado} onOpenChange={(o) => !o && setProductoSeleccionado(null)}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>{productoSeleccionado?.nombre}</DialogTitle></DialogHeader>
+          {productoSeleccionado && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div><span className="text-muted-foreground">Proveedor:</span> {proveedores.find((pr) => pr.id === productoSeleccionado.proveedor_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Marca:</span> {marcas.find((m) => m.id === productoSeleccionado.marca_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Categoría:</span> {categorias.find((c) => c.id === productoSeleccionado.categoria_id)?.nombre || "—"}</div>
+                <div><span className="text-muted-foreground">Stock:</span> <Badge variant={productoSeleccionado.stock <= 0 ? "destructive" : "secondary"}>{productoSeleccionado.stock}</Badge></div>
+                <div><span className="text-muted-foreground">Talla:</span> {productoSeleccionado.talla || "—"}</div>
+                <div><span className="text-muted-foreground">Color:</span> {productoSeleccionado.color || "—"}</div>
+                <div><span className="text-muted-foreground">Costo:</span> {COP(productoSeleccionado.costo_unitario)}</div>
+                <div><span className="text-muted-foreground">Precio:</span> {COP(productoSeleccionado.precio_venta)}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => { openEditarProducto(productoSeleccionado); setProductoSeleccionado(null); }}
+                >
+                  <Pencil className="w-4 h-4 mr-1" /> Editar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => { setOpenEntrada(productoSeleccionado); setProductoSeleccionado(null); }}
+                >
+                  + Stock
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => { deleteProducto(productoSeleccionado.id); setProductoSeleccionado(null); }}
+                >
+                  <Trash2 className="w-4 h-4 mr-1" /> Eliminar
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
