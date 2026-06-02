@@ -952,12 +952,13 @@ const AdminFinanzas = () => {
                       <TableRow key={m.id} className={isGrouped ? "border-l-4 border-l-primary bg-primary/5" : ""}>
                         <TableCell className="text-xs">
                           {m.fecha}
-                          {isGrouped && (
+                          {m.tipo === "ingreso" && m.no_venta && (
                             <div className="text-[10px] text-primary font-semibold mt-0.5">
-                              🛒 Venta #{m.no_venta} ({groupSize})
+                              #{m.no_venta}{groupSize > 1 ? ` (${groupSize})` : ""}
                             </div>
                           )}
                         </TableCell>
+
                         <TableCell>
                           <Badge variant={m.tipo === "ingreso" ? "default" : "secondary"} className={m.tipo === "ingreso" ? "bg-green-600" : "bg-orange-500"}>
                             {m.tipo}
