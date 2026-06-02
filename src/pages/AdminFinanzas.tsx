@@ -609,7 +609,7 @@ const AdminFinanzas = () => {
                     </Select>
                   </div>
 
-                  <div><Label>Producto / Concepto *</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required /></div>
+                  <div><Label>Producto / Concepto {cartItems.length === 0 ? "*" : ""}</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required={cartItems.length === 0} /></div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div><Label>Cantidad</Label><Input type="number" step={fTipo === "ingreso" ? "1" : "0.01"} value={fCantidad} onChange={(e) => {
