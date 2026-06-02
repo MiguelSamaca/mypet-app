@@ -440,14 +440,17 @@ const AdminFinanzas = () => {
       if (filtroNaturalezaGasto !== "todos" && m.tipo === "ingreso") return false;
       return true;
     });
-    // Ordenar: por fecha desc, luego agrupando por no_venta (desc), luego created_at desc
+    // Ordenar: por fecha desc, luego agrupando por no_venta (desc) solo para ventas >= 51, luego id desc
     return [...filtered].sort((a, b) => {
       if (a.fecha !== b.fecha) return a.fecha < b.fecha ? 1 : -1;
       const av = Number(a.no_venta) || 0;
       const bv = Number(b.no_venta) || 0;
-      if (av !== bv) return bv - av;
+      const aGroup = av >= 51 ? av : 0;
+      const bGroup = bv >= 51 ? bv : 0;
+      if (aGroup !== bGroup) return bGroup - aGroup;
       return (a.id || "") < (b.id || "") ? 1 : -1;
     });
+
   }, [movimientos, filtroPeriodo, anio, mes, filtroUnidad, filtroTipo, filtroNaturalezaGasto]);
 
 
