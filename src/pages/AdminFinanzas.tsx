@@ -112,6 +112,8 @@ const AdminFinanzas = () => {
   const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
   const [productoBoutiqueOpen, setProductoBoutiqueOpen] = useState(false);
   const [fPagadoMiguel, setFPagadoMiguel] = useState(false);
+  // Carrito de productos para venta múltiple (mismo No. Venta)
+  const [cartItems, setCartItems] = useState<Array<{ producto_boutique_id: string | null; producto: string; cantidad: number; costo: number; ventas: number; categoria_id: string | null }>>([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
