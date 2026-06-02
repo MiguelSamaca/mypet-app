@@ -327,7 +327,8 @@ const AdminFinanzas = () => {
     };
 
     if (editingMov) {
-      const { error } = await supabase.from("movimientos").update({ ...basePayload, ...currentItem, producto_boutique_id: undefined } as any).eq("id", editingMov.id);
+      const { producto_boutique_id: _pbid, ...currentForUpdate } = currentItem;
+      const { error } = await supabase.from("movimientos").update({ ...basePayload, ...currentForUpdate } as any).eq("id", editingMov.id);
       if (error) { toast.error(error.message); return; }
       toast.success("Movimiento actualizado");
     } else {
