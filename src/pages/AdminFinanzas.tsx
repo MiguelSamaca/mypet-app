@@ -427,7 +427,7 @@ const AdminFinanzas = () => {
 
   // Filtros aplicados
   const movFiltrados = useMemo(() => {
-    return movimientos.filter((m) => {
+    const filtered = movimientos.filter((m) => {
       const [yStr, mStr] = String(m.fecha).slice(0, 10).split("-");
       const fYear = Number(yStr);
       const fMonth = Number(mStr);
@@ -440,7 +440,16 @@ const AdminFinanzas = () => {
       if (filtroNaturalezaGasto !== "todos" && m.tipo === "ingreso") return false;
       return true;
     });
+    // Ordenar: por fecha desc, luego agrupando por no_venta (desc), luego created_at desc
+    return [...filtered].sort((a, b) => {
+      if (a.fecha !== b.fecha) return a.fecha < b.fecha ? 1 : -1;
+      const av = Number(a.no_venta) || 0;
+      const bv = Number(b.no_venta) || 0;
+      if (av !== bv) return bv - av;
+      return (a.created_at || "") < (b.created_at || "") ? 1 : -1;
+    });
   }, [movimientos, filtroPeriodo, anio, mes, filtroUnidad, filtroTipo, filtroNaturalezaGasto]);
+
 
   // KPIs
   const kpis = useMemo(() => {
