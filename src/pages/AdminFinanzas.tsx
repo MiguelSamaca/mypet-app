@@ -395,6 +395,36 @@ const AdminFinanzas = () => {
     loadAll();
   };
 
+  const handleDeleteVenta = async (noVenta: string) => {
+    const movsVenta = movimientos.filter((mv) => mv.no_venta === noVenta);
+    if (movsVenta.length === 0) return;
+    if (!confirm(`¿Eliminar TODA la venta #${noVenta}? (${movsVenta.length} productos)`)) return;
+    const ids = movsVenta.map((mv) => mv.id);
+    // Revertir inventario para todos
+    const { data: invLinks } = await (supabase as any)
+      .from("movimientos_inventario")
+      .select("producto_id, cantidad, costo_unitario, tipo, movimiento_id")
+      .in("movimiento_id", ids);
+    if (invLinks && invLinks.length > 0) {
+      const reversos = invLinks
+        .filter((m: any) => m.tipo === "salida" || m.tipo === "entrada")
+        .map((m: any) => ({
+          producto_id: m.producto_id,
+          tipo: m.tipo === "salida" ? "entrada" : "salida",
+          cantidad: m.cantidad,
+          costo_unitario: m.costo_unitario ?? 0,
+          notas: `Reverso por eliminación de venta #${noVenta}`,
+        }));
+      if (reversos.length > 0) await supabase.from("movimientos_inventario").insert(reversos as any);
+    }
+    const { error } = await supabase.from("movimientos").delete().in("id", ids);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Venta #${noVenta} eliminada (${ids.length} productos)`);
+    loadAll();
+  };
+
+
+
   // Filtros aplicados
   const movFiltrados = useMemo(() => {
     return movimientos.filter((m) => {
