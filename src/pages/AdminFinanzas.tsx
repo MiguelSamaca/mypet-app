@@ -150,7 +150,7 @@ const AdminFinanzas = () => {
       const n = parseInt(String(m.no_venta || "").replace(/\D/g, ""), 10);
       if (!isNaN(n) && n > max) max = n;
     });
-    return String(max + 1);
+    return String(max + 1).padStart(3, "0");
   }, [movimientos]);
 
   const resetForm = () => {
@@ -182,7 +182,7 @@ const AdminFinanzas = () => {
     setFCosto(String(m.costo ?? 0));
     setFVentas(String(m.ventas ?? 0));
     setFCliente(m.cliente || "");
-    setFNoVenta(m.no_venta || "");
+    setFNoVenta(m.no_venta ? String(Number(m.no_venta)).padStart(3, "0") : "");
     setFDetalle(m.detalle || "");
     setFPerro(m.perro_id || "");
     setFManada(false);
@@ -309,7 +309,7 @@ const AdminFinanzas = () => {
       tipo: fTipo,
       unidad_negocio: fUnidad,
       cliente: fCliente || null,
-      no_venta: fNoVenta || null,
+      no_venta: fNoVenta ? String(Number(fNoVenta)).padStart(3, "0") : null,
       detalle: fDetalle || null,
       perro_id: fPerro || null,
       tarifa_id: fTarifa || null,
