@@ -143,13 +143,31 @@ const AdminFinanzas = () => {
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
 
+  // Próximo No. Venta consecutivo (mínimo 51)
+  const nextNoVenta = useMemo(() => {
+    let max = 50;
+    movimientos.forEach((m) => {
+      const n = parseInt(String(m.no_venta || "").replace(/\D/g, ""), 10);
+      if (!isNaN(n) && n > max) max = n;
+    });
+    return String(max + 1);
+  }, [movimientos]);
+
   const resetForm = () => {
     setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10)); setFFechaSalida("");
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
     setFProductoBoutique(""); setFClienteBoutique(""); setFPagadoMiguel(false); setEditingMov(null);
+    setCartItems([]);
   };
+
+  // Al abrir el diálogo nuevo (no edición) e ingreso → asignar No. Venta automático
+  useEffect(() => {
+    if (openNuevo && !editingMov && fTipo === "ingreso" && !fNoVenta) {
+      setFNoVenta(nextNoVenta);
+    }
+  }, [openNuevo, editingMov, fTipo, nextNoVenta, fNoVenta]);
 
   const openEditarMovimiento = (m: Movimiento) => {
     setEditingMov(m);
