@@ -970,7 +970,7 @@ const AdminFinanzas = () => {
                           {m.fecha}
                           {m.tipo === "ingreso" && m.no_venta && (
                             <div className="text-[10px] text-primary font-semibold mt-0.5">
-                              #{m.no_venta}{groupSize > 1 ? ` (${groupSize})` : ""}
+                              #{String(Number(m.no_venta)).padStart(3, "0")}{groupSize > 1 ? ` (${groupSize})` : ""}
                             </div>
                           )}
                         </TableCell>
