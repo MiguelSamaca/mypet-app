@@ -303,16 +303,11 @@ const AdminFinanzas = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
+    const basePayload = {
       fecha: fFecha,
       fecha_salida: fFechaSalida || null,
       tipo: fTipo,
-      categoria_id: fCategoria || null,
       unidad_negocio: fUnidad,
-      producto: fProducto || (fCategoria ? categorias.find((c) => c.id === fCategoria)?.nombre : "") || "Movimiento",
-      cantidad: parseFloat(fCantidad) || 1,
-      costo: parseFloat(fCosto) || 0,
-      ventas: parseFloat(fVentas) || 0,
       cliente: fCliente || null,
       no_venta: fNoVenta || null,
       detalle: fDetalle || null,
@@ -322,25 +317,50 @@ const AdminFinanzas = () => {
       cliente_boutique_id: fClienteBoutique || null,
       pagado_por_miguel: fTipo === "gasto" ? fPagadoMiguel : false,
     };
+    const currentItem = {
+      categoria_id: fCategoria || null,
+      producto: fProducto || (fCategoria ? categorias.find((c) => c.id === fCategoria)?.nombre : "") || "Movimiento",
+      cantidad: parseFloat(fCantidad) || 1,
+      costo: parseFloat(fCosto) || 0,
+      ventas: parseFloat(fVentas) || 0,
+      producto_boutique_id: fProductoBoutique || null,
+    };
+
     if (editingMov) {
-      const { error } = await supabase.from("movimientos").update(payload as any).eq("id", editingMov.id);
+      const { error } = await supabase.from("movimientos").update({ ...basePayload, ...currentItem, producto_boutique_id: undefined } as any).eq("id", editingMov.id);
       if (error) { toast.error(error.message); return; }
       toast.success("Movimiento actualizado");
     } else {
-      const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
-      if (error) { toast.error(error.message); return; }
-      // Si hay producto de inventario vinculado → registrar salida (venta o consumo/gasto)
-      if (fProductoBoutique && (fTipo === "ingreso" || fTipo === "gasto")) {
-        await supabase.from("movimientos_inventario").insert({
-          producto_id: fProductoBoutique,
-          tipo: "salida",
-          cantidad: parseFloat(fCantidad) || 1,
-          costo_unitario: parseFloat(fCosto) / (parseFloat(fCantidad) || 1) || 0,
-          notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
-          movimiento_id: insertedMov?.id ?? null,
-        } as any);
+      // Combinar carrito + item actual (si está lleno)
+      const allItems = [...cartItems];
+      if (currentItem.producto && currentItem.producto !== "Movimiento" || currentItem.ventas > 0 || currentItem.costo > 0) {
+        allItems.push(currentItem);
       }
-      toast.success("Movimiento registrado");
+      if (allItems.length === 0) { toast.error("Agrega al menos un producto"); return; }
+
+      for (const it of allItems) {
+        const payload = {
+          ...basePayload,
+          categoria_id: it.categoria_id,
+          producto: it.producto,
+          cantidad: it.cantidad,
+          costo: it.costo,
+          ventas: it.ventas,
+        };
+        const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
+        if (error) { toast.error(error.message); return; }
+        if (it.producto_boutique_id && (fTipo === "ingreso" || fTipo === "gasto")) {
+          await supabase.from("movimientos_inventario").insert({
+            producto_id: it.producto_boutique_id,
+            tipo: "salida",
+            cantidad: it.cantidad,
+            costo_unitario: it.cantidad > 0 ? it.costo / it.cantidad : 0,
+            notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
+            movimiento_id: insertedMov?.id ?? null,
+          } as any);
+        }
+      }
+      toast.success(allItems.length > 1 ? `Venta registrada con ${allItems.length} productos` : "Movimiento registrado");
     }
     setOpenNuevo(false);
     resetForm();
