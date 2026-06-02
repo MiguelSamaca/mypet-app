@@ -998,7 +998,7 @@ const AdminFinanzas = () => {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleDeleteVenta(m.no_venta!)}
-                                title={`Eliminar toda la venta #${m.no_venta} (${groupSize} productos)`}
+                                title={`Eliminar toda la venta #${String(Number(m.no_venta)).padStart(3, "0")} (${groupSize} productos)`}
                                 className="text-destructive hover:text-destructive hover:bg-destructive/10"
                               >
                                 <Trash2 className="w-3 h-3" />
