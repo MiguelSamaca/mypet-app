@@ -446,7 +446,7 @@ const AdminFinanzas = () => {
       const av = Number(a.no_venta) || 0;
       const bv = Number(b.no_venta) || 0;
       if (av !== bv) return bv - av;
-      return (a.created_at || "") < (b.created_at || "") ? 1 : -1;
+      return (a.id || "") < (b.id || "") ? 1 : -1;
     });
   }, [movimientos, filtroPeriodo, anio, mes, filtroUnidad, filtroTipo, filtroNaturalezaGasto]);
 
