@@ -112,6 +112,8 @@ const AdminFinanzas = () => {
   const [fProductoBoutique, setFProductoBoutique] = useState<string>("");
   const [productoBoutiqueOpen, setProductoBoutiqueOpen] = useState(false);
   const [fPagadoMiguel, setFPagadoMiguel] = useState(false);
+  // Carrito de productos para venta múltiple (mismo No. Venta)
+  const [cartItems, setCartItems] = useState<Array<{ producto_boutique_id: string | null; producto: string; cantidad: number; costo: number; ventas: number; categoria_id: string | null }>>([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -141,13 +143,31 @@ const AdminFinanzas = () => {
 
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/admin"); };
 
+  // Próximo No. Venta consecutivo (mínimo 51)
+  const nextNoVenta = useMemo(() => {
+    let max = 50;
+    movimientos.forEach((m) => {
+      const n = parseInt(String(m.no_venta || "").replace(/\D/g, ""), 10);
+      if (!isNaN(n) && n > max) max = n;
+    });
+    return String(max + 1);
+  }, [movimientos]);
+
   const resetForm = () => {
     setFTipo("ingreso"); setFFecha(new Date().toISOString().slice(0, 10)); setFFechaSalida("");
     setFCategoria(""); setFUnidad("HOTEL"); setFTarifa(""); setFProducto("");
     setFCantidad("1"); setFCosto("0"); setFVentas("0"); setFCliente("");
     setFNoVenta(""); setFDetalle(""); setFPerro(""); setFManada(false); setFNotas("");
     setFProductoBoutique(""); setFClienteBoutique(""); setFPagadoMiguel(false); setEditingMov(null);
+    setCartItems([]);
   };
+
+  // Al abrir el diálogo nuevo (no edición) e ingreso → asignar No. Venta automático
+  useEffect(() => {
+    if (openNuevo && !editingMov && fTipo === "ingreso" && !fNoVenta) {
+      setFNoVenta(nextNoVenta);
+    }
+  }, [openNuevo, editingMov, fTipo, nextNoVenta, fNoVenta]);
 
   const openEditarMovimiento = (m: Movimiento) => {
     setEditingMov(m);
@@ -283,16 +303,11 @@ const AdminFinanzas = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
+    const basePayload = {
       fecha: fFecha,
       fecha_salida: fFechaSalida || null,
       tipo: fTipo,
-      categoria_id: fCategoria || null,
       unidad_negocio: fUnidad,
-      producto: fProducto || (fCategoria ? categorias.find((c) => c.id === fCategoria)?.nombre : "") || "Movimiento",
-      cantidad: parseFloat(fCantidad) || 1,
-      costo: parseFloat(fCosto) || 0,
-      ventas: parseFloat(fVentas) || 0,
       cliente: fCliente || null,
       no_venta: fNoVenta || null,
       detalle: fDetalle || null,
@@ -302,25 +317,51 @@ const AdminFinanzas = () => {
       cliente_boutique_id: fClienteBoutique || null,
       pagado_por_miguel: fTipo === "gasto" ? fPagadoMiguel : false,
     };
+    const currentItem = {
+      categoria_id: fCategoria || null,
+      producto: fProducto || (fCategoria ? categorias.find((c) => c.id === fCategoria)?.nombre : "") || "Movimiento",
+      cantidad: parseFloat(fCantidad) || 1,
+      costo: parseFloat(fCosto) || 0,
+      ventas: parseFloat(fVentas) || 0,
+      producto_boutique_id: fProductoBoutique || null,
+    };
+
     if (editingMov) {
-      const { error } = await supabase.from("movimientos").update(payload as any).eq("id", editingMov.id);
+      const { producto_boutique_id: _pbid, ...currentForUpdate } = currentItem;
+      const { error } = await supabase.from("movimientos").update({ ...basePayload, ...currentForUpdate } as any).eq("id", editingMov.id);
       if (error) { toast.error(error.message); return; }
       toast.success("Movimiento actualizado");
     } else {
-      const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
-      if (error) { toast.error(error.message); return; }
-      // Si hay producto de inventario vinculado → registrar salida (venta o consumo/gasto)
-      if (fProductoBoutique && (fTipo === "ingreso" || fTipo === "gasto")) {
-        await supabase.from("movimientos_inventario").insert({
-          producto_id: fProductoBoutique,
-          tipo: "salida",
-          cantidad: parseFloat(fCantidad) || 1,
-          costo_unitario: parseFloat(fCosto) / (parseFloat(fCantidad) || 1) || 0,
-          notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
-          movimiento_id: insertedMov?.id ?? null,
-        } as any);
+      // Combinar carrito + item actual (si está lleno)
+      const allItems = [...cartItems];
+      if (currentItem.producto && currentItem.producto !== "Movimiento" || currentItem.ventas > 0 || currentItem.costo > 0) {
+        allItems.push(currentItem);
       }
-      toast.success("Movimiento registrado");
+      if (allItems.length === 0) { toast.error("Agrega al menos un producto"); return; }
+
+      for (const it of allItems) {
+        const payload = {
+          ...basePayload,
+          categoria_id: it.categoria_id,
+          producto: it.producto,
+          cantidad: it.cantidad,
+          costo: it.costo,
+          ventas: it.ventas,
+        };
+        const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
+        if (error) { toast.error(error.message); return; }
+        if (it.producto_boutique_id && (fTipo === "ingreso" || fTipo === "gasto")) {
+          await supabase.from("movimientos_inventario").insert({
+            producto_id: it.producto_boutique_id,
+            tipo: "salida",
+            cantidad: it.cantidad,
+            costo_unitario: it.cantidad > 0 ? it.costo / it.cantidad : 0,
+            notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
+            movimiento_id: insertedMov?.id ?? null,
+          } as any);
+        }
+      }
+      toast.success(allItems.length > 1 ? `Venta registrada con ${allItems.length} productos` : "Movimiento registrado");
     }
     setOpenNuevo(false);
     resetForm();
@@ -568,7 +609,7 @@ const AdminFinanzas = () => {
                     </Select>
                   </div>
 
-                  <div><Label>Producto / Concepto *</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required /></div>
+                  <div><Label>Producto / Concepto {cartItems.length === 0 ? "*" : ""}</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required={cartItems.length === 0} /></div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div><Label>Cantidad</Label><Input type="number" step={fTipo === "ingreso" ? "1" : "0.01"} value={fCantidad} onChange={(e) => {
@@ -643,7 +684,59 @@ const AdminFinanzas = () => {
                     </label>
                   )}
 
-                  <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : "Guardar movimiento"}</Button>
+                  {fTipo === "ingreso" && !editingMov && (
+                    <div className="bg-primary/5 border border-primary/20 p-3 rounded-lg space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs uppercase">🛒 Productos en esta venta (mismo No. {fNoVenta || "—"})</Label>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const prod = fProducto.trim();
+                            const ventas = parseFloat(fVentas) || 0;
+                            if (!prod) { toast.error("Indica el producto antes de agregar"); return; }
+                            if (ventas <= 0) { toast.error("Indica el valor de venta"); return; }
+                            setCartItems((prev) => [...prev, {
+                              producto_boutique_id: fProductoBoutique || null,
+                              producto: prod,
+                              cantidad: parseFloat(fCantidad) || 1,
+                              costo: parseFloat(fCosto) || 0,
+                              ventas,
+                              categoria_id: fCategoria || null,
+                            }]);
+                            // Limpiar campos de producto, conservar cliente/No.Venta/fecha
+                            setFProducto(""); setFProductoBoutique(""); setFCantidad("1");
+                            setFCosto("0"); setFVentas("0");
+                            toast.success("Producto agregado a la venta");
+                          }}
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Agregar otro producto
+                        </Button>
+                      </div>
+                      {cartItems.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">Si la venta incluye varios productos, llena los datos arriba y haz clic en "Agregar otro producto". El último también se guarda al enviar.</p>
+                      ) : (
+                        <div className="space-y-1">
+                          {cartItems.map((it, idx) => (
+                            <div key={idx} className="flex items-center justify-between text-sm bg-background rounded px-2 py-1">
+                              <span className="truncate flex-1">{it.cantidad}× {it.producto}</span>
+                              <span className="font-mono text-xs mr-2">{COP(it.ventas)}</span>
+                              <Button type="button" variant="ghost" size="sm" onClick={() => setCartItems((prev) => prev.filter((_, i) => i !== idx))}>
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))}
+                          <div className="flex justify-between text-sm font-semibold pt-1 border-t">
+                            <span>Total carrito {(parseFloat(fVentas) || 0) > 0 ? "+ actual" : ""}:</span>
+                            <span>{COP(cartItems.reduce((s, i) => s + i.ventas, 0) + (parseFloat(fVentas) || 0))}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <Button type="submit" className="w-full">{editingMov ? "Actualizar movimiento" : (cartItems.length > 0 ? `Guardar venta (${cartItems.length + ((parseFloat(fVentas) || 0) > 0 ? 1 : 0)} productos)` : "Guardar movimiento")}</Button>
                 </form>
               </DialogContent>
             </Dialog>
