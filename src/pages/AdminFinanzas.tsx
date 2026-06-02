@@ -952,14 +952,18 @@ const AdminFinanzas = () => {
                   <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Sin movimientos en este periodo</TableCell></TableRow>
                 )}
                 {(() => {
-                  // Contar items por No. Venta para agrupar visualmente
+                  // Contar items por No. Venta (solo a partir del consecutivo 51) para agrupar visualmente
                   const ventaCount = new Map<string, number>();
                   movFiltrados.forEach((m) => {
-                    if (m.no_venta) ventaCount.set(m.no_venta, (ventaCount.get(m.no_venta) || 0) + 1);
+                    if (m.no_venta && (Number(m.no_venta) || 0) >= 51) {
+                      ventaCount.set(m.no_venta, (ventaCount.get(m.no_venta) || 0) + 1);
+                    }
                   });
                   return movFiltrados.map((m) => {
-                    const groupSize = m.no_venta ? (ventaCount.get(m.no_venta) || 1) : 1;
+                    const noVentaNum = Number(m.no_venta) || 0;
+                    const groupSize = m.no_venta && noVentaNum >= 51 ? (ventaCount.get(m.no_venta) || 1) : 1;
                     const isGrouped = groupSize > 1;
+
                     return (
                       <TableRow key={m.id} className={isGrouped ? "border-l-4 border-l-primary bg-primary/5" : ""}>
                         <TableCell className="text-xs">
