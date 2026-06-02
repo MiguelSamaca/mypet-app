@@ -395,6 +395,36 @@ const AdminFinanzas = () => {
     loadAll();
   };
 
+  const handleDeleteVenta = async (noVenta: string) => {
+    const movsVenta = movimientos.filter((mv) => mv.no_venta === noVenta);
+    if (movsVenta.length === 0) return;
+    if (!confirm(`¿Eliminar TODA la venta #${noVenta}? (${movsVenta.length} productos)`)) return;
+    const ids = movsVenta.map((mv) => mv.id);
+    // Revertir inventario para todos
+    const { data: invLinks } = await (supabase as any)
+      .from("movimientos_inventario")
+      .select("producto_id, cantidad, costo_unitario, tipo, movimiento_id")
+      .in("movimiento_id", ids);
+    if (invLinks && invLinks.length > 0) {
+      const reversos = invLinks
+        .filter((m: any) => m.tipo === "salida" || m.tipo === "entrada")
+        .map((m: any) => ({
+          producto_id: m.producto_id,
+          tipo: m.tipo === "salida" ? "entrada" : "salida",
+          cantidad: m.cantidad,
+          costo_unitario: m.costo_unitario ?? 0,
+          notas: `Reverso por eliminación de venta #${noVenta}`,
+        }));
+      if (reversos.length > 0) await supabase.from("movimientos_inventario").insert(reversos as any);
+    }
+    const { error } = await supabase.from("movimientos").delete().in("id", ids);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Venta #${noVenta} eliminada (${ids.length} productos)`);
+    loadAll();
+  };
+
+
+
   // Filtros aplicados
   const movFiltrados = useMemo(() => {
     return movimientos.filter((m) => {
@@ -909,29 +939,61 @@ const AdminFinanzas = () => {
                 {movFiltrados.length === 0 && (
                   <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Sin movimientos en este periodo</TableCell></TableRow>
                 )}
-                {movFiltrados.map((m) => (
-                  <TableRow key={m.id}>
-                    <TableCell className="text-xs">{m.fecha}</TableCell>
-                    <TableCell>
-                      <Badge variant={m.tipo === "ingreso" ? "default" : "secondary"} className={m.tipo === "ingreso" ? "bg-green-600" : "bg-orange-500"}>
-                        {m.tipo}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-xs">{UNIDAD_LABEL[m.unidad_negocio] || m.unidad_negocio}</TableCell>
-                    <TableCell className="font-medium">{m.producto}</TableCell>
-                    <TableCell className="text-center text-xs">{m.cantidad}</TableCell>
-                    <TableCell className="text-xs">{m.categorias_finanzas?.nombre || "—"}</TableCell>
-                    <TableCell className="text-right text-xs">{m.costo > 0 ? COP(Number(m.costo)) : "—"}</TableCell>
-                    <TableCell className="text-right font-semibold">{m.ventas > 0 ? COP(Number(m.ventas)) : "—"}</TableCell>
-                    <TableCell className="text-xs">
-                      {m.perros?.nombre ? <Link to={`/peludos/${m.perros.codigo_acceso}`} className="text-primary underline">🐾 {m.perros.nombre}</Link> : (m.cliente || "—")}
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => openEditarMovimiento(m)}><Pencil className="w-3 h-3" /></Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDelete(m.id)}><Trash2 className="w-3 h-3" /></Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {(() => {
+                  // Contar items por No. Venta para agrupar visualmente
+                  const ventaCount = new Map<string, number>();
+                  movFiltrados.forEach((m) => {
+                    if (m.no_venta) ventaCount.set(m.no_venta, (ventaCount.get(m.no_venta) || 0) + 1);
+                  });
+                  return movFiltrados.map((m) => {
+                    const groupSize = m.no_venta ? (ventaCount.get(m.no_venta) || 1) : 1;
+                    const isGrouped = groupSize > 1;
+                    return (
+                      <TableRow key={m.id} className={isGrouped ? "border-l-4 border-l-primary bg-primary/5" : ""}>
+                        <TableCell className="text-xs">
+                          {m.fecha}
+                          {isGrouped && (
+                            <div className="text-[10px] text-primary font-semibold mt-0.5">
+                              🛒 Venta #{m.no_venta} ({groupSize})
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={m.tipo === "ingreso" ? "default" : "secondary"} className={m.tipo === "ingreso" ? "bg-green-600" : "bg-orange-500"}>
+                            {m.tipo}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs">{UNIDAD_LABEL[m.unidad_negocio] || m.unidad_negocio}</TableCell>
+                        <TableCell className="font-medium">{m.producto}</TableCell>
+                        <TableCell className="text-center text-xs">{m.cantidad}</TableCell>
+                        <TableCell className="text-xs">{m.categorias_finanzas?.nombre || "—"}</TableCell>
+                        <TableCell className="text-right text-xs">{m.costo > 0 ? COP(Number(m.costo)) : "—"}</TableCell>
+                        <TableCell className="text-right font-semibold">{m.ventas > 0 ? COP(Number(m.ventas)) : "—"}</TableCell>
+                        <TableCell className="text-xs">
+                          {m.perros?.nombre ? <Link to={`/peludos/${m.perros.codigo_acceso}`} className="text-primary underline">🐾 {m.perros.nombre}</Link> : (m.cliente || "—")}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-0.5">
+                            <Button variant="ghost" size="sm" onClick={() => openEditarMovimiento(m)} title="Editar"><Pencil className="w-3 h-3" /></Button>
+                            <Button variant="ghost" size="sm" onClick={() => handleDelete(m.id)} title="Eliminar este producto"><Trash2 className="w-3 h-3" /></Button>
+                            {isGrouped && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteVenta(m.no_venta!)}
+                                title={`Eliminar toda la venta #${m.no_venta} (${groupSize} productos)`}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                <span className="text-[10px] ml-0.5">venta</span>
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  });
+                })()}
               </TableBody>
             </Table>
           </div>
