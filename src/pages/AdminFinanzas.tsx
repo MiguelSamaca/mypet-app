@@ -540,7 +540,7 @@ const AdminFinanzas = () => {
                     <div><Label>Fecha {fTipo === "ingreso" && fUnidad === "HOTEL" ? "entrada" : ""} *</Label><Input type="date" value={fFecha} onChange={(e) => setFFecha(e.target.value)} required /></div>
                     <div>
                       <Label>Unidad de negocio</Label>
-                      <Select value={fUnidad} onValueChange={(v) => setFUnidad(v as Unidad)}>
+                      <Select value={fUnidad} onValueChange={(v) => { setFUnidad(v as Unidad); if (v !== "HOTEL") setFTarifa(""); }}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="HOTEL">MP HOTEL</SelectItem>
