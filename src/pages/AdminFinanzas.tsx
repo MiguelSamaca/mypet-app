@@ -312,7 +312,7 @@ const AdminFinanzas = () => {
       tipo: fTipo,
       unidad_negocio: fUnidad,
       cliente: fCliente || null,
-      no_venta: fNoVenta ? String(Number(fNoVenta)).padStart(3, "0") : null,
+      no_venta: fTipo === "ingreso" && fNoVenta ? String(Number(fNoVenta)).padStart(3, "0") : null,
       detalle: fDetalle || null,
       perro_id: fPerro || null,
       tarifa_id: fTarifa || null,
@@ -530,7 +530,7 @@ const AdminFinanzas = () => {
               <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
                 <DialogHeader><DialogTitle>{editingMov ? "Editar movimiento" : "Registrar movimiento"}</DialogTitle></DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-3">
-                  <Tabs value={fTipo} onValueChange={(v) => { setFTipo(v as Tipo); setFCategoria(""); }}>
+                  <Tabs value={fTipo} onValueChange={(v) => { setFTipo(v as Tipo); setFCategoria(""); if (v === "gasto") setFNoVenta(""); }}>
                     <TabsList className="grid grid-cols-2 w-full">
                       <TabsTrigger value="ingreso">💚 Ingreso</TabsTrigger>
                       <TabsTrigger value="gasto">🔻 Gasto</TabsTrigger>
