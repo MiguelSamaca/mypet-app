@@ -685,16 +685,55 @@ const AdminFinanzas = () => {
                       {clientesBoutique.length === 0 ? (
                         <p className="text-xs text-muted-foreground">No hay clientes registrados. Crea uno para asociar la venta.</p>
                       ) : (
-                        <Select value={fClienteBoutique} onValueChange={handleClienteBoutiqueChange}>
-                          <SelectTrigger><SelectValue placeholder="Selecciona cliente..." /></SelectTrigger>
-                          <SelectContent>
-                            {clientesBoutique.map((c) => (
-                              <SelectItem key={c.id} value={c.id}>
-                                {c.nombre}{c.ciudad ? ` · ${c.ciudad}` : ""}{c.telefono ? ` · ${c.telefono}` : ""}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Popover open={clienteBoutiqueOpen} onOpenChange={setClienteBoutiqueOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={clienteBoutiqueOpen}
+                              className="w-full justify-between font-normal"
+                            >
+                              {(() => {
+                                const c = clientesBoutique.find((x) => x.id === fClienteBoutique);
+                                if (!c) return <span className="text-muted-foreground">Buscar / seleccionar cliente...</span>;
+                                return <span className="truncate">{c.nombre}{c.ciudad ? ` · ${c.ciudad}` : ""}{c.telefono ? ` · ${c.telefono}` : ""}</span>;
+                              })()}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                            <Command
+                              filter={(value, search) => {
+                                if (!search) return 1;
+                                return value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
+                              }}
+                            >
+                              <CommandInput placeholder="Buscar cliente por nombre, teléfono o ciudad..." />
+                              <CommandList>
+                                <CommandEmpty>No se encontraron clientes.</CommandEmpty>
+                                <CommandGroup>
+                                  {clientesBoutique.map((c) => {
+                                    const label = `${c.nombre}${c.ciudad ? ` · ${c.ciudad}` : ""}${c.telefono ? ` · ${c.telefono}` : ""}${c.email ? ` · ${c.email}` : ""}`;
+                                    return (
+                                      <CommandItem
+                                        key={c.id}
+                                        value={`${label} ${c.id}`}
+                                        onSelect={() => {
+                                          handleClienteBoutiqueChange(c.id);
+                                          setClienteBoutiqueOpen(false);
+                                        }}
+                                      >
+                                        <Check className={cn("mr-2 h-4 w-4", fClienteBoutique === c.id ? "opacity-100" : "opacity-0")} />
+                                        <span className="flex-1 truncate">{label}</span>
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
                       )}
                       {fUnidad !== "TIENDA" && (
                         <div className="pt-2">
