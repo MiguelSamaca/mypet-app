@@ -312,7 +312,7 @@ const AdminFinanzas = () => {
       tipo: fTipo,
       unidad_negocio: fUnidad,
       cliente: fCliente || null,
-      no_venta: fNoVenta ? String(Number(fNoVenta)).padStart(3, "0") : null,
+      no_venta: fTipo === "ingreso" && fNoVenta ? String(Number(fNoVenta)).padStart(3, "0") : null,
       detalle: fDetalle || null,
       perro_id: fPerro || null,
       tarifa_id: fTarifa || null,
