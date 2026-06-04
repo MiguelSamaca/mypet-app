@@ -224,6 +224,8 @@ const AdminFinanzas = () => {
     setFProductoBoutique(id);
     const pb = productosBoutique.find((x) => x.id === id);
     if (!pb) return;
+    // Limpiar tarifa de hotel para que cantidad recalcule sobre el producto boutique
+    setFTarifa("");
     setFProducto(pb.nombre);
     const cant = parseFloat(fCantidad) || 1;
     if (fTipo === "gasto") {
