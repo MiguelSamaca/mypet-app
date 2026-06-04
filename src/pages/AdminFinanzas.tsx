@@ -750,8 +750,8 @@ const AdminFinanzas = () => {
                               ventas,
                               categoria_id: fCategoria || null,
                             }]);
-                            // Limpiar campos de producto, conservar cliente/No.Venta/fecha
-                            setFProducto(""); setFProductoBoutique(""); setFCantidad("1");
+                            // Limpiar campos de producto y tarifa, conservar cliente/No.Venta/fecha
+                            setFProducto(""); setFProductoBoutique(""); setFTarifa(""); setFCantidad("1");
                             setFCosto("0"); setFVentas("0");
                             toast.success("Producto agregado a la venta");
                           }}
