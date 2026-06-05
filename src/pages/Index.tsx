@@ -13,8 +13,20 @@ import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import LeadPopup from "@/components/LeadPopup";
 import Seo from "@/components/Seo";
+import MyPetSaasLanding from "./MyPetSaasLanding";
+
+// Hostnames that render the Mayte Pet Hotel landing.
+// Everything else (mypet-app.lovable.app, previews, future SaaS domain) renders the neutral MyPet SaaS landing.
+const MAYTE_HOSTS = ["maytepethotel.com", "www.maytepethotel.com"];
 
 const Index = () => {
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
+  const isMayte = MAYTE_HOSTS.includes(host);
+
+  if (!isMayte) {
+    return <MyPetSaasLanding />;
+  }
+
   return (
     <main className="min-h-screen">
       <Seo

@@ -9,12 +9,18 @@ interface SeoProps {
   noindex?: boolean;
 }
 
-const SITE_URL = "https://maytepethotel.com";
+const FALLBACK_SITE_URL = "https://maytepethotel.com";
 const DEFAULT_IMAGE =
   "https://storage.googleapis.com/gpt-engineer-file-uploads/0maNRANWg8NigfI6BuWwrjJItVC2/social-images/social-1770176941336-Logo MPH con fondo (1).png";
 
 const Seo = ({ title, description, path, image, type = "website", noindex }: SeoProps) => {
-  const url = `${SITE_URL}${path}`;
+  // Canonical/og:url should reflect the actual host the user is on,
+  // so mypet-app.lovable.app doesn't compete with maytepethotel.com for SEO.
+  const origin =
+    typeof window !== "undefined" && window.location?.origin
+      ? window.location.origin
+      : FALLBACK_SITE_URL;
+  const url = `${origin}${path}`;
   const img = image || DEFAULT_IMAGE;
   return (
     <Helmet>
