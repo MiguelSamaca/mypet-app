@@ -29,6 +29,7 @@ import Seo from "@/components/Seo";
 type Tenant = {
   id: string;
   nombre: string;
+  slug: string | null;
   email_contacto: string | null;
   plan: string;
   estado: string;
@@ -37,6 +38,10 @@ type Tenant = {
   color_primario: string | null;
   fecha_creacion: string;
 };
+
+const slugify = (s: string) =>
+  s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40);
 
 type TenantModule = {
   id: string;
