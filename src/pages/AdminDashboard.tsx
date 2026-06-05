@@ -122,7 +122,7 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           {isSuper && (
-            <Link to="/admin/superadmin" className="sm:col-span-2">
+            <Link to="/superadmin" className="sm:col-span-2">
               <Card className="group relative overflow-hidden p-6 md:p-8 transition-all border-2 hover:border-primary hover:shadow-lg cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/20 to-purple-500/5 opacity-50 group-hover:opacity-80 transition-opacity" />
                 <div className="relative flex items-center gap-4">

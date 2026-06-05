@@ -201,7 +201,7 @@ const AdminSuperadmin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
-      <Seo title="Superadmin · Mayte Pet Hotel" description="Administración multi-tenant" path="/admin/superadmin" noindex />
+      <Seo title="Superadmin · Mayte Pet Hotel" description="Administración multi-tenant" path="/superadmin" noindex />
       <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
