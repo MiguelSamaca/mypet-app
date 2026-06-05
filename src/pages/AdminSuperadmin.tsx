@@ -136,7 +136,8 @@ const AdminSuperadmin = () => {
   };
 
   const updateTenantField = async (id: string, field: keyof Tenant, value: any) => {
-    const { error } = await supabase.from("tenants").update({ [field]: value }).eq("id", id);
+    const patch = { [field]: value } as Partial<Tenant>;
+    const { error } = await supabase.from("tenants").update(patch as any).eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
