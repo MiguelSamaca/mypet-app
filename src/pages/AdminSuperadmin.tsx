@@ -293,6 +293,11 @@ const AdminSuperadmin = () => {
                   </Badge>
                   <Badge variant="outline">{t.plan}</Badge>
                 </div>
+                {t.slug && (
+                  <p className="text-xs font-mono text-primary">
+                    /t/{t.slug} · {t.slug}.mypet.com
+                  </p>
+                )}
                 {t.email_contacto && (
                   <p className="text-sm text-muted-foreground">{t.email_contacto}</p>
                 )}
