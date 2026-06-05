@@ -65,6 +65,7 @@ const AdminSuperadmin = () => {
 
   // form
   const [fNombre, setFNombre] = useState("");
+  const [fSlug, setFSlug] = useState("");
   const [fEmail, setFEmail] = useState("");
   const [fPlan, setFPlan] = useState<string>("basico");
   const [fEstado, setFEstado] = useState<string>("activo");
