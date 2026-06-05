@@ -70,7 +70,7 @@ const AdminSuperadmin = () => {
   const [fPlan, setFPlan] = useState<string>("basico");
   const [fEstado, setFEstado] = useState<string>("activo");
   const [fMax, setFMax] = useState(5);
-  const [fColor, setFColor] = useState("#D946EF");
+  const [fColor, setFColor] = useState("#10B981");
 
   useEffect(() => {
     (async () => {
@@ -142,7 +142,7 @@ const AdminSuperadmin = () => {
     if (mErr) toast.error("Tenant creado pero falló crear módulos: " + mErr.message);
     toast.success("Guardería creada");
     setOpenNew(false);
-    setFNombre(""); setFSlug(""); setFEmail(""); setFPlan("basico"); setFEstado("activo"); setFMax(5); setFColor("#D946EF");
+    setFNombre(""); setFSlug(""); setFEmail(""); setFPlan("basico"); setFEstado("activo"); setFMax(5); setFColor("#10B981");
     loadAll();
   };
 
