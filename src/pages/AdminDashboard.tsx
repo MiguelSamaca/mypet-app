@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users } from "lucide-react";
+import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users, Crown } from "lucide-react";
 import { toast } from "sonner";
 import Seo from "@/components/Seo";
 
@@ -70,14 +70,22 @@ const tiles: Tile[] = [
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
+  const [isSuper, setIsSuper] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) {
         navigate("/admin");
         return;
       }
       setEmail(session.user.email || "");
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "superadmin")
+        .maybeSingle();
+      setIsSuper(!!data);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) navigate("/admin");
@@ -113,6 +121,22 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          {isSuper && (
+            <Link to="/admin/superadmin" className="sm:col-span-2">
+              <Card className="group relative overflow-hidden p-6 md:p-8 transition-all border-2 hover:border-primary hover:shadow-lg cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/20 to-purple-500/5 opacity-50 group-hover:opacity-80 transition-opacity" />
+                <div className="relative flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-background/80 backdrop-blur flex items-center justify-center shadow-sm">
+                    <Crown className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold mb-1">Superadmin · Guarderías</h3>
+                    <p className="text-sm text-muted-foreground">Gestiona tenants, planes y módulos activos.</p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          )}
           {tiles.map((t) => {
             const Icon = t.icon;
             const inner = (
