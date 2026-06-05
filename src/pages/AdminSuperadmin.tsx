@@ -111,10 +111,16 @@ const AdminSuperadmin = () => {
       toast.error("El nombre es obligatorio");
       return;
     }
+    const slug = (fSlug.trim() || slugify(fNombre));
+    if (!slug) {
+      toast.error("Slug inválido");
+      return;
+    }
     const { data, error } = await supabase
       .from("tenants")
       .insert({
         nombre: fNombre.trim(),
+        slug,
         email_contacto: fEmail.trim() || null,
         plan: fPlan,
         estado: fEstado,
@@ -127,7 +133,6 @@ const AdminSuperadmin = () => {
       toast.error(error.message);
       return;
     }
-    // create default modules (all active)
     const rows = MODULES.map((modulo) => ({
       tenant_id: data.id,
       modulo,
@@ -137,7 +142,7 @@ const AdminSuperadmin = () => {
     if (mErr) toast.error("Tenant creado pero falló crear módulos: " + mErr.message);
     toast.success("Guardería creada");
     setOpenNew(false);
-    setFNombre(""); setFEmail(""); setFPlan("basico"); setFEstado("activo"); setFMax(5); setFColor("#D946EF");
+    setFNombre(""); setFSlug(""); setFEmail(""); setFPlan("basico"); setFEstado("activo"); setFMax(5); setFColor("#D946EF");
     loadAll();
   };
 
