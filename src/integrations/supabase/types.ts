@@ -734,6 +734,7 @@ export type Database = {
           max_usuarios: number
           nombre: string
           plan: string
+          slug: string | null
           updated_at: string
         }
         Insert: {
@@ -747,6 +748,7 @@ export type Database = {
           max_usuarios?: number
           nombre: string
           plan?: string
+          slug?: string | null
           updated_at?: string
         }
         Update: {
@@ -760,6 +762,7 @@ export type Database = {
           max_usuarios?: number
           nombre?: string
           plan?: string
+          slug?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -892,6 +895,18 @@ export type Database = {
           nombre: string
           notas: string
           raza: string
+        }[]
+      }
+      get_tenant_by_slug: {
+        Args: { _slug: string }
+        Returns: {
+          color_primario: string
+          estado: string
+          id: string
+          logo_url: string
+          nombre: string
+          plan: string
+          slug: string
         }[]
       }
       get_visitas_publicas: {
