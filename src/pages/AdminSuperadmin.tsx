@@ -222,7 +222,12 @@ const AdminSuperadmin = () => {
               <div className="space-y-3">
                 <div>
                   <Label>Nombre *</Label>
-                  <Input value={fNombre} onChange={(e) => setFNombre(e.target.value)} />
+                  <Input value={fNombre} onChange={(e) => { setFNombre(e.target.value); if (!fSlug) setFSlug(slugify(e.target.value)); }} />
+                </div>
+                <div>
+                  <Label>Slug (URL) *</Label>
+                  <Input value={fSlug} onChange={(e) => setFSlug(slugify(e.target.value))} placeholder="huellitas" />
+                  <p className="text-xs text-muted-foreground mt-1">URL pruebas: mypet.lovable.app/t/<b>{fSlug || "slug"}</b> · Futuro: <b>{fSlug || "slug"}</b>.mypet.com</p>
                 </div>
                 <div>
                   <Label>Email de contacto</Label>
