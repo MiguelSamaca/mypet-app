@@ -199,33 +199,9 @@ const AdminSuperadmin = () => {
     );
   }
 
-  // Scope MyPet SaaS emerald palette ONLY to the Superadmin view by overriding
-  // the design tokens on a wrapper. Other admin pages keep Mayte's pink theme.
-  const mypetTheme = {
-    "--background": "0 0% 100%",
-    "--foreground": "158 64% 8%",
-    "--card": "0 0% 100%",
-    "--card-foreground": "158 64% 8%",
-    "--popover": "0 0% 100%",
-    "--popover-foreground": "158 64% 8%",
-    "--primary": "160 84% 16%",
-    "--primary-foreground": "0 0% 100%",
-    "--secondary": "152 76% 95%",
-    "--secondary-foreground": "160 84% 16%",
-    "--muted": "152 76% 95%",
-    "--muted-foreground": "215 14% 34%",
-    "--accent": "160 84% 39%",
-    "--accent-foreground": "0 0% 100%",
-    "--destructive": "0 84% 60%",
-    "--destructive-foreground": "0 0% 100%",
-    "--border": "149 80% 90%",
-    "--input": "149 80% 90%",
-    "--ring": "160 84% 39%",
-  } as React.CSSProperties;
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30" style={mypetTheme}>
-      <Seo title="Superadmin · MyPet" description="Administración multi-tenant MyPet" path="/superadmin" noindex />
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="Superadmin · Mayte Pet Hotel" description="Administración multi-tenant" path="/superadmin" noindex />
       <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
