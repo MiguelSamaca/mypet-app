@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users, Crown } from "lucide-react";
+import { PawPrint, Wallet, LogOut, ShoppingBag, Sparkles, Users, Crown, BarChart3 } from "lucide-react";
 import { toast } from "sonner";
 import Seo from "@/components/Seo";
 
@@ -55,6 +55,14 @@ const tiles: Tile[] = [
     desc: "Registro y seguimiento de compras de clientes.",
     icon: ShoppingBag,
     accent: "from-rose-500/20 to-rose-500/5",
+    available: true,
+  },
+  {
+    to: "/admin/marketing",
+    title: "Marketing",
+    desc: "Leads, conversiones, tráfico, comportamiento y Meta Ads.",
+    icon: BarChart3,
+    accent: "from-fuchsia-500/20 to-fuchsia-500/5",
     available: true,
   },
   {
