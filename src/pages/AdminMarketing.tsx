@@ -84,7 +84,7 @@ const AdminMarketing = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Seo title="Marketing · Admin" description="Dashboard de marketing y conversiones" noindex />
+      <Seo title="Marketing · Admin" description="Dashboard de marketing y conversiones" path="/admin/marketing" noindex />
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
