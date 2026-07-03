@@ -342,6 +342,7 @@ const AdminFinanzas = () => {
       }
       if (allItems.length === 0) { toast.error("Agrega al menos un producto"); return; }
 
+      let stockAjustes = 0;
       for (const it of allItems) {
         const payload = {
           ...basePayload,
@@ -354,7 +355,7 @@ const AdminFinanzas = () => {
         const { data: insertedMov, error } = await supabase.from("movimientos").insert(payload as any).select("id").single();
         if (error) { toast.error(error.message); return; }
         if (it.producto_boutique_id && (fTipo === "ingreso" || fTipo === "gasto")) {
-          await supabase.from("movimientos_inventario").insert({
+          const { error: invErr } = await supabase.from("movimientos_inventario").insert({
             producto_id: it.producto_boutique_id,
             tipo: "salida",
             cantidad: it.cantidad,
@@ -362,9 +363,15 @@ const AdminFinanzas = () => {
             notas: `${fTipo === "gasto" ? "Gasto" : "Venta"} · ${fNoVenta || fFecha}`,
             movimiento_id: insertedMov?.id ?? null,
           } as any);
+          if (invErr) {
+            toast.error(`Movimiento guardado, pero NO se descontó stock: ${invErr.message}`);
+          } else {
+            stockAjustes += 1;
+          }
         }
       }
-      toast.success(allItems.length > 1 ? `Venta registrada con ${allItems.length} productos` : "Movimiento registrado");
+      const stockMsg = stockAjustes > 0 ? ` · Stock descontado (${stockAjustes})` : "";
+      toast.success((allItems.length > 1 ? `Venta registrada con ${allItems.length} productos` : "Movimiento registrado") + stockMsg);
     }
     setOpenNuevo(false);
     resetForm();
