@@ -15,7 +15,7 @@ const DEFAULT_IMAGE =
 
 const Seo = ({ title, description, path, image, type = "website", noindex }: SeoProps) => {
   // Canonical/og:url should reflect the actual host the user is on,
-  // so mypet-app.lovable.app doesn't compete with maytepethotel.com for SEO.
+  // so preview/staging hosts don't compete with maytepethotel.com for SEO.
   const origin =
     typeof window !== "undefined" && window.location?.origin
       ? window.location.origin

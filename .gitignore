@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Export de base de datos con datos reales de clientes — NUNCA subir
+db-export/
