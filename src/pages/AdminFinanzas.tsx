@@ -664,11 +664,11 @@ const AdminFinanzas = () => {
                   <div><Label>Producto / Concepto {cartItems.length === 0 ? "*" : ""}</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required={cartItems.length === 0} /></div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    <div><Label>Cantidad</Label><Input type="number" step={fTipo === "ingreso" ? "1" : "0.01"} value={fCantidad} onChange={(e) => {
-                      const val = e.target.value;
-                      if (fTipo === "ingreso" && val.includes(".")) return;
+                    <div><Label>Cantidad</Label><Input type="number" step="1" min="1" inputMode="numeric" value={fCantidad} onChange={(e) => {
+                      const val = e.target.value.replace(/[.,]/g, "");
                       handleCantidadChange(val);
                     }} /></div>
+
                     <div><Label>Costo (COP)</Label><Input type="number" step="1" value={fCosto} onChange={(e) => setFCosto(e.target.value)} /></div>
                     <div>
                       <Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label>
