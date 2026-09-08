@@ -43,3 +43,22 @@ Deploy de funciones: `supabase functions deploy <nombre>` (requiere CLI de Supab
 - Migraciones SQL en `supabase/migrations/` con timestamp; nunca cambiar el esquema solo desde el dashboard sin dejar la migración en el repo.
 - `db-export/` contiene un export con datos reales de clientes — está en `.gitignore` y **jamás debe commitearse** (el repo es público).
 - El `.env` solo contiene claves públicas de Supabase (`VITE_*`); los secretos viven en Supabase Edge Functions.
+
+## Infraestructura (desde sep 2026 — fuera de Lovable)
+
+- **Supabase**: proyecto propio `fxalcejjkftwlegocsys`, organización `MaytePetHotel`,
+  región `us-east-1`. Reemplaza a `cvhzsanjnkmqzrjdgcjh`, que era un backend de
+  Lovable Cloud y ya no es la fuente de verdad.
+  - Conexión directa `db.<ref>.supabase.co` **no resuelve por IPv4**: usar el pooler
+    `postgresql://postgres.<ref>:<pass>@aws-0-us-east-1.pooler.supabase.com:5432/postgres`.
+- **Deploy**: Vercel, equipo `MAYTE` (`mayte3`), proyecto `mypet-app`.
+  Vercel usa sus propias variables del panel, no el `.env` del repo.
+  `vercel.json` trae los rewrites de SPA — sin ellos, recargar `/admin` da 404.
+- **Storage**: bucket público `peludos` (672 archivos, 132 MB). Las fotos se
+  optimizaron a máx 1600px manteniendo ruta y extensión originales, porque las URLs
+  están incrustadas en `perros.foto_url` y `visitas.fotos_galeria`. Los originales
+  sin optimizar (1.6 GB) están solo en el disco local, en `backup-mayte/storage/`.
+- **Plan gratuito**: 1 GB de storage y 500 MB de base. Si el storage se acerca al
+  límite, optimizar antes de pagar Pro.
+
+Scripts de migración en `scripts/migracion/` (bajar storage, optimizar, subir).
