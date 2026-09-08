@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# MyPet — Plataforma de gestión para guarderías caninas
 
-## Project info
+Plataforma multi-tenant para guarderías y hoteles caninos. Nació como la app de operación de **Mayte Pet Hotel** (Bogotá) y está evolucionando a un SaaS modular para guarderías en Colombia y LatAm, con registro de asistencia agéntico por WhatsApp como producto estrella.
 
-**URL**: https://lovable.dev/projects/a97ed797-90cf-43e5-b4a6-ed11ac6dde7e
+## Stack
 
-## How can I edit this code?
+- **Frontend:** Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui
+- **Backend:** Supabase (Postgres + RLS multi-tenant, Edge Functions, Storage, Auth)
+- **IA:** Gemini 2.5 Flash (transcripción de audio en `transcribe-peludo`)
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/a97ed797-90cf-43e5-b4a6-ed11ac6dde7e) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Desarrollo local
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm install
+npm run dev        # http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+Variables de entorno (`.env`):
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+VITE_SUPABASE_PROJECT_ID=...
+VITE_SUPABASE_PUBLISHABLE_KEY=...
+VITE_SUPABASE_URL=...
+```
 
-**Use GitHub Codespaces**
+## Estructura
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+├── pages/            # Landing pública + panel admin (Dashboard, Peludos,
+│                     # Finanzas, Boutique, CRM, Marketing, Superadmin)
+├── components/       # UI (shadcn) + módulos boutique/finanzas
+├── integrations/     # Cliente Supabase
+supabase/
+├── functions/        # Edge Functions: notify-lead, register-purchase,
+│                     # transcribe-peludo
+└── migrations/       # Migraciones SQL
+```
 
-## What technologies are used for this project?
+## Módulos
 
-This project is built with:
+| Módulo | Descripción |
+|---|---|
+| Peludos | Fichas de perros + perfil público por código de acceso |
+| Visitas | Estadías con actividades, fotos y calificaciones |
+| Finanzas | Ingresos/egresos por unidad de negocio |
+| Boutique | Inventario, proveedores, clientes, compras |
+| CRM / Marketing | Clientes y leads capturados desde la landing |
+| Superadmin | Gestión de tenants (guarderías) y módulos activos |
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Secretos de Edge Functions (Supabase → Settings → Edge Functions)
 
-## How can I deploy this project?
+- `GEMINI_API_KEY` — transcripción de audio
+- `SHOPIFY_STORE_URL`, `SHOPIFY_CLIENT_ID`, `SHOPIFY_CLIENT_SECRET` — sincronización Shopify
+- `META_CONVERSIONS_API_TOKEN` — Conversions API de Meta
 
-Simply open [Lovable](https://lovable.dev/projects/a97ed797-90cf-43e5-b4a6-ed11ac6dde7e) and click on Share -> Publish.
+## Multi-tenant
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Cada guardería es un registro en `tenants`; el aislamiento de datos se hace con políticas RLS (`can_access_tenant`, `is_staff`, `is_superadmin`) sobre `tenant_id` en todas las tablas de negocio. Los módulos se activan por tenant en `tenant_modules`.

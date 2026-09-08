@@ -213,12 +213,12 @@ const AdminMarketing = () => {
               <div className="flex items-start gap-3">
                 <BarChart3 className="h-5 w-5 text-primary mt-0.5" />
                 <div className="flex-1">
-                  <h3 className="font-medium">Lovable Analytics</h3>
+                  <h3 className="font-medium">Analytics del hosting</h3>
                   <p className="text-sm text-muted-foreground mb-3">
                     Visitas, pageviews, fuentes de tráfico, dispositivos y países. Con filtros por fecha.
                   </p>
                   <p className="text-xs text-muted-foreground mb-4">
-                    Ruta: Settings (engranaje arriba a la derecha en Lovable) → More → Analytics.
+                    Disponible en el panel del hosting (Vercel/Cloudflare) → Analytics.
                   </p>
                 </div>
               </div>
