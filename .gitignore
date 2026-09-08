@@ -34,3 +34,8 @@ código de las 3 edge functio.txt
 secretos*.txt
 # Export de base de datos con datos reales de clientes — NUNCA subir
 db-export/
+
+.vercel
+
+# Temporales del CLI de Supabase
+supabase/.temp/
