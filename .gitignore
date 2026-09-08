@@ -23,7 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-<<<<<<< HEAD
 # Credenciales de migracion — NUNCA subir
 .env.migracion
 backup-mayte/
@@ -33,7 +32,5 @@ mypet-backup-full/
 código de las 3 edge functio.txt
 *edge functio*.txt
 secretos*.txt
-=======
 # Export de base de datos con datos reales de clientes — NUNCA subir
 db-export/
->>>>>>> fase0-independencia-lovable
