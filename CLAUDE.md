@@ -51,7 +51,10 @@ Deploy de funciones: `supabase functions deploy <nombre>` (requiere CLI de Supab
   Lovable Cloud y ya no es la fuente de verdad.
   - Conexión directa `db.<ref>.supabase.co` **no resuelve por IPv4**: usar el pooler
     `postgresql://postgres.<ref>:<pass>@aws-0-us-east-1.pooler.supabase.com:5432/postgres`.
-- **Deploy**: Vercel, equipo `MAYTE` (`mayte3`), proyecto `mypet-app`.
+- **Deploy**: Vercel, equipo `MAYTE` (`mayte3`, plan Hobby), proyecto `mypet-app`.
+  Conectado a GitHub: cada push a `main` despliega solo. La cuenta de Vercel es
+  cuidogapp@gmail.com y la de GitHub miguel.samaca.samaca@gmail.com — distintas a
+  propósito, se enlazan por OAuth.
   Vercel usa sus propias variables del panel, no el `.env` del repo.
   `vercel.json` trae los rewrites de SPA — sin ellos, recargar `/admin` da 404.
 - **Storage**: bucket público `peludos` (672 archivos, 132 MB). Las fotos se
