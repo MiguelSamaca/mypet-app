@@ -56,6 +56,11 @@ Deploy de funciones: `supabase functions deploy <nombre>` (requiere CLI de Supab
   cuidogapp@gmail.com y la de GitHub miguel.samaca.samaca@gmail.com — distintas a
   propósito, se enlazan por OAuth.
   Vercel usa sus propias variables del panel, no el `.env` del repo.
+- **Dominio**: `maytepethotel.com` y `www`, ambos con registro A a `76.76.21.21`.
+  Los nameservers siguen en IONOS y ahí deben quedarse: el correo del negocio vive
+  en el mismo dominio (MX de IONOS + SPF, DKIM y DMARC). Al tocar DNS, nunca borrar
+  esos registros ni pasar los nameservers a Vercel — se cae el correo de Catalina.
+  El certificado TLS lo emite y renueva Vercel solo.
   `vercel.json` trae los rewrites de SPA — sin ellos, recargar `/admin` da 404.
 - **Storage**: bucket público `peludos` (672 archivos, 132 MB). Las fotos se
   optimizaron a máx 1600px manteniendo ruta y extensión originales, porque las URLs
