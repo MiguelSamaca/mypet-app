@@ -8,3 +8,16 @@ verify_jwt = false
 
 [functions.transcribe-peludo]
 verify_jwt = false
+[auth]
+# Dominio final del sitio. La app solo usa signInWithPassword, así que esto
+# aplica a enlaces por correo si algún día se añade recuperación de contraseña.
+site_url = "https://maytepethotel.com"
+additional_redirect_urls = [
+  "https://www.maytepethotel.com",
+  "https://mypet-app-delta.vercel.app",
+  "http://localhost:8080",
+]
+# La app no tiene pantalla de registro: los usuarios se crean a mano desde el
+# panel. Sin esto, cualquiera con la clave anon (pública, va en el bundle JS)
+# podría crearse una cuenta en el proyecto.
+enable_signup = false
