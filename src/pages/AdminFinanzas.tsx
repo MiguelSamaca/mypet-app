@@ -228,7 +228,7 @@ const AdminFinanzas = () => {
     // Limpiar tarifa de hotel para que cantidad recalcule sobre el producto boutique
     setFTarifa("");
     setFProducto(pb.nombre);
-    const cant = parseFloat(fCantidad) || 1;
+    const cant = parseInt(fCantidad) || 1;
     if (fTipo === "gasto") {
       setFCosto(String(pb.costo_unitario * cant));
       setFVentas(String(pb.costo_unitario * cant));
@@ -259,7 +259,7 @@ const AdminFinanzas = () => {
     setFProducto(tar.nombre);
     setFUnidad(tar.unidad_negocio);
     const precio = fManada ? tar.precio_manada : tar.precio_hotel;
-    const cant = parseFloat(fCantidad) || 1;
+    const cant = parseInt(fCantidad) || 1;
     setFVentas(String(precio * cant));
     // Auto categoria ingreso "Hospedaje" o similar según sección
     if (fTipo === "ingreso") {
@@ -275,7 +275,7 @@ const AdminFinanzas = () => {
       const tar = tarifas.find((t) => t.id === fTarifa);
       if (tar) {
         const precio = val ? tar.precio_manada : tar.precio_hotel;
-        const cant = parseFloat(fCantidad) || 1;
+        const cant = parseInt(fCantidad) || 1;
         setFVentas(String(precio * cant));
       }
     }
@@ -283,7 +283,7 @@ const AdminFinanzas = () => {
 
   const handleCantidadChange = (v: string) => {
     setFCantidad(v);
-    const cant = parseFloat(v) || 0;
+    const cant = parseInt(v) || 0;
     if (fTarifa) {
       const tar = tarifas.find((t) => t.id === fTarifa);
       if (tar) {
@@ -323,7 +323,7 @@ const AdminFinanzas = () => {
     const currentItem = {
       categoria_id: fCategoria || null,
       producto: fProducto || (fCategoria ? categorias.find((c) => c.id === fCategoria)?.nombre : "") || "Movimiento",
-      cantidad: parseFloat(fCantidad) || 1,
+      cantidad: parseInt(fCantidad) || 1,
       costo: parseFloat(fCosto) || 0,
       ventas: parseFloat(fVentas) || 0,
       producto_boutique_id: fProductoBoutique || null,
@@ -664,18 +664,18 @@ const AdminFinanzas = () => {
                   <div><Label>Producto / Concepto {cartItems.length === 0 ? "*" : ""}</Label><Input value={fProducto} onChange={(e) => setFProducto(e.target.value)} required={cartItems.length === 0} /></div>
 
                   <div className="grid grid-cols-3 gap-3">
-                    <div><Label>Cantidad</Label><Input type="number" step={fTipo === "ingreso" ? "1" : "0.01"} value={fCantidad} onChange={(e) => {
-                      const val = e.target.value;
-                      if (fTipo === "ingreso" && val.includes(".")) return;
+                    <div><Label>Cantidad</Label><Input type="number" step="1" min="1" inputMode="numeric" value={fCantidad} onChange={(e) => {
+                      const val = e.target.value.replace(/[.,]/g, "");
                       handleCantidadChange(val);
                     }} /></div>
+
                     <div><Label>Costo (COP)</Label><Input type="number" step="1" value={fCosto} onChange={(e) => setFCosto(e.target.value)} /></div>
                     <div>
                       <Label>{fTipo === "ingreso" ? "Ventas" : "Valor"} (COP)</Label>
                       <Input type="number" step="1" value={fVentas} onChange={(e) => setFVentas(e.target.value)} />
-                      {(parseFloat(fCantidad) || 0) > 1 && (parseFloat(fVentas) || 0) > 0 && (
+                      {(parseInt(fCantidad) || 0) > 1 && (parseFloat(fVentas) || 0) > 0 && (
                         <p className="text-[10px] text-muted-foreground mt-1">
-                          Unitario: {COP((parseFloat(fVentas) || 0) / (parseFloat(fCantidad) || 1))}
+                          Unitario: {COP((parseFloat(fVentas) || 0) / (parseInt(fCantidad) || 1))}
                         </p>
                       )}
                     </div>
@@ -791,7 +791,7 @@ const AdminFinanzas = () => {
                             setCartItems((prev) => [...prev, {
                               producto_boutique_id: fProductoBoutique || null,
                               producto: prod,
-                              cantidad: parseFloat(fCantidad) || 1,
+                              cantidad: parseInt(fCantidad) || 1,
                               costo: parseFloat(fCosto) || 0,
                               ventas,
                               categoria_id: fCategoria || null,
