@@ -149,6 +149,11 @@ serve(async (req) => {
     const META_TOKEN = Deno.env.get("META_CONVERSIONS_API_TOKEN");
     const PIXEL_ID = "915339354347019";
 
+    // Resultado del envío a Meta. Se devuelve en la respuesta para que un fallo
+    // sea observable: quien llama la ignora (fire-and-forget), pero sin esto un
+    // token revocado se traduce en conversiones perdidas sin ninguna señal.
+    let metaResult: Record<string, unknown> = { sent: false, reason: "sin token" };
+
     if (META_TOKEN) {
       try {
         const eventData: Record<string, unknown> = {
@@ -184,15 +189,18 @@ serve(async (req) => {
         const metaData = await metaRes.json();
         if (!metaRes.ok) {
           console.error("Meta CAPI error:", JSON.stringify(metaData));
+          metaResult = { sent: false, status: metaRes.status, error: metaData?.error ?? metaData };
         } else {
           console.log("Meta CAPI event sent:", metaData.events_received);
+          metaResult = { sent: true, events_received: metaData.events_received };
         }
       } catch (metaErr) {
         console.error("Meta CAPI failed:", metaErr);
+        metaResult = { sent: false, reason: String(metaErr) };
       }
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, meta: metaResult }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
