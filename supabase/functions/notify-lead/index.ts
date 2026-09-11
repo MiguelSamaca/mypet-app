@@ -25,6 +25,10 @@ serve(async (req) => {
     const SHOPIFY_CLIENT_ID = Deno.env.get("SHOPIFY_CLIENT_ID");
     const SHOPIFY_CLIENT_SECRET = Deno.env.get("SHOPIFY_CLIENT_SECRET");
 
+    // Resultado del sync con Shopify, por el mismo motivo que el de Meta:
+    // sin esto un fallo de credenciales o de permisos es invisible desde fuera.
+    let shopifyResult: Record<string, unknown> = { sent: false, reason: "sin credenciales" };
+
     if (SHOPIFY_STORE_URL && SHOPIFY_CLIENT_ID && SHOPIFY_CLIENT_SECRET) {
       try {
         // Step 1: Get access token via Client Credentials Grant
@@ -43,6 +47,7 @@ serve(async (req) => {
         const tokenData = await tokenRes.json();
         if (!tokenRes.ok) {
           console.error("Shopify token error:", JSON.stringify(tokenData));
+          shopifyResult = { sent: false, paso: "token", status: tokenRes.status, error: tokenData?.errors ?? tokenData };
         } else {
           const accessToken = tokenData.access_token;
 
@@ -131,17 +136,22 @@ serve(async (req) => {
               );
               await updateRes.json();
               console.log("Shopify customer updated:", existingCustomer.id);
+              shopifyResult = { sent: true, accion: "actualizado", customer_id: existingCustomer.id };
             } else {
               console.error("Shopify: email taken but not found via search");
+              shopifyResult = { sent: false, paso: "busqueda", reason: "email ocupado pero no encontrado" };
             }
           } else if (!shopifyRes.ok) {
             console.error("Shopify error:", JSON.stringify(shopifyData));
+            shopifyResult = { sent: false, paso: "crear", status: shopifyRes.status, error: shopifyData?.errors ?? shopifyData };
           } else {
             console.log("Shopify customer created:", shopifyData.customer?.id);
+            shopifyResult = { sent: true, accion: "creado", customer_id: shopifyData.customer?.id };
           }
         }
       } catch (shopifyErr) {
         console.error("Shopify sync failed:", shopifyErr);
+        shopifyResult = { sent: false, reason: String(shopifyErr) };
       }
     }
 
@@ -200,7 +210,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ success: true, meta: metaResult }), {
+    return new Response(JSON.stringify({ success: true, shopify: shopifyResult, meta: metaResult }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
