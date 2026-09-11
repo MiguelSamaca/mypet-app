@@ -69,4 +69,11 @@ Deploy de funciones: `supabase functions deploy <nombre>` (requiere CLI de Supab
 - **Plan gratuito**: 1 GB de storage y 500 MB de base. Si el storage se acerca al
   límite, optimizar antes de pagar Pro.
 
+- **Historial de migraciones**: la base nueva se restauró desde un dump, no
+  ejecutando `supabase/migrations/`. Las 20 migraciones quedaron marcadas como
+  aplicadas con `supabase migration repair --status applied`, así que `db push`
+  no intentará re-ejecutarlas. Si algún día se restaura otra vez desde un dump,
+  hay que repetir ese repair — sin él, un `db push` correría migraciones con
+  `DROP`/`ALTER` sobre un esquema que ya existe.
+
 Scripts de migración en `scripts/migracion/` (bajar storage, optimizar, subir).
